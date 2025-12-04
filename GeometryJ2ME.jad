@@ -1,0 +1,8 @@
+MIDlet-Version: 1.0
+MIDlet-Icon: img/gj2meicon.png
+MIDlet-Vendor: thesharkguy
+MIDlet-Jar-URL: GeometryJ2ME.jar
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
+MIDlet-1: Geometry Dash,img/gj2meicon.png,com.gd.j2me.Launcher
+MIDlet-Name: GeometryJ2ME
