@@ -26,6 +26,9 @@ public class Launcher extends MIDlet {
         if (mainMenu != null) {
             mainMenu.stop();
         }
+        if (gameScreen != null) {
+        	gameScreen.stop();
+        }
     }
     
     public void switchDisplay(Displayable nextDisplayable) {

@@ -7,9 +7,12 @@ import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.*;
 import javax.microedition.media.*;
 import javax.microedition.media.control.*;
+
+import com.gd.j2me.SharkUtilities.Hitbox;
+
 import java.io.InputStream;
 import java.io.IOException;
-//import java.util.*;
+import java.util.*;
 
 public class GameScreen extends GameCanvas implements Runnable {
 	private Launcher midlet;
@@ -18,13 +21,13 @@ public class GameScreen extends GameCanvas implements Runnable {
     private Thread gameThread;
     private float playerX = 0;
     private float playerY = 0;
-    private float velocityY = 0;
+    private float velocityY = 0; 
     private float progress = 0f;
     private int progressFixed = 0;
     private float progressTest = 0; //for testing only
-    private final float GRAVITY = 5.5f;
-    private final float JUMP_STRENGTH = -22.36f;
-    private final float GROUND_LEVEL = 0;
+    private final float GRAVITY = 1.5f;
+    private final float JUMP_STRENGTH = -11.18f;
+    private final float GROUND_LEVEL = 10;
     
     //converted int variables
     private int playerXint = 0;
@@ -50,16 +53,22 @@ public class GameScreen extends GameCanvas implements Runnable {
     private String levelName = "Level";
     private int bgColor = 0x287DFF;
     private int gnColor = 0x287DFF;
-    //private List obj;
-    
+    private List objid;
+    private float[] objx = new float[1000];
+    private float[] objy = new float[1000];
+    private int objlength = 0;
+    private Hitbox[] objlengthhitbox = new Hitbox[1000];
+
     //camera variables
     private float cameraX = 0;
-    private float cameraY = -159;
+    private float cameraY = -149;
 	private boolean isGrounded;
 	
 	//player variables
 	private int type = 0;
 	private Image player;
+	private SharkUtilities.Hitbox playerhitbox = SharkUtilities.Hitbox.rect(0f, 0f, 20f, 20f);
+	//private SharkUtilities.Hitbox obj = SharkUtilities.Hitbox[5]
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -88,6 +97,17 @@ public class GameScreen extends GameCanvas implements Runnable {
         progress = 0;
         gameThread = new Thread(this);
         gameThread.start();
+        
+        GameObject.create(1, 350, 30, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 350, 10, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 410, 10, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 490, 10, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 490, 30, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
     }
 
     public void stop() {
@@ -108,7 +128,12 @@ public class GameScreen extends GameCanvas implements Runnable {
             if (!isPaused) {
             	playerupdate();
             }
-            draw();
+            try {
+				draw();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
             
             try { Thread.sleep(1); } catch (InterruptedException e) {}
         }
@@ -152,11 +177,18 @@ public class GameScreen extends GameCanvas implements Runnable {
     	}
     	isTouchingDown = false;
     }
+    
+    protected void keyPressed(int keyCode) {
+    	int key = getGameAction(keyCode);
+    	if (key == -7) {
+    		pause();
+    	}
+    }
 
     private void update() {
     	currentFrameTime = System.currentTimeMillis();
         deltaTimeMillis = currentFrameTime - lastFrameTime;
-        deltaTimeSeconds = deltaTimeMillis / 1000.0;
+        deltaTimeSeconds = deltaTimeMillis / 1000.0; 
         
         lastFrameTime = currentFrameTime;
     }
@@ -177,32 +209,41 @@ public class GameScreen extends GameCanvas implements Runnable {
         } else {
         	
         }
-        playerY += velocityY * deltaTimeSeconds * 20;
+        playerY += velocityY * deltaTimeSeconds * 40;
         playerX += 10.41667 * deltaTimeSeconds * 20;
+        
+        
         if (playerX > getWidth() * 0.3f) {
         	cameraX = playerX - (getWidth() * 0.3f);
         } else {
         	cameraX = 0;
         }
-        if (playerY < GROUND_LEVEL) {
+        if ((playerY) < GROUND_LEVEL) {
         	isGrounded = false;
             if (!(velocityY > (0 - JUMP_STRENGTH))) {
-            	velocityY += GRAVITY * deltaTimeSeconds * 20;
+            	velocityY += GRAVITY * deltaTimeSeconds * 40;
             } else {
             	velocityY = 0 - JUMP_STRENGTH;
             }
         } else {
-            playerY = playerY - (playerY - GROUND_LEVEL);
+            playerY = (long) (playerY - (playerY - GROUND_LEVEL));
             velocityY = 0;
             isGrounded = true;
+        }
+        
+        for (int i = 0; i < objlength; i++) {
+        	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
+        		System.out.println(SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i]));
+        	}
         }
         
         playerXint = (int)playerX;
         playerYint = (int)playerY;
         GROUND_LEVELint = (int)GROUND_LEVEL;
+        playerhitbox = SharkUtilities.Hitbox.rect(playerX, playerY, playerhitbox.getWidth(), playerhitbox.getHeight());
     }
 
-    private void draw() {
+    private void draw() throws IOException {
         Graphics g = getGraphics();
         
         g.setColor(bgColor);
@@ -210,14 +251,25 @@ public class GameScreen extends GameCanvas implements Runnable {
         
         g.setColor(0xFFFFFF);
         g.drawLine(0, (int) GROUND_LEVELint + 20 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + 20 - (int)cameraY);
+        ///g.drawLine(0, (int) GROUND_LEVELint + 0 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + 0 - (int)cameraY);
+        ///g.drawLine(0, (int) GROUND_LEVELint + -20 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + -20 - (int)cameraY);
+        ///g.drawLine(0, (int) GROUND_LEVELint + -40 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + -40 - (int)cameraY);
         
         g.setColor(0xFFFF00);
         g.drawImage(player, playerXint - (int)cameraX, playerYint - (int)cameraY, 0);
+        
+        SharkUtilities.drawHitbox(playerhitbox.getX() - (int)cameraX, playerhitbox.getY() - (int)cameraY, playerhitbox.getWidth(), playerhitbox.getHeight(), g, 0x0000ff, 0);
+        SharkUtilities.drawHitboxWithRect(playerhitbox, g, 0x0000ff, 0);
         
         //
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
         TextUtilities.drawOutlinedString("Attempt 1", (getWidth() / 2)+((0-(int)cameraX)-("Attempt 1".length() * 5)), getHeight() / 3, 0, g, 0xFFFFFF, 0x000000);
         
+        for (int i = 0; i < objlength; i++) {
+        	if (objx[i]-cameraX<getWidth()+20&&objx[i]-cameraX>-20)
+        	GameObject.render(1, objx[i]-cameraX, objy[i]-cameraY, g);
+        	SharkUtilities.drawHitboxWithRect(objlengthhitbox[i], g, 0x0000ff, 0);
+        }
         //
         
         g.drawImage(pauseBtn, getWidth() - 24, 4, 0);
@@ -234,7 +286,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         
         String debugStr = "gameVerID:"+gameVerID+"\nlevelName:"+levelName+"\nbgColor:"+bgColor+"\ngnColor:"+gnColor;
-        String debugStr2 = "\npyvel:"+velocityY+"\ncx:"+cameraX+"\ndtms:"+deltaTimeMillis;
+        String debugStr2 = "\npyvel:"+velocityY+"\ncx:"+cameraX+"\ndtms:"+deltaTimeMillis+"\nkeystate:"+getKeyStates()+"\nobjlength:"+objx[1];
         
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL, g);
         TextUtilities.drawOutlinedString(debugStr, 0, 0, 0, g, 0xFFFFFF, 0x000000);
