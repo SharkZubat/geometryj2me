@@ -1,2 +1,4 @@
 # geometryj2me
-Geometry Dash with J2ME port.
+
+# About
+Geometry Dash J2ME is the demake of Geometry Dash for Java Phones.
