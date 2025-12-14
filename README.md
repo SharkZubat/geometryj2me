@@ -9,6 +9,7 @@ Geometry Dash J2ME is the demake of Geometry Dash for Java Phones.
 ## Dev-Team
 |Collabulator|Role|
 |---|---|
-|[thesharkguy](https://github.com/SharkZubat)|dev, code, lvls, testing and bugfixes|
+|[thesharkguy](https://github.com/SharkZubat)|dev, code, lvls, music, testing and bugfixes|
+|virtualinsane_|music|
 
-not there yet...
+###### there is 2 left!
