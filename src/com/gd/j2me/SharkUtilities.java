@@ -1,6 +1,10 @@
 package com.gd.j2me;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
+
+import com.sun.midp.io.j2me.storage.File;
 
 public class SharkUtilities {
 
@@ -10,30 +14,52 @@ public class SharkUtilities {
 		private float y = 0;
 		private float width = 0;
 		private float height = 0;
+		private double anchorx = 0;
+		private double anchory = 0;
 		
-		private Hitbox(float f, float g, float h, float i) {
+		private Hitbox(float f, float g, float h, float i, double d, double e) {
 			// TODO Auto-generated constructor stub
 			this.x = f;
 	        this.y = g;
 	        this.width = h;
 	        this.height = i;
+	        this.anchorx = d;
+	        this.anchory = e;
 		}
 
 		public static boolean isTouching(Hitbox hitbox1, Hitbox hitbox2) {
+			hitbox1 = Hitbox.rect(hitbox1.getX() - (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() - (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() - (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() - (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			
 			// TODO Auto-generated method stub
-			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1)
-					&& (hitbox2.getX() + hitbox2.getWidth() > hitbox1.getX()-1)
-					&& (hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1)
-					&& (hitbox2.getY() + hitbox2.getHeight() > hitbox1.getY()-1)) {
+			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1+ (hitbox1.getWidth() * (float) hitbox1.getAnchorX()))
+					&& (hitbox2.getX() + hitbox2.getWidth() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()) > hitbox1.getX()-1)
+					&& (hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1+ (hitbox1.getHeight() * (float) hitbox1.getAnchorY()))
+					&& (hitbox2.getY() + hitbox2.getHeight() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()) > hitbox1.getY()-1)) {
+				return true;
+				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
+			}
+			return false;
+		}
+		
+		public static boolean isTouchingPY(Hitbox hitbox1, Hitbox hitbox2) {
+			hitbox1 = Hitbox.rect(hitbox1.getX() - (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() - (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			
+			// TODO Auto-generated method stub
+			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1+ (hitbox1.getWidth() * (float) hitbox1.getAnchorX()))
+					&& (hitbox2.getX() + hitbox2.getWidth() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()) > hitbox1.getX()-1)
+					&& (hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1+ (hitbox1.getHeight() * (float) hitbox1.getAnchorY()))
+					&& (hitbox2.getY() + hitbox2.getHeight() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()) > hitbox1.getY()-1)) {
 				return true;
 				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
 			}
 			return false;
 		}
 
-		public static Hitbox rect(float f, float g, float h, float i) {
+		public static Hitbox rect(float f, float g, float h, float i, double d, double e) {
 			// TODO Auto-generated method stub
-			return new Hitbox(f, g, h, i);
+			return new Hitbox(f, g, h, i, d, e);
 		}
 		
 		public float getX() {
@@ -56,9 +82,41 @@ public class SharkUtilities {
 			// TODO Auto-generated method stub
 			return height;
 		}
+		
+		public double getAnchorX() {
+			return anchorx;
+		}
+		
+		public double getAnchorY() {
+			return anchory;
+		}
+		
+		public static boolean isTouchingH(Hitbox hitbox1, Hitbox hitbox2) {
+			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			// TODO Auto-generated method stub
+			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1+ (hitbox1.getWidth() * (float) hitbox1.getAnchorX()))
+					&& (hitbox2.getX() + hitbox2.getWidth() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()) > hitbox1.getX()-1)) {
+				return true;
+				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1);
+			}
+			return false;
+			//return "shit";
+		}
 
+		public static boolean isTouchingV(Hitbox hitbox1, Hitbox hitbox2) {
+			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			// TODO Auto-generated method stub
+			if 		 ((hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1+ (hitbox1.getHeight() * (float) hitbox1.getAnchorY()))
+					&& (hitbox2.getY() + hitbox2.getHeight() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()) > hitbox1.getY()-1)) {
+				return true;
+				//return hitbox2.getY() + ", " + (hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
+			}
+			return false;
+			//return hitbox2.getY() + ", " + (hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
+		}
 	}
-
 	//public static Hitbox[] Hitbox;
 
 	public static void drawHitbox(float i, float j, float k, float l, Graphics g,
@@ -91,8 +149,8 @@ public class SharkUtilities {
 		// TODO Auto-generated method stub
 		g.setColor(m);
 		
-		float i = hitbox.getX();
-		float j = hitbox.getY();
+		float i = (float) (hitbox.getX()+(hitbox.getWidth() * hitbox.getAnchorX()));
+		float j = (float) (hitbox.getY()+(hitbox.getHeight() * hitbox.getAnchorY()));
 		float k = hitbox.getWidth();
 		float l = hitbox.getHeight();
 		
@@ -105,5 +163,115 @@ public class SharkUtilities {
 			}
 		}
 		
+	}
+
+	public static void drawImageWithAnchor(Image image, int i, int j, int k,
+			double d, double e, Graphics g) {
+		// TODO Auto-generated method stub
+		int x = (int) (i+(image.getWidth()*d));
+		int y = (int) (j+(image.getHeight()*e));
+		g.drawImage(image, x, y, k);
+		
+	}
+	
+	public static Image tintImage(Image source, int rgb) {
+        int[] rgbData = new int[source.getWidth() * source.getHeight()];
+
+        source.getRGB(rgbData, 0, source.getWidth(), 0, 0, source.getWidth(), source.getHeight());
+
+        int tintR = (rgb >> 16) & 0xFF;
+        int tintG = (rgb >> 8) & 0xFF;
+        int tintB = rgb & 0xFF;
+
+        for (int i = 0; i < rgbData.length; i++) {
+            int pixel = rgbData[i];
+
+            int alpha = (pixel >> 24) & 0xFF;
+            int origR = (pixel >> 16) & 0xFF;
+            int origG = (pixel >> 8) & 0xFF;
+            int origB = pixel & 0xFF;
+
+            int newR = (origR * tintR) / 255;
+            int newG = (origG * tintG) / 255;
+            int newB = (origB * tintB) / 255;
+
+            rgbData[i] = (alpha << 24) | (newR << 16) | (newG << 8) | newB;
+        }
+        return Image.createRGBImage(rgbData, source.getWidth(), source.getHeight(), true);
+	}
+	
+	private static Image transformImage(Image image, int type) {
+		Image transformedImage = Image.createImage(image.getWidth(), image.getHeight());
+		Graphics g = transformedImage.getGraphics();
+		
+		g.drawRegion(image, 0, 0, image.getWidth(), image.getHeight(), type, 0, 0, Graphics.TOP | Graphics.LEFT);
+		
+		return transformedImage;
+	}
+
+	public static Image flipImage(Image image, int type) {
+		// TODO Auto-generated method stub
+		int[] imageData = new int[image.getWidth() * image.getHeight()];
+		image.getRGB(imageData, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+		
+		int[] transformedImageData = new int[image.getWidth() * image.getHeight()];
+		
+		switch (type) {
+			case (0):{
+				for (int y = 0; y < image.getHeight(); y++) {
+				    for (int x = 0; x < image.getWidth(); x++) {
+				        int originalIndex = y * image.getWidth() + x;
+				        int flippedIndex = y * image.getWidth() + (image.getWidth() - 1 - x);
+				        transformedImageData[flippedIndex] = imageData[originalIndex];
+				    }
+				}
+
+			}
+			case (1):{
+				for (int y = 0; y < image.getHeight(); y++) {
+				    for (int x = 0; x < image.getWidth(); x++) {
+				        int originalIndex = y * image.getWidth() + x;
+				        int flippedIndex = (image.getHeight() - 1 - y) * image.getWidth() + x;
+				        transformedImageData[flippedIndex] = imageData[originalIndex];
+				    }
+				}
+			}
+		}
+		
+		return Image.createRGBImage(transformedImageData, image.getWidth(), image.getHeight(), true);
+	}
+	
+	public static Image flipImageHorizontal(Image image) {
+	    
+	    int[] argbData = new int[image.getWidth() * image.getHeight()];
+	    image.getRGB(argbData, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+	    
+	    int[] flippedData = new int[image.getWidth() * image.getHeight()];
+	    
+	    for (int y = 0; y < image.getHeight(); y++) {
+	        for (int x = 0; x < image.getWidth(); x++) {
+	            flippedData[y * image.getWidth() + (image.getWidth() - 1 - x)] = argbData[y * image.getWidth() + x];
+	        }
+	    }
+	    
+	    Image flippedImage = Image.createRGBImage(flippedData, image.getWidth(), image.getHeight(), true);
+	    return flippedImage;
+	}
+	
+	public static Image flipImageVertical(Image image) {
+	    
+	    int[] argbData = new int[image.getWidth() * image.getHeight()];
+	    image.getRGB(argbData, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+	    
+	    int[] flippedData = new int[image.getWidth() * image.getHeight()];
+	    
+	    for (int y = 0; y < image.getHeight(); y++) {
+	        for (int x = 0; x < image.getWidth(); x++) {
+	            flippedData[y * image.getWidth() + x] = argbData[(image.getHeight() - 1 - y) * image.getWidth() + x];
+	        }
+	    }
+	    
+	    Image flippedImage = Image.createRGBImage(flippedData, image.getWidth(), image.getHeight(), true);
+	    return flippedImage;
 	}
 }

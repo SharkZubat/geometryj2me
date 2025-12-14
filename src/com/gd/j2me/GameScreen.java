@@ -1,12 +1,14 @@
 package com.gd.j2me;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.*;
 import javax.microedition.media.*;
 import javax.microedition.media.control.*;
+import java.util.Random;
 
 import com.gd.j2me.SharkUtilities.Hitbox;
 
@@ -25,9 +27,9 @@ public class GameScreen extends GameCanvas implements Runnable {
     private float progress = 0f;
     private int progressFixed = 0;
     private float progressTest = 0; //for testing only
-    private final float GRAVITY = 1.5f;
+    private final float GRAVITY = 1.11f;
     private final float JUMP_STRENGTH = -11.18f;
-    private final float GROUND_LEVEL = 10;
+    private final float GROUND_LEVEL = 0;
     
     //converted int variables
     private int playerXint = 0;
@@ -46,28 +48,38 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     //music variables
     private Player midiPlayer;
+    private Player sfx;
     private long currentMidiTime;
     
     //game level variables
     private int gameVerID = 1;
     private String levelName = "Level";
-    private int bgColor = 0x287DFF;
-    private int gnColor = 0x287DFF;
-    private List objid;
+    private int bgColor = 0x287dff;
+    private int gnColor = 0x0066ff;
+    private int[] objid = new int[1000];
     private float[] objx = new float[1000];
     private float[] objy = new float[1000];
     private int objlength = 0;
     private Hitbox[] objlengthhitbox = new Hitbox[1000];
-
+    private Image bgimage;
+    private Image gnimage;
+    private Image lineimage;
+    private String music = "/sounds/midi/Jumper.mid";
+    private Image gnshadow;
+    private boolean isPlaying = false;
+    
     //camera variables
     private float cameraX = 0;
-    private float cameraY = -149;
+    private float cameraY = -159;
 	private boolean isGrounded;
 	
 	//player variables
 	private int type = 0;
 	private Image player;
-	private SharkUtilities.Hitbox playerhitbox = SharkUtilities.Hitbox.rect(0f, 0f, 20f, 20f);
+	private SharkUtilities.Hitbox playerhitbox = SharkUtilities.Hitbox.rect(0f, 0f, 20f, 20f, 0.5, 0.5);
+	private SharkUtilities.Hitbox smallphitbox = SharkUtilities.Hitbox.rect(0f, 0f, 5f, 5f, 0, 0);
+	private boolean isTouched;
+	private boolean isDeath;
 	//private SharkUtilities.Hitbox obj = SharkUtilities.Hitbox[5]
     
     public GameScreen(Launcher midlet) {
@@ -80,7 +92,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         isRunning = true;
         
         try {
-	        InputStream is = getClass().getResourceAsStream("/sounds/midi/Jumper.mid");
+	        InputStream is = getClass().getResourceAsStream(music);
 	        midiPlayer = Manager.createPlayer(is, "audio/midi");
 	        midiPlayer.start();
 	        is.close();
@@ -90,6 +102,10 @@ public class GameScreen extends GameCanvas implements Runnable {
         try {
         	pauseBtn = Image.createImage("/img/GJ_pauseBtn_clean_001.png");
         	player = Image.createImage("/img/cube1.png");
+        	bgimage = SharkUtilities.tintImage(Image.createImage("/img/level/game_bg_01_001.png"), bgColor);
+        	gnimage = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquare_01_001.png"), gnColor);
+        	lineimage = SharkUtilities.tintImage(Image.createImage("/img/level/floorLine_01_001.png"), 0xffffff);
+        	gnshadow = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquareShadow_001.png"), 0xffffff);
         } catch (IOException ioex) {System.out.println("error:" + ioex);}
         
         deltaTimeMillis = 0;
@@ -98,6 +114,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
         
+        GameObject.create(1, 330, -10, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
         GameObject.create(1, 350, 30, objid, objx, objy, objlength, objlengthhitbox);
         objlength++;
         GameObject.create(1, 350, 10, objid, objx, objy, objlength, objlengthhitbox);
@@ -107,6 +125,26 @@ public class GameScreen extends GameCanvas implements Runnable {
         GameObject.create(1, 490, 10, objid, objx, objy, objlength, objlengthhitbox);
         objlength++;
         GameObject.create(1, 490, 30, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 570, 10, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 570, 30, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 570, 50, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(1, 630, 10, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(8, 630, 30, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(8, 60, 50, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(8, 80, 50, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(8, 100, 50, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(8, 120, 50, objid, objx, objy, objlength, objlengthhitbox);
+        objlength++;
+        GameObject.create(8, 140, 50, objid, objx, objy, objlength, objlengthhitbox);
         objlength++;
     }
 
@@ -121,11 +159,26 @@ public class GameScreen extends GameCanvas implements Runnable {
 			}
 	    }
     }
+    
+    //public void startgame() {
+    //	if (!isPlaying) {
+    //    	try {
+    //			draw();
+    //		} catch (IOException e2) {
+    //			// TODO Auto-generated catch block
+    //			e2.printStackTrace();
+    //		}
+    //		try { Thread.sleep(1000); } catch (InterruptedException e) {}
+    //		isPlaying = true;
+    //    	update();
+    //   	try { Thread.sleep(1); } catch (InterruptedException e) {}
+    //	}
+    //}
 
     public void run() {
         while (isRunning) {
             update();
-            if (!isPaused) {
+            if (!isPaused && !isDeath) {
             	playerupdate();
             }
             try {
@@ -193,14 +246,122 @@ public class GameScreen extends GameCanvas implements Runnable {
         lastFrameTime = currentFrameTime;
     }
     
-    private void playerupdate() {
+    private void checkjump() {
         int keyStates = getKeyStates();
         if ((keyStates & FIRE_PRESSED) != 0 || (keyStates & UP_PRESSED) != 0 || (isTouchingDown)) {
             if (isGrounded) {
-                velocityY = JUMP_STRENGTH;
+                velocityY = (float) (JUMP_STRENGTH+GRAVITY * deltaTimeSeconds * 50);
+                isGrounded = false;
             }
         }
-        
+    }
+    
+    private void checkjumpaftertouch() {
+        int keyStates = getKeyStates();
+        if ((keyStates & FIRE_PRESSED) != 0 || (keyStates & UP_PRESSED) != 0 || (isTouchingDown)) {
+            if (isGrounded) {
+                velocityY = (float) (JUMP_STRENGTH+GRAVITY * deltaTimeSeconds * 50);
+                isGrounded = false;
+            }
+        }
+    }
+    
+    private void checkothercollis() {
+    	for (int i = 0; i < objlength; i++) {
+        	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
+        		if (GameObject.getHitboxType(objid[i]) == 1) {
+        			System.out.println((float)objlengthhitbox[i].getHeight() + (float)objlengthhitbox[i].getY());
+        			System.out.println((float)objlengthhitbox[i].getHeight());
+        			System.out.println((float)objlengthhitbox[i].getY());
+        			System.out.println((float)playerhitbox.getY());
+        			System.out.println((float)playerhitbox.getHeight());
+            		try {
+            			if (!isDeath) {
+            				death();
+            			}
+    				} catch (IOException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+        		}
+        	}
+    	}
+    }
+    
+    private void checkcollisions() {
+        for (int i = 0; i < objlength; i++) {
+        	smallphitbox = SharkUtilities.Hitbox.rect(playerX+5, playerY+5, 5, 5, 0, 0);
+        	if (SharkUtilities.Hitbox.isTouchingPY(smallphitbox, objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1) {
+        		try {
+        			System.out.println((float)objlengthhitbox[i].getHeight() + (float)objlengthhitbox[i].getY()+ ((float)objlengthhitbox[i].getHeight() * (float)objlengthhitbox[i].getAnchorY()));
+        			System.out.println((float)objlengthhitbox[i].getHeight());
+        			System.out.println((float)objlengthhitbox[i].getY() + ((float)objlengthhitbox[i].getHeight() * (float)objlengthhitbox[i].getAnchorY()));
+        			System.out.println((float)smallphitbox.getY());
+        			System.out.println((float)smallphitbox.getHeight());
+        			if (!isDeath) {
+        				death();
+        			}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	} else {
+        		System.out.println(SharkUtilities.Hitbox.isTouching(smallphitbox, objlengthhitbox[i]));
+        	}
+        	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i]) && velocityY > 0) {
+        		if (!SharkUtilities.Hitbox.isTouchingV(smallphitbox, objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1) {
+	        		velocityY = 0;
+	        		playerY = -((-objy[i]) + playerhitbox.getHeight());
+        		}
+	        	System.out.println(SharkUtilities.Hitbox.isTouchingV(smallphitbox, objlengthhitbox[i]));
+        		//  + (playerhitbox.getHeight() * (float) playerhitbox.getAnchorY())
+	        	if (!((playerY) < GROUND_LEVEL-10)) {
+	        		playerY = (long) (playerY - (playerY - GROUND_LEVEL+10));
+	        		velocityY = 0;
+	        		isGrounded = true;
+	        	}
+         		isTouched = true;
+        		
+        		if (GameObject.getHitboxType(objid[i]) != 1) {
+        			isGrounded = true;
+        			checkjumpaftertouch();
+        		}
+        		
+        		//System.out.println(-((-objy[i]) + playerhitbox.getHeight()));
+        		break;
+        	} else {
+        		isTouched = false;
+        		if (GameObject.getHitboxType(objid[i]) != 1) {
+        			checkjumpaftertouch();
+        		}
+        	}
+        }
+    }
+    
+    private void death() throws IOException {
+    	isDeath = true;
+    	try {
+    		midiPlayer.stop();
+	        InputStream is = getClass().getResourceAsStream("/sounds/midi/explode_11.mid");
+	        sfx = Manager.createPlayer(is, "audio/midi");
+	        sfx.start();
+	        is.close();
+	        is = null;
+	        draw();
+		} catch (MediaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    private void playerupdate() {
+    	//testing only
+    	//Random random = new Random();
+    	
+    	//int randomNumber = random.nextInt(10) -159;
+
+    	//cameraY = randomNumber;
+    	
         progress += 1 * deltaTimeSeconds;
         progressFixed = (int) Math.floor(progress);
         progressTest = deltaTimeMillis;
@@ -209,38 +370,43 @@ public class GameScreen extends GameCanvas implements Runnable {
         } else {
         	
         }
-        playerY += velocityY * deltaTimeSeconds * 40;
-        playerX += 10.41667 * deltaTimeSeconds * 20;
         
+        checkcollisions();
+        
+        playerX += 10.41667 * deltaTimeSeconds * 20;
+        playerY += velocityY * deltaTimeSeconds * 50;
         
         if (playerX > getWidth() * 0.3f) {
         	cameraX = playerX - (getWidth() * 0.3f);
         } else {
         	cameraX = 0;
         }
-        if ((playerY) < GROUND_LEVEL) {
-        	isGrounded = false;
-            if (!(velocityY > (0 - JUMP_STRENGTH))) {
-            	velocityY += GRAVITY * deltaTimeSeconds * 40;
-            } else {
-            	velocityY = 0 - JUMP_STRENGTH;
-            }
-        } else {
-            playerY = (long) (playerY - (playerY - GROUND_LEVEL));
-            velocityY = 0;
-            isGrounded = true;
-        }
         
-        for (int i = 0; i < objlength; i++) {
-        	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
-        		System.out.println(SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i]));
-        	}
+        if (!isTouched) {
+	        if (((playerY) < GROUND_LEVEL-10)) {
+	        	isGrounded = false;
+	            if (!(velocityY < -15)) {
+	            	velocityY += GRAVITY * deltaTimeSeconds * 50;
+	            } else {
+	            	velocityY = -15;
+	            }
+	        } else {
+	            playerY = (long) (playerY - (playerY - GROUND_LEVEL+10));
+	            velocityY = 0;
+	            isGrounded = true;
+	        }
+        }
+
+        if (isTouched) {
+        	checkjumpaftertouch();
         }
         
         playerXint = (int)playerX;
         playerYint = (int)playerY;
         GROUND_LEVELint = (int)GROUND_LEVEL;
-        playerhitbox = SharkUtilities.Hitbox.rect(playerX, playerY, playerhitbox.getWidth(), playerhitbox.getHeight());
+        smallphitbox = SharkUtilities.Hitbox.rect((int)(playerX+17.5), (int)(playerY+17.5), 5, 5, 0, 0);
+        playerhitbox = SharkUtilities.Hitbox.rect(playerX, playerY, playerhitbox.getWidth(), playerhitbox.getHeight(), 0.5, 0.5);
+        checkothercollis();
     }
 
     private void draw() throws IOException {
@@ -249,17 +415,21 @@ public class GameScreen extends GameCanvas implements Runnable {
         g.setColor(bgColor);
         g.fillRect(0, 0, getWidth(), getHeight());
         
+        SharkUtilities.drawImageWithAnchor(bgimage, (int) (-cameraX * 0.1f) + (int) (Math.floor((double) ((cameraX * 0.1f)/400))*400), (int) (-getHeight()+GROUND_LEVEL+60+(int) ((-cameraY - 159) * 0.1f)), 0, 0, 0, g);
+        SharkUtilities.drawImageWithAnchor(bgimage, (int) (-cameraX * 0.1f) + 400 + (int) (Math.floor((double) ((cameraX * 0.1f)/400))*400), (int) (-getHeight()+GROUND_LEVEL+60+(int) ((-cameraY - 159) * 0.1f)), 0, 0, 0, g);
+        
         g.setColor(0xFFFFFF);
         g.drawLine(0, (int) GROUND_LEVELint + 20 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + 20 - (int)cameraY);
-        ///g.drawLine(0, (int) GROUND_LEVELint + 0 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + 0 - (int)cameraY);
-        ///g.drawLine(0, (int) GROUND_LEVELint + -20 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + -20 - (int)cameraY);
-        ///g.drawLine(0, (int) GROUND_LEVELint + -40 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + -40 - (int)cameraY);
+        //g.drawLine(0, (int) GROUND_LEVELint + 0 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + 0 - (int)cameraY);
+        //g.drawLine(0, (int) GROUND_LEVELint + -20 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + -20 - (int)cameraY);
+        //g.drawLine(0, (int) GROUND_LEVELint + -40 - (int)cameraY, getWidth(), (int) GROUND_LEVELint + -40 - (int)cameraY);
         
         g.setColor(0xFFFF00);
-        g.drawImage(player, playerXint - (int)cameraX, playerYint - (int)cameraY, 0);
+        SharkUtilities.drawImageWithAnchor(player, playerXint - (int)cameraX, playerYint - (int)cameraY, 0, 0.5, 0.5, g);
         
-        SharkUtilities.drawHitbox(playerhitbox.getX() - (int)cameraX, playerhitbox.getY() - (int)cameraY, playerhitbox.getWidth(), playerhitbox.getHeight(), g, 0x0000ff, 0);
-        SharkUtilities.drawHitboxWithRect(playerhitbox, g, 0x0000ff, 0);
+        SharkUtilities.drawHitbox(playerhitbox.getX() + (playerhitbox.getWidth() * (float) playerhitbox.getAnchorX()) - (int)cameraX, playerhitbox.getY() + (playerhitbox.getHeight() * (float) playerhitbox.getAnchorY()) - (int)cameraY, playerhitbox.getWidth(), playerhitbox.getHeight(), g, 0x0000ff, 0);
+        SharkUtilities.drawHitbox(smallphitbox.getX() + (smallphitbox.getWidth() * (float) smallphitbox.getAnchorX()) - (int)cameraX, smallphitbox.getY() + (smallphitbox.getHeight() * (float) smallphitbox.getAnchorY()) - (int)cameraY, smallphitbox.getWidth(), smallphitbox.getHeight(), g, 0xff0000, 0);
+        //SharkUtilities.drawHitboxWithRect(playerhitbox, g, 0x0000ff, 0);
         
         //
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
@@ -267,9 +437,22 @@ public class GameScreen extends GameCanvas implements Runnable {
         
         for (int i = 0; i < objlength; i++) {
         	if (objx[i]-cameraX<getWidth()+20&&objx[i]-cameraX>-20)
-        	GameObject.render(1, objx[i]-cameraX, objy[i]-cameraY, g);
-        	SharkUtilities.drawHitboxWithRect(objlengthhitbox[i], g, 0x0000ff, 0);
+        	GameObject.render(objid[i], objx[i]-cameraX, objy[i]-cameraY, 0.5, 0.5, g);
+        	if (GameObject.getHitboxType(objid[i]) == 1) {
+        		SharkUtilities.drawHitboxWithRect(Hitbox.rect(objlengthhitbox[i].getX()-cameraX, objlengthhitbox[i].getY()-cameraY, objlengthhitbox[i].getWidth(), objlengthhitbox[i].getHeight(), objlengthhitbox[i].getAnchorX(), objlengthhitbox[i].getAnchorY()), g, 0xff0000, 0);
+        	} else {
+        		SharkUtilities.drawHitboxWithRect(Hitbox.rect(objlengthhitbox[i].getX()-cameraX, objlengthhitbox[i].getY()-cameraY, objlengthhitbox[i].getWidth(), objlengthhitbox[i].getHeight(), objlengthhitbox[i].getAnchorX(), objlengthhitbox[i].getAnchorY()), g, 0x0000ff, 0);
+        	}
         }
+        
+        for (int i = 0; i-75 < 320; i += 75) {
+        	SharkUtilities.drawImageWithAnchor(gnimage, (int) -cameraX+i+(int) (Math.floor((double) (cameraX/75))*75), (int) -cameraY+20, 0, 0.0, 0.0, g);
+        }
+        
+        SharkUtilities.drawImageWithAnchor(gnshadow, 0, (int) -cameraY+20, 0, 0, 0, g);
+        SharkUtilities.drawImageWithAnchor(SharkUtilities.flipImageHorizontal(gnshadow), getWidth(), (int) -cameraY+20, 0, -1, 0, g);
+        
+        SharkUtilities.drawImageWithAnchor(lineimage, getWidth() / 2, (int) -cameraY+20, 0, -0.5, 0, g);
         //
         
         g.drawImage(pauseBtn, getWidth() - 24, 4, 0);

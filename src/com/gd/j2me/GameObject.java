@@ -10,43 +10,85 @@ import java.util.*;
 
 public class GameObject {
 	
-	private static Image obj001;
+	private static Image[] objimage = new Image[100];
+	private static int[] hitboxids = new int[100];
 	
-	public static void create(int i, float f, float g) {
-		// TODO Auto-generated method stub
+	private static void setupimgs() throws IOException {
+		objimage[1] = Image.createImage("/img/obj/square_01_001.png");
+		objimage[8] = Image.createImage("/img/obj/spike_01_001.png");
+	}
+	
+	private static void setuphtypes() {
+		hitboxids[1] = 0;
+		hitboxids[2] = 0;
+		hitboxids[3] = 0;
+		hitboxids[4] = 0;
+		hitboxids[5] = 0;
+		hitboxids[6] = 0;
+		hitboxids[7] = 0;
+		hitboxids[8] = 1;
+		hitboxids[9] = 1;
+	}
+	
+	public static int getHitboxType(int i) {
+		//some values will return:
+		//0 - solid
+		//1 - hazard
+		//2 - portal/pad
+		//3 - orb/ring
+		//4 - untouched
 		
+		setuphtypes();
+		
+		return hitboxids[i];
 	}
 
-	public static void render(int i, float f, float g, Graphics g2) throws IOException {
+	public static void render(int i, float f, float g, double h, double i2, Graphics g2) throws IOException {
 		// TODO Auto-generated method stub
-		obj001 = Image.createImage("/img/obj/square_01_001.png");
+		setupimgs();
+		Image image = objimage[i];
 		
 		try {
-			g2.drawImage(obj001, (int) f, (int) g, 0);
+			SharkUtilities.drawImageWithAnchor(image, (int) f, (int) g, 0, h, i2, g2);
 		} catch (Exception e) {
 			
 		}
 		
-		//g2.setColor(0xffffff);
+		//g2.setColor(0x80ffffff);
 		//g2.drawRect((int) f, (int) g, 20, 20);
 	}
+	
+	private static void setuphitboxes(int i, int objlength, float[] objx, float[] objy, Hitbox[] objlengthhitbox) {
+		switch (i) {
+			case (8): {
+				objlengthhitbox[objlength] = Hitbox.rect(objx[objlength]+16, objy[objlength]+12, 4, 8, 0.5, 0.5);
+				break;
+			}
+			default: {
+				objlengthhitbox[objlength] = Hitbox.rect(objx[objlength], objy[objlength], 20, 20, 0.5, 0.5);
+				break;
+			}
+		}
+	}
 
-	public static void create(int i, float f, float g, List objid,
+	public static void create(int i, int f, int g, int[] objid,
 			float[] objx, float[] objy, int objlength, Hitbox[] objlengthhitbox) {
 		// TODO Auto-generated method stub
 		int objlenght = objlength;
         
 		try {
 			objx[objlenght] = f;
-			objy[objlenght] = -g+20;
+			objy[objlenght] = -g;
+			objid[objlength] = i;
 			
-			objlengthhitbox[objlength] = Hitbox.rect(objx[objlength], objy[objlength], 20, 20);
+			setuphitboxes(i, objlength, objx, objy, objlengthhitbox);
 		} catch (Exception e) {
 			objlenght = 0;
 			objx[objlenght] = f;
-			objy[objlenght] = -g+20;
-
-			objlengthhitbox[objlength] = Hitbox.rect(objx[objlength], objy[objlength], 20, 20);
+			objy[objlenght] = -g;
+			objid[objlength] = i;
+			
+			setuphitboxes(i, objlength, objx, objy, objlengthhitbox);
 		}
 	}
 	
