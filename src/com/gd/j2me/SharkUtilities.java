@@ -28,29 +28,14 @@ public class SharkUtilities {
 		}
 
 		public static boolean isTouching(Hitbox hitbox1, Hitbox hitbox2) {
-			hitbox1 = Hitbox.rect(hitbox1.getX() - (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() - (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
-			hitbox2 = Hitbox.rect(hitbox2.getX() - (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() - (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
 			
 			// TODO Auto-generated method stub
-			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1+ (hitbox1.getWidth() * (float) hitbox1.getAnchorX()))
-					&& (hitbox2.getX() + hitbox2.getWidth() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()) > hitbox1.getX()-1)
-					&& (hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1+ (hitbox1.getHeight() * (float) hitbox1.getAnchorY()))
-					&& (hitbox2.getY() + hitbox2.getHeight() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()) > hitbox1.getY()-1)) {
-				return true;
-				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
-			}
-			return false;
-		}
-		
-		public static boolean isTouchingPY(Hitbox hitbox1, Hitbox hitbox2) {
-			hitbox1 = Hitbox.rect(hitbox1.getX() - (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
-			hitbox2 = Hitbox.rect(hitbox2.getX() - (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
-			
-			// TODO Auto-generated method stub
-			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1+ (hitbox1.getWidth() * (float) hitbox1.getAnchorX()))
-					&& (hitbox2.getX() + hitbox2.getWidth() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()) > hitbox1.getX()-1)
-					&& (hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1+ (hitbox1.getHeight() * (float) hitbox1.getAnchorY()))
-					&& (hitbox2.getY() + hitbox2.getHeight() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()) > hitbox1.getY()-1)) {
+			if ((((hitbox1.getX()+hitbox1.getWidth())+1)>hitbox2.getX())
+					&& (((hitbox2.getX()+hitbox2.getWidth())+1)>hitbox1.getX())
+					&& (((hitbox2.getY()+hitbox2.getHeight())+1)>hitbox1.getY())
+					&& (((hitbox1.getY()+hitbox1.getHeight())+1)>hitbox2.getY())) {
 				return true;
 				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
 			}
@@ -95,8 +80,20 @@ public class SharkUtilities {
 			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
 			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
 			// TODO Auto-generated method stub
-			if 		 ((hitbox2.getX() < hitbox1.getX() + hitbox1.getWidth()+1+ (hitbox1.getWidth() * (float) hitbox1.getAnchorX()))
-					&& (hitbox2.getX() + hitbox2.getWidth() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()) > hitbox1.getX()-1)) {
+			if ((((hitbox2.getY()+hitbox2.getHeight())+1)>hitbox1.getY())
+				&& (((hitbox1.getY()+hitbox1.getHeight())+1)>hitbox2.getY())) {
+				return true;
+				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1);
+			}
+			return false;
+			//return "shit";
+		}
+		
+		public static boolean isTouchingD(Hitbox hitbox1, Hitbox hitbox2) {
+			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			// TODO Auto-generated method stub
+			if ((((hitbox1.getY()+hitbox1.getHeight())+1)>hitbox2.getY())) {
 				return true;
 				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1);
 			}
@@ -108,8 +105,8 @@ public class SharkUtilities {
 			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
 			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
 			// TODO Auto-generated method stub
-			if 		 ((hitbox2.getY() < hitbox1.getY() + hitbox1.getHeight()+1+ (hitbox1.getHeight() * (float) hitbox1.getAnchorY()))
-					&& (hitbox2.getY() + hitbox2.getHeight() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()) > hitbox1.getY()-1)) {
+			if ((((hitbox1.getX()+hitbox1.getWidth())+1)>hitbox2.getX())
+					&& (((hitbox2.getX()+hitbox2.getWidth())+1)>hitbox1.getX())) {
 				return true;
 				//return hitbox2.getY() + ", " + (hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
 			}
@@ -274,4 +271,97 @@ public class SharkUtilities {
 	    Image flippedImage = Image.createRGBImage(flippedData, image.getWidth(), image.getHeight(), true);
 	    return flippedImage;
 	}
+	
+	// Source - https://stackoverflow.com/a
+	// Posted by mr_lou
+	// Retrieved 2025-12-14, License - CC BY-SA 3.0
+
+	public static Image scale(Image original, int newWidth, int newHeight) {
+
+	 int[] rawInput = new int[original.getHeight() * original.getWidth()];
+	 original.getRGB(rawInput, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
+
+	 int[] rawOutput = new int[newWidth * newHeight];
+
+	 // YD compensates for the x loop by subtracting the width back out
+	 int YD = (original.getHeight() / newHeight) * original.getWidth() - original.getWidth();
+	 int YR = original.getHeight() % newHeight;
+	 int XD = original.getWidth() / newWidth;
+	 int XR = original.getWidth() % newWidth;
+	 int outOffset = 0;
+	 int inOffset = 0;
+
+	 for (int y = newHeight, YE = 0; y > 0; y--) {
+		   for (int x = newWidth, XE = 0; x > 0; x--) {
+			     rawOutput[outOffset++] = rawInput[inOffset];
+			     inOffset += XD;
+			     XE += XR;
+			     if (XE >= newWidth) {
+				       XE -= newWidth;
+				       inOffset++;
+			     }
+		   }
+		   inOffset += YD;
+		   YE += YR;
+		   if (YE >= newHeight) {
+		     YE -= newHeight;
+		     inOffset += original.getWidth();
+		   }
+		 }
+		 rawInput = null;
+		 return Image.createRGBImage(rawOutput, newWidth, newHeight, true);
+	}
+	
+    public static float lerp(float start, float end, float amount) {
+        return start + (end - start) * amount;
+    }
+    
+    public static Image rotateImage(Image image, float angle) {
+        int[] srcData = new int[image.getWidth() * image.getHeight()];
+        image.getRGB(srcData, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+        
+        double radians = Math.toRadians(angle);
+        float sin = (float) Math.sin(radians);
+        float cos = (float) Math.cos(radians);
+
+        int newWidth = (int) Math.floor(Math.abs(image.getWidth() * cos) + Math.abs(image.getHeight() * sin));
+        int newHeight = (int) Math.floor(Math.abs(image.getHeight() * cos) + Math.abs(image.getWidth() * sin));
+
+        int[] dstData = new int[newWidth * newHeight];
+
+        for (int y = 0; y < newHeight; y++) {
+            for (int x = 0; x < newWidth; x++) {
+                int srcX = (int) ((x - newWidth / 2) * cos - (y - newHeight / 2) * sin + image.getWidth() / 2);
+                int srcY = (int) ((x - newWidth / 2) * sin + (y - newHeight / 2) * cos + image.getHeight() / 2);
+                
+                if (srcX >= 0 && srcX < image.getWidth() && srcY >= 0 && srcY < image.getHeight()) {
+                    dstData[x + y * newWidth] = srcData[srcX + srcY * image.getWidth()];
+                } else {
+                    dstData[x + y * newWidth] = 0x00000000;
+                }
+            }
+        }
+
+        return Image.createRGBImage(dstData, newWidth, newHeight, true);
+    }
+    
+    public static float rotateImageToReturnWidth(Image image, float angle) {
+        double radians = Math.toRadians(angle);
+        float sin = (float) Math.sin(radians);
+        float cos = (float) Math.cos(radians);
+
+        int newWidth = (int) Math.floor(Math.abs(image.getWidth() * cos) + Math.abs(image.getHeight() * sin));
+
+        return newWidth;
+    }
+    
+    public static float rotateImageToReturnHeight(Image image, float angle) {
+        double radians = Math.toRadians(angle);
+        float sin = (float) Math.sin(radians);
+        float cos = (float) Math.cos(radians);
+        
+        int newHeight = (int) Math.floor(Math.abs(image.getHeight() * cos) + Math.abs(image.getWidth() * sin));
+
+        return newHeight;
+    }
 }

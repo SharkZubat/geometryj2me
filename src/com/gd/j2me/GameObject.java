@@ -42,11 +42,16 @@ public class GameObject {
 		
 		return hitboxids[i];
 	}
-
-	public static void render(int i, float f, float g, double h, double i2, Graphics g2) throws IOException {
-		// TODO Auto-generated method stub
+	
+	public static Image getImage(int i) throws IOException {
 		setupimgs();
-		Image image = objimage[i];
+		
+		return objimage[i];
+	}
+
+	public static void render(int i, float f, float g, double h, double i2, Image image2, Graphics g2) throws IOException {
+		// TODO Auto-generated method stub
+		Image image = image2;
 		
 		try {
 			SharkUtilities.drawImageWithAnchor(image, (int) f, (int) g, 0, h, i2, g2);
