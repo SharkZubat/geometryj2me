@@ -100,6 +100,18 @@ public class SharkUtilities {
 			return false;
 			//return "shit";
 		}
+		
+		public static boolean isTouchingU(Hitbox hitbox1, Hitbox hitbox2) {
+			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
+			hitbox2 = Hitbox.rect(hitbox2.getX() + (hitbox2.getWidth() * (float) hitbox2.getAnchorX()), hitbox2.getY() + (hitbox2.getHeight() * (float) hitbox2.getAnchorY()), hitbox2.getWidth(), hitbox2.getHeight(), hitbox2.getAnchorX(), hitbox2.getAnchorY());
+			// TODO Auto-generated method stub
+			if ((((hitbox2.getY()+hitbox2.getHeight())+1)>hitbox1.getY())) {
+				return true;
+				//return hitbox2.getX() + ", " + (hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() <= hitbox1.getX() + hitbox1.getWidth()+1) + ", " + (hitbox2.getX() + hitbox2.getWidth() >= hitbox1.getX()-1);
+			}
+			return false;
+			//return "shit";
+		}
 
 		public static boolean isTouchingV(Hitbox hitbox1, Hitbox hitbox2) {
 			hitbox1 = Hitbox.rect(hitbox1.getX() + (hitbox1.getWidth() * (float) hitbox1.getAnchorX()), hitbox1.getY() + (hitbox1.getHeight() * (float) hitbox1.getAnchorY()), hitbox1.getWidth(), hitbox1.getHeight(), hitbox1.getAnchorX(), hitbox1.getAnchorY());
@@ -163,6 +175,15 @@ public class SharkUtilities {
 	}
 
 	public static void drawImageWithAnchor(Image image, int i, int j, int k,
+			double d, double e, Graphics g) {
+		// TODO Auto-generated method stub
+		int x = (int) (i+(image.getWidth()*d));
+		int y = (int) (j-(image.getHeight()*e)+(40*e));
+		g.drawImage(image, x, y, k);
+		
+	}
+	
+	public static void drawImageWithAnchorOld(Image image, int i, int j, int k,
 			double d, double e, Graphics g) {
 		// TODO Auto-generated method stub
 		int x = (int) (i+(image.getWidth()*d));
@@ -363,5 +384,84 @@ public class SharkUtilities {
         int newHeight = (int) Math.floor(Math.abs(image.getHeight() * cos) + Math.abs(image.getWidth() * sin));
 
         return newHeight;
+    }
+    
+    public static void fillRectWithTransp(int x, int y, int width, int height, int color, Graphics g) {
+        try {
+            int[] rawData = new int[width * height];
+            
+            int targetColor = color; 
+
+            for (int i = 0; i < rawData.length; i++) {
+                rawData[i] = targetColor;;
+            }
+
+            g.drawImage(Image.createRGBImage(rawData, width, height, true), x, y, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static Image splitImg(Image image, int x1, int y1, int width, int height) {
+    	int[] rgbData = new int[image.getWidth() * image.getHeight()];
+    	image.getRGB(rgbData, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+    	
+    	int[] subRgbData = new int[width * height];
+    	
+    	for (int y = 0; y < height; y++) {
+    	    for (int x = 0; x < width; x++) {
+    	        int sourceIndex = (y1 + y) * image.getWidth() + (x1 + x);
+    	        int subIndex = y * width + x;
+    	        subRgbData[subIndex] = rgbData[sourceIndex];
+    	    }
+    	}
+    	
+    	
+    	return Image.createRGBImage(subRgbData, width, height, true);
+    }
+    
+    public static double atan(double x) {
+        if (Double.isNaN(x)) return Double.NaN;
+        if (x == Double.POSITIVE_INFINITY) return Math.PI / 2;
+        if (x == Double.NEGATIVE_INFINITY) return -Math.PI / 2;
+        
+        boolean flip = false;
+        if (Math.abs(x) > 1) {
+            x = 1 / x;
+            flip = true;
+        }
+
+        double result = 0;
+        double term = x;
+        double sign = 1.0;
+        int iterations = 100; 
+
+        for (int i = 0; i < iterations; i++) {
+            result += sign * term / (2 * i + 1);
+            term *= x * x;
+            sign *= -1;
+        }
+
+        if (flip) {
+            return (x > 0 ? Math.PI / 2 : -Math.PI / 2) - result;
+        }
+
+        return result;
+    }
+    
+    public static double atan2(double y, double x) {
+        if (x > 0) {
+            return atan(y / x);
+        } else if (x < 0 && y >= 0) {
+            return atan(y / x) + Math.PI;
+        } else if (x < 0 && y < 0) {
+            return atan(y / x) - Math.PI;
+        } else if (x == 0 && y > 0) {
+            return Math.PI / 2;
+        } else if (x == 0 && y < 0) {
+            return -Math.PI / 2;
+        } else {
+            return 0.0; 
+        }
     }
 }

@@ -1,7 +1,8 @@
 package com.gd.j2me;
 
+import java.io.IOException;
+
 import javax.microedition.midlet.MIDlet;
-import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.*;
 
 public class Launcher extends MIDlet {
@@ -38,7 +39,12 @@ public class Launcher extends MIDlet {
     public GameScreen getGameScreen() {
     	mainMenu = null;
     	gameScreen = new GameScreen(this);
-    	gameScreen.start();
+    	try {
+			gameScreen.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return gameScreen;
     }
 }
