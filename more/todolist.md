@@ -1,0 +1,14 @@
+# todo:
+- bg, ground, player to main menu
+- main levels menu
+- garage menu
+- save data system
+- sfxs midis
+- end wall
+- level complete, practice complete end screen
+- pause menu improvements
+- practice mode
+- level progress system (normal + practice)
+- make physics accurate
+- death animation (maybe)
+- more objects
