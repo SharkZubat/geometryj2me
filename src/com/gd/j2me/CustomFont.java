@@ -29,7 +29,7 @@ public class CustomFont {
 				tempImage = SharkUtilities.splitImg(image, 0, 0, 10, 10);
 			}
 			Image tempImage2 = SharkUtilities.scale(tempImage, (int)(tempImage.getWidth() * scale), (int)(tempImage.getHeight() * scale));
-			System.out.println(tempImage.getWidth() * scale);
+			//System.out.println(tempImage.getWidth() * scale);
 			//Graphics g2 = splitImage.getGraphics();
 			//g2.drawRegion(image, (image.getWidth() / target.length())*getChar(target.charAt(i)), 0, image.getWidth() / target.length(), image.getHeight(), Sprite.TRANS_NONE, 0, 0, Graphics.TOP | Graphics.LEFT);
 			g.drawImage(tempImage2, (int) (x + ((widthSpace * i))), y, 0);

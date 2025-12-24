@@ -125,6 +125,29 @@ public class SharkUtilities {
 			return false;
 			//return hitbox2.getY() + ", " + (hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() <= hitbox1.getY() + hitbox1.getHeight()+1) + ", " + (hitbox2.getY() + hitbox2.getHeight() >= hitbox1.getY()-1);
 		}
+
+		public Hitbox expand(float i, float j, float k, float l, double d, double e) {
+			// TODO Auto-generated method stub
+			return new Hitbox(x+i, y+i, width+k, height+l, anchorx+d, anchory+e);
+		}
+	}
+	public static class HitboxPoly {
+		private float x = 0;
+		private float y = 0;
+		private float lt = 0;
+		private float lb = 0;
+		private float rt = 0;
+		private float rb = 0;
+		
+		private HitboxPoly(float f, float g, float h, float i, float j, float k) {
+			// TODO Auto-generated constructor stub
+			this.x = f;
+	        this.y = g;
+	        this.lt = h;
+	        this.lb = i;
+	        this.rt = j;
+	        this.rb = k;
+		}
 	}
 	//public static Hitbox[] Hitbox;
 
@@ -258,6 +281,7 @@ public class SharkUtilities {
 		
 		return Image.createRGBImage(transformedImageData, image.getWidth(), image.getHeight(), true);
 	}
+	
 	
 	public static Image flipImageHorizontal(Image image) {
 	    

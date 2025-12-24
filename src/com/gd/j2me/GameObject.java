@@ -29,6 +29,7 @@ public class GameObject {
 		objimage[11] = Image.createImage("/img/obj/portal_02_001.png");
 		objimage[12] = Image.createImage("/img/obj/portal_03_001.png");
 		objimage[13] = Image.createImage("/img/obj/portal_04_001.png");
+		objimage[14] = Image.createImage("/img/obj/square_05_001.png");
 	}
 	
 	private static void setuphtypes() {
@@ -45,6 +46,7 @@ public class GameObject {
 		hitboxids[11] = 2;
 		hitboxids[12] = 2;
 		hitboxids[13] = 2;
+		hitboxids[14] = 4;
 	}
 	
 	public static int getHitboxType(int i) {
@@ -53,7 +55,7 @@ public class GameObject {
 		//1 - hazard
 		//2 - portal/pad
 		//3 - orb/ring
-		//4 - untouched
+		//4 - untouched/decoration
 		
 		setuphtypes();
 		
@@ -66,29 +68,38 @@ public class GameObject {
 		return objimage[i];
 	}
 
-	public static void render(int i, float f, float g, double h, double i2, Image image2, Graphics g2) throws IOException {
+	public static void render(int i, float f, float g, double h, double i2, Image[] image2, Graphics g2) throws IOException {
 		// TODO Auto-generated method stub
-		Image image = image2;
+		Image[] image = image2;
 		
 		switch (i) {
 			case 10: {
-				SharkUtilities.drawImageWithAnchor(image, (int) f+10, (int) g, 0, h, i2, g2);
+				if (i == 10)
+				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
 			}
 			case 11: {
-				SharkUtilities.drawImageWithAnchor(image, (int) f+10, (int) g, 0, h, i2, g2);
+				if (i == 11)
+				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
 			}
 			case 12: {
-				SharkUtilities.drawImageWithAnchor(image, (int) f+10, (int) g, 0, h, i2, g2);
+				if (i == 12)
+				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
 			}
 			case 13: {
-				SharkUtilities.drawImageWithAnchor(image, (int) f+10, (int) g, 0, h, i2, g2);
+				if (i == 13)
+				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
+			}
+			case 14: {
+				if (i == 14)
+				SharkUtilities.drawImageWithAnchor(image[i], (int) f, (int) g, 0, h, i2, g2);
 			}
 			default: {
 				if (i != 10 &&
 						i != 11 &&
 						i != 12 &&
-						i != 13)
-				SharkUtilities.drawImageWithAnchor(image, (int) f, (int) g, 0, h, i2, g2);
+						i != 13 &&
+						i != 14)
+				SharkUtilities.drawImageWithAnchor(image[i], (int) f, (int) g, 0, h, i2, g2);
 			}
 		}
 		
