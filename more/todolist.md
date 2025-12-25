@@ -1,16 +1,16 @@
 # todo:
-- bg, ground, player to main menu
-- main levels menu
-- garage menu
-- save data system
-- sfxs midis
-- end wall
-- level complete, practice complete end screen
-- pause menu improvements
-- practice mode
-- level progress system (normal + practice)
-- make physics accurate
-- death animation (maybe)
-- more objects
 - level loader [(a level file for e.g.)](https://github.com/SharkZubat/geometryj2me/blob/main/res/lvls/1.gjl)
+- make physics accurate
 - object rotation, triggers, pulsing, more
+- more objects
+- main levels menu
+- sfxs midis
+- bg, ground, player to main menu
+- save data system
+- pause menu improvements
+- garage menu
+- end wall
+- end screen
+- level progress system (normal + practice)
+- death animation (maybe)
+- practice mode
