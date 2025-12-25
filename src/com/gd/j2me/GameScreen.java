@@ -105,7 +105,9 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private static int[] objlengthimage = new int[100];
 	private int color1 = 0x40ff00;
 	private int color2 = 0x00ffff;
+	private Image bgimage2;
 	//private SharkUtilities.Hitbox obj = SharkUtilities.Hitbox[5]
+	private Image gnimage2;
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -124,8 +126,10 @@ public class GameScreen extends GameCanvas implements Runnable {
         	ship = SharkUtilities.tintImage(Image.createImage("/img/icons/ship_01_001.png"), color1);
         	player_glow = Image.createImage("/img/icons/player_01_glow_001.png");
         	pausemenubg = SharkUtilities.scale(Image.createImage("/img/128black.png"), getWidth(), getHeight());
-        	bgimage = SharkUtilities.tintImage(Image.createImage("/img/level/game_bg_01_001.png"), bgColor);
-        	gnimage = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquare_01_001.png"), gnColor);
+        	bgimage2 = Image.createImage("/img/level/game_bg_01_001.png");
+        	gnimage2 = Image.createImage("/img/level/groundSquare_01_001.png");
+        	bgimage = SharkUtilities.tintImage(bgimage2, bgColor);
+        	gnimage = SharkUtilities.tintImage(gnimage2, gnColor);
         	lineimage = SharkUtilities.tintImage(Image.createImage("/img/level/floorLine_01_001.png"), 0xffffff);
         	gnshadow = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquareShadow_001.png"), 0xffffff);
         	bigFont = Image.createImage("/img/fonts/bigFont.png");
@@ -284,6 +288,7 @@ public class GameScreen extends GameCanvas implements Runnable {
        // makenewobj(10, 1620, 30);
         //makenewobj(10, 1640, 30);
         makenewobj(8, 2880, 10);
+        
         LevelLoader.Load("let's Dih!");
         try {
         	Vector currentobjid = new Vector();
@@ -897,6 +902,9 @@ public class GameScreen extends GameCanvas implements Runnable {
     	//int randomNumber = random.nextInt(10) -159;
 
     	//cameraY = randomNumber;
+    	
+    	bgimage = SharkUtilities.tintImage(bgimage2, bgColor);
+    	gnimage = SharkUtilities.tintImage(gnimage2, gnColor);
     	
     	if (!isDeath) {
     	
