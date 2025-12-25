@@ -483,23 +483,9 @@ public class GameScreen extends GameCanvas implements Runnable {
         lastFrameTime = currentFrameTime;
     }
     
-    private void checkjump() {
-        int keyStates = getKeyStates();
-        if ((keyStates & FIRE_PRESSED) != 0 || (keyStates & UP_PRESSED) != 0 || (isTouchingDown)) {
-            if (isGrounded) {
-            	if (!isFlipped) {
-            		velocityY = (float) (JUMP_STRENGTH+GRAVITY * deltaTimeSeconds * 42);
-            	} else {
-            		velocityY = (float) (-JUMP_STRENGTH-GRAVITY * deltaTimeSeconds * 42);
-            	}
-                isGrounded = false;
-                isTouched = false;
-            }
-        }
-    }
-    
     private void checkjumpaftertouch() {
         int keyStates = getKeyStates();
+        if (!isDeath)
         if (((keyStates & FIRE_PRESSED) != 0 || (keyStates & UP_PRESSED) != 0 || (isTouchingDown)) && !isDeath && !isPaused) {
         	switch (type) {
         		case 0: {
@@ -874,6 +860,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     private void restart() {
 		playerX=0;
 		playerY=-10;
+		velocityY=0;
 		cameraY = -159-((getHeight()-240));
 		attempts++;
 		isFlipped=false;
@@ -1326,7 +1313,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL, g);
         //TextUtilities.drawOutlinedString(debugStr, 0, 0, 0, g, 0xFFFFFF, 0x000000);
         //TextUtilities.drawOutlinedString(debugStr2, 0, 12, 0, g, 0xFFFFFF, 0x000000);
-        TextUtilities.drawOutlinedString("" + playerY, 0, 24, 0, g, 0xFFFFFF, 0x000000);
+        TextUtilities.drawOutlinedString("" + type, 0, 24, 0, g, 0xFFFFFF, 0x000000);
         
         if (isPaused) {
         	//
