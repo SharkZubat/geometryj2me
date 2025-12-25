@@ -877,6 +877,9 @@ public class GameScreen extends GameCanvas implements Runnable {
 		cameraY = -159-((getHeight()-240));
 		attempts++;
 		isFlipped=false;
+		isFlying=false;
+		isGrounded=false;
+		isTouched=false;
 		type=0;
 		progress = 0;
 		currentMidiTime = 0;
