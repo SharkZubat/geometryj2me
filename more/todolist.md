@@ -13,3 +13,4 @@
 - death animation (maybe)
 - more objects
 - level loader [(a level file for e.g.)](https://github.com/SharkZubat/geometryj2me/blob/main/res/lvls/1.gjl)
+- object rotation, triggers, pulsing, more
