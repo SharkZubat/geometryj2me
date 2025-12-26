@@ -92,15 +92,19 @@ public class MainMenu extends GameCanvas implements Runnable {
     	}
     	isTouchingDown = false;
     }
+    
     protected void keyPressed(int keyCode) {
-        int keyStates = getKeyStates();
-        if (((keyStates & FIRE_PRESSED) != 0) && menu == "mainlevels") {
+    }
+    
+    protected void keyReleased(int keyCode) {
+    	int gameAction = getGameAction(keyCode);
+        if (gameAction == FIRE && menu == "mainlevels") {
         	System.out.println("test");
         	this.stop();
         	midlet.switchDisplay(midlet.getGameScreen());
         	selection = null;
         }
-        if (((keyStates & FIRE_PRESSED) != 0)) {
+        if (gameAction == Canvas.FIRE) {
         	menu = "mainlevels";
         	selection = null;
         }

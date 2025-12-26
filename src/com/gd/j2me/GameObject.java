@@ -9,6 +9,23 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameObject {
+	public static class Object {
+	    public int objid;
+	    public float objx;
+	    public float objy;
+	    public boolean isFlippedHor;
+	    public boolean isFlippedVer;
+	    public float rotation;
+	    
+	    public Object(int num1, float num2, float num3, boolean num4, boolean num5, float num6) {
+	    	this.objid = num1;
+	    	this.objx = num2;
+	    	this.objy = num3;
+	    	this.isFlippedHor = num4;
+	    	this.isFlippedVer = num5;
+	    	this.rotation = num6;
+	    }
+	}
 	
 	private static Image[] objimage = new Image[100];
 	private static int[] hitboxids = new int[100];

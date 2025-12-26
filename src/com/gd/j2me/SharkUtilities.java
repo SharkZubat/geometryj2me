@@ -2,9 +2,6 @@ package com.gd.j2me;
 
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.game.Sprite;
-
-import com.sun.midp.io.j2me.storage.File;
 
 public class SharkUtilities {
 

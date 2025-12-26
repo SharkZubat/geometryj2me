@@ -74,6 +74,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     private boolean isLoadingLevel = true;
     private static boolean[] objdataistouching = new boolean[1000];
     private int attempts = 1;
+    private Vector obj = new Vector();
     
     //camera variables
     private float cameraX = 30;
@@ -110,6 +111,8 @@ public class GameScreen extends GameCanvas implements Runnable {
 	//private SharkUtilities.Hitbox obj = SharkUtilities.Hitbox[5]
 	private Image gnimage2;
 	private Image transparentblack;
+	private Image practiceBtn;
+	private Image playBtn;
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -137,6 +140,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         	gnshadow = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquareShadow_001.png"), 0xffffff);
         	bigFont = Image.createImage("/img/fonts/bigFont.png");
         	bigFontbig = Image.createImage("/img/fonts/bigFont-24.png");
+        	practiceBtn = Image.createImage("/img/GJ_practiceBtn_001.png");
+        	playBtn = Image.createImage("/img/GJ_playBtn2_001.png");
         } catch (IOException ioex) {System.out.println("error:" + ioex);}
         
 		try {
@@ -1337,7 +1342,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL, g);
         //TextUtilities.drawOutlinedString(debugStr, 0, 0, 0, g, 0xFFFFFF, 0x000000);
         //TextUtilities.drawOutlinedString(debugStr2, 0, 12, 0, g, 0xFFFFFF, 0x000000);
-        TextUtilities.drawOutlinedString("" + type, 0, 24, 0, g, 0xFFFFFF, 0x000000);
+        TextUtilities.drawOutlinedString("" + playerY, 0, 24, 0, g, 0xFFFFFF, 0x000000);
         
         if (isPaused) {
         	//
@@ -1347,6 +1352,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         	g.drawImage(SharkUtilities.scale(transparentblack, getWidth()-12, getHeight()-12), 6, 6, 0);
         	//TextUtilities.drawOutlinedString(levelName, 0, 0, 0, g, 0xffffff, 0x000000);
         	CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(levelName.length() * 22 * 0.4f), 6, 0.8f, levelName, 22, g);
+        	SharkUtilities.drawImageWithAnchor(playBtn, getWidth()/2, getHeight()/2, 0, -0.5, 0.5, g);
         }
         
         //SharkUtilities.splitImg(player, 0, 0, 10, 5);
