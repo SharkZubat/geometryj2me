@@ -132,6 +132,7 @@ public class SharkUtilities {
 		}
 	}
 	public static class HitboxPoly {
+		// idk how it works now
 		private float x = 0;
 		private float y = 0;
 		private float lt = 0;
@@ -148,6 +149,30 @@ public class SharkUtilities {
 	        this.rt = j;
 	        this.rb = k;
 		}
+	}
+	
+	public static class Clickable {
+		public int x= 0;
+		public int y=0;
+		public int w=0;
+		public int h=0;
+		
+		public Clickable(int x, int y, int w, int h) {
+			// TODO Auto-generated constructor stub
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+		}
+
+		public static boolean isTouching(Clickable clickable, int x, int y) {
+			// TODO Auto-generated method stub
+	    	if ((x >= clickable.x && x <= clickable.x + clickable.w && y >= clickable.y && y <= clickable.y + clickable.h)) {
+	    		return true;
+	    	}
+	    	return false;
+		}
+		
 	}
 	//public static Hitbox[] Hitbox;
 
