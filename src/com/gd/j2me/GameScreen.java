@@ -10,6 +10,7 @@ import javax.microedition.media.*;
 import javax.microedition.media.control.*;
 import java.util.Random;
 
+import com.gd.j2me.SharkUtilities.Clickable;
 import com.gd.j2me.SharkUtilities.Hitbox;
 
 import java.io.InputStream;
@@ -108,6 +109,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private Image bgimage2;
 	//private SharkUtilities.Hitbox obj = SharkUtilities.Hitbox[5]
 	private Image gnimage2;
+	private Image transparentblack;
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -125,7 +127,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         	player_2 = SharkUtilities.tintImage(Image.createImage("/img/icons/player_01_2_001.png"), color2);
         	ship = SharkUtilities.tintImage(Image.createImage("/img/icons/ship_01_001.png"), color1);
         	player_glow = Image.createImage("/img/icons/player_01_glow_001.png");
-        	pausemenubg = SharkUtilities.scale(Image.createImage("/img/128black.png"), getWidth(), getHeight());
+        	transparentblack = Image.createImage("/img/128black.png");
+        	pausemenubg = SharkUtilities.scale(transparentblack, getWidth(), getHeight());
         	bgimage2 = Image.createImage("/img/level/game_bg_01_001.png");
         	gnimage2 = Image.createImage("/img/level/groundSquare_01_001.png");
         	bgimage = SharkUtilities.tintImage(bgimage2, bgColor);
@@ -290,6 +293,43 @@ public class GameScreen extends GameCanvas implements Runnable {
         makenewobj(8, 2880, 10);
         
         LevelLoader.Load("let's Dih!");
+        
+        try {
+        	for (int i = 0; i < 15; i++) {
+        	    objimage[i] = GameObject.getImage(i);
+        	    System.out.println(i);
+        	}
+        } catch (IOException e) {
+        	// TODO Auto-generated catch block
+        	//e.printStackTrace();
+        }
+        
+        gameThread = new Thread(this);
+        gameThread.start();
+        if (!isDone) {
+        	Timer aTimer= new Timer();
+        	TimerTask ttask = new TimerTask() {
+        		public void run() {
+        			if (!isDone && !isPaused && isRunning) {
+	        			try {
+							midiPlayer.start();
+						} catch (MediaException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+        			}
+        			isDone = true;
+        		}
+        	};
+        	isLoadingLevel = false;
+			aTimer.schedule(ttask, 1000);
+        }
+    }
+    
+    private void unusedthings() {
+    	// unused only
+    	
+    	// old image loader
         try {
         	Vector currentobjid = new Vector();
 
@@ -311,26 +351,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         } catch (IOException e) {
         	// TODO Auto-generated catch block
         	e.printStackTrace();
-        }
-        gameThread = new Thread(this);
-        gameThread.start();
-        if (!isDone) {
-        	Timer aTimer= new Timer();
-        	TimerTask ttask = new TimerTask() {
-        		public void run() {
-        			if (!isDone && !isPaused && isRunning) {
-	        			try {
-							midiPlayer.start();
-						} catch (MediaException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-        			}
-        			isDone = true;
-        		}
-        	};
-        	isLoadingLevel = false;
-			aTimer.schedule(ttask, 1000);
         }
     }
 
@@ -463,6 +483,10 @@ public class GameScreen extends GameCanvas implements Runnable {
     protected void pointerReleased(int x, int y) {
     	if ((x >= 296 - (320-getWidth()) && x <= 316 - (320-getWidth()) && y >= 4 && y <= 24) && !isPaused) {
     		System.out.println("pause button pressed");
+    		pause();
+    	}
+    	
+    	if (Clickable.isTouching(new Clickable(0, 0, 20, 20), x, y) && isPaused) {
     		pause();
     	}
     	isTouchingDown = false;
@@ -1318,8 +1342,11 @@ public class GameScreen extends GameCanvas implements Runnable {
         if (isPaused) {
         	//
         	TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
-        	g.drawImage(pausemenubg, 0, 0, 0);
-        	TextUtilities.drawOutlinedString(levelName, 0, 0, 0, g, 0xffffff, 0x000000);
+        	//g.drawImage(pausemenubg, 0, 0, 0);
+        	g.drawImage(SharkUtilities.scale(transparentblack, getWidth(), getHeight()), 0, 0, 0);
+        	g.drawImage(SharkUtilities.scale(transparentblack, getWidth()-12, getHeight()-12), 6, 6, 0);
+        	//TextUtilities.drawOutlinedString(levelName, 0, 0, 0, g, 0xffffff, 0x000000);
+        	CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(levelName.length() * 22 * 0.4f), 6, 0.8f, levelName, 22, g);
         }
         
         //SharkUtilities.splitImg(player, 0, 0, 10, 5);

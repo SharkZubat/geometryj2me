@@ -32,6 +32,9 @@ public class MainMenu extends GameCanvas implements Runnable {
 	private boolean isTouchingDown;
 	private String selection;
 	private Player midiPlayer;
+	private Image bigFont;
+	private Image bigFontbig;
+	private String menu = "main";
     
     public MainMenu(Launcher midlet) {
         super(true);
@@ -55,6 +58,8 @@ public class MainMenu extends GameCanvas implements Runnable {
         	playBtn = Image.createImage("/img/GJ_playBtn_001.png");
         	garageBtn = Image.createImage("/img/GJ_garageBtn_001.png");
         	creatorBtn = Image.createImage("/img/GJ_creatorBtn_001.png");
+        	bigFont = Image.createImage("/img/fonts/bigFont.png");
+        	bigFontbig = Image.createImage("/img/fonts/bigFont-24.png");
         } catch (IOException ioex) {System.out.println("error:" + ioex);}    
         
         gameThread = new Thread(this);
@@ -87,12 +92,29 @@ public class MainMenu extends GameCanvas implements Runnable {
     	}
     	isTouchingDown = false;
     }
+    protected void keyPressed(int keyCode) {
+        int keyStates = getKeyStates();
+        if (((keyStates & FIRE_PRESSED) != 0) && menu == "mainlevels") {
+        	System.out.println("test");
+        	this.stop();
+        	midlet.switchDisplay(midlet.getGameScreen());
+        	selection = null;
+        }
+        if (((keyStates & FIRE_PRESSED) != 0)) {
+        	menu = "mainlevels";
+        	selection = null;
+        }
+    }
     
     
     public void run() {
     	while (isRunning) {
             update();
-            draw();
+            if (menu == "main") {
+            	draw();
+            } else if (menu == "mainlevels") {
+            	drawmainlevels();
+            }
             
             try { Thread.sleep(0); } catch (InterruptedException e) {}
     	}
@@ -104,12 +126,10 @@ public class MainMenu extends GameCanvas implements Runnable {
         double deltaTimeSeconds = deltaTimeMillis / 1000.0;
         //
         int keyStates = getKeyStates();
-        if (((keyStates & FIRE_PRESSED) != 0) || selection == "playBtn") {
-        	this.stop();
-        	midlet.switchDisplay(midlet.getGameScreen());
+        if (selection == "playBtn") {
+        	menu = "mainlevels";
         	selection = null;
         }
-        
         //
         lastFrameTime = currentFrameTime;
     }
@@ -125,6 +145,16 @@ public class MainMenu extends GameCanvas implements Runnable {
         g.drawImage(garageBtn, (int) ((garageBtn.getWidth() - getWidth()) * -0.2f), (int) ((garageBtn.getHeight() - getHeight()) * -0.5f)-10, 0);
         g.drawImage(creatorBtn, (int) ((creatorBtn.getWidth() - getWidth()) * -0.8f), (int) ((creatorBtn.getHeight() - getHeight()) * -0.5f)-10, 0);
         
+        
+        flushGraphics();
+    }
+    
+    public void drawmainlevels() {
+    	Graphics g = getGraphics();
+    	
+        g.setColor(0x287DFF);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        CustomFont.drawString(bigFontbig, 0, 0, 1f, "test", 22, g);
         
         flushGraphics();
     }
