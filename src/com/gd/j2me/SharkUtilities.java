@@ -128,6 +128,7 @@ public class SharkUtilities {
 			return new Hitbox(x+i, y+i, width+k, height+l, anchorx+d, anchory+e);
 		}
 	}
+	
 	public static class HitboxPoly {
 		// idk how it works now
 		private float x = 0;

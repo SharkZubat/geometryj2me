@@ -458,8 +458,9 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void checkothercollis() {
     	for (int i = 0; i < objlength; i++) {
+    		GameObjectData o = (GameObjectData) obj.elementAt(i);
         	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
-        		if (GameObject.getHitboxType(objid[i]) == 1 ) {
+        		if (GameObject.getHitboxType(o.objid) == 1 ) {
         			//System.out.println((float)objlengthhitbox[i].getHeight() + (float)objlengthhitbox[i].getY());
         			//System.out.println((float)objlengthhitbox[i].getHeight());
         			//System.out.println((float)objlengthhitbox[i].getY());
@@ -480,7 +481,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     				}
         		}
         	}
-        	if (SharkUtilities.Hitbox.isTouching(smallphitbox, objlengthhitbox[i])  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
+        	if (SharkUtilities.Hitbox.isTouching(smallphitbox, objlengthhitbox[i])  && GameObject.getHitboxType(o.objid) != 2 && GameObject.getHitboxType(o.objid) != 3 && GameObject.getHitboxType(o.objid) != 4) {
         		try {
         			//System.out.println("advanced death log with some positions:");
         			//System.out.println((float)objlengthhitbox[i].getHeight() + (float)objlengthhitbox[i].getY()+ ((float)objlengthhitbox[i].getHeight() * (float)objlengthhitbox[i].getAnchorY()));
@@ -521,12 +522,12 @@ public class GameScreen extends GameCanvas implements Runnable {
         	boolean secondValue = true;
         	if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i])
         			&& secondValue
-        			&& GameObject.getHitboxType(objid[i]) != 1
-        			&& GameObject.getHitboxType(objid[i]) != 2
-        			&& GameObject.getHitboxType(objid[i]) != 3 
-        			&& GameObject.getHitboxType(objid[i]) != 4) { 
+        			&& GameObject.getHitboxType(o.objid) != 1
+        			&& GameObject.getHitboxType(o.objid) != 2
+        			&& GameObject.getHitboxType(o.objid) != 3 
+        			&& GameObject.getHitboxType(o.objid) != 4) { 
 	        	if (!isFlipped) {
-			        if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
+			        if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(o.objid) != 1  && GameObject.getHitboxType(o.objid) != 2 && GameObject.getHitboxType(o.objid) != 3 && GameObject.getHitboxType(o.objid) != 4) {
 		        		velocityY = 1.f/8;
 		        		playerY = o.objy + playerhitbox.getHeight() + 1;
 		        		isTouched = true;
@@ -534,7 +535,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 		        	}
 		        	
 		        } else {
-		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
+		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(o.objid) != 1  && GameObject.getHitboxType(o.objid) != 2 && GameObject.getHitboxType(o.objid) != 3 && GameObject.getHitboxType(o.objid) != 4) {
 		        		velocityY = -1.f/8;
 		        		playerY = o.objy - playerhitbox.getHeight() - 1;
 		        		isTouched = true;
@@ -577,7 +578,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         		secondValue = velocityY < 0;
         	}
         	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
-	        	if (GameObject.getHitboxType(objid[i]) == 2 && !objdataistouching[i]) {
+	        	if (GameObject.getHitboxType(o.objid) == 2 && !objdataistouching[i]) {
 	        		objdataistouching[i] = true;
 	        		isTrailing = true;
 	        		isGrounded = false;
@@ -599,7 +600,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	if (!isFlipped) {
 		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 		        			velocityY = 1.f/24;
-		        			playerY = o.objy - playerhitbox.getHeight() - 10;
+		        			playerY = o.objy - playerhitbox.getHeight();
 		        		isTouched = true;
 		        	}
 		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1 && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
@@ -609,7 +610,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 		        	if (type == 1) {
 			        	if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 		        			velocityY = -1.f/24;
-		        			playerY = o.objy + playerhitbox.getHeight() + 10;
+		        			playerY = o.objy + playerhitbox.getHeight();
 		        		isTouched = true;
 		        		isGrounded = true;
 			        	}
@@ -618,7 +619,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 		        } else {
 			        if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 		        		velocityY = -1.f/8;
-		        		playerY = o.objy + playerhitbox.getHeight() + 10;
+		        		playerY = o.objy + playerhitbox.getHeight();
 		        		isTouched = true;
 		        	}
 			        if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1 && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
@@ -705,12 +706,12 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	if (!isFlipped) {
 	        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 	        			velocityY = 1.f/24;
-	        			playerY = o.objy - playerhitbox.getHeight() - 10;
+	        			playerY = o.objy - playerhitbox.getHeight();
 	        		isTouched = true;
 	        	}} else {
 		        	if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 		        		velocityY = -1.f/8;
-	        			playerY = o.objy + playerhitbox.getHeight() + 10;
+	        			playerY = o.objy + playerhitbox.getHeight();
 	        		isTouched = true;
 	        	}
 	        	}
