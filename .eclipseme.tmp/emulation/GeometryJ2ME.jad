@@ -1,6 +1,10 @@
 MIDlet-1: Geometry Dash,img/gj2meicon.png,com.gd.j2me.Launcher
 MIDlet-Icon: img/gj2meicon.png
+<<<<<<< Updated upstream
 MIDlet-Jar-Size: 356302
+=======
+MIDlet-Jar-Size: 325344
+>>>>>>> Stashed changes
 MIDlet-Jar-URL: GeometryJ2ME.jar
 MIDlet-Name: GeometryJ2ME
 MIDlet-Vendor: thesharkguy
