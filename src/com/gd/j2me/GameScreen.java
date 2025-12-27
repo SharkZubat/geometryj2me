@@ -114,6 +114,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private Image transparentblack;
 	private Image practiceBtn;
 	private Image playBtn;
+	private boolean isHitPortal;
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -581,6 +582,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	if (GameObject.getHitboxType(o.objid) == 2 && !objdataistouching[i]) {
 	        		objdataistouching[i] = true;
 	        		isTrailing = true;
+	        		isHitPortal = true;
 	        		isGrounded = false;
 	        		
 	        		touchportals(i);
@@ -741,7 +743,8 @@ public class GameScreen extends GameCanvas implements Runnable {
     private void touchportals(int i) {
     	border = (int) Math.floor((objlengthhitbox[i].getY()+110)/20);
     	border = Math.min(0, border);
-		switch (objid[i]) {
+    	GameObjectData o = (GameObjectData) obj.elementAt(i);
+		switch (o.objid) {
 		case 10: {
 			isFlipped = false;
 			if (-0.5f < velocityY && 0.5f > velocityY) {
@@ -1256,7 +1259,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL, g);
         //TextUtilities.drawOutlinedString(debugStr, 0, 0, 0, g, 0xFFFFFF, 0x000000);
         //TextUtilities.drawOutlinedString(debugStr2, 0, 12, 0, g, 0xFFFFFF, 0x000000);
-        TextUtilities.drawOutlinedString("" + isGrounded, 0, 24, 0, g, 0xFFFFFF, 0x000000);
+        TextUtilities.drawOutlinedString("" + isHitPortal, 0, 24, 0, g, 0xFFFFFF, 0x000000);
         
         if (isPaused) {
         	//
