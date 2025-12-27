@@ -10,6 +10,7 @@ import javax.microedition.media.*;
 import javax.microedition.media.control.*;
 import java.util.Random;
 
+import com.gd.j2me.GameObject.GameObjectData;
 import com.gd.j2me.SharkUtilities.Clickable;
 import com.gd.j2me.SharkUtilities.Hitbox;
 
@@ -74,7 +75,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     private boolean isLoadingLevel = true;
     private static boolean[] objdataistouching = new boolean[1000];
     private int attempts = 1;
-    private Vector obj = new Vector();
+    private static Vector obj = new Vector();
     
     //camera variables
     private float cameraX = 30;
@@ -156,106 +157,14 @@ public class GameScreen extends GameCanvas implements Runnable {
         progress = 0;
         cameraY = -159-((getHeight()-240));
         
-        GameObject.create(1, 330, -10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 350, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 350, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 410, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 490, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 490, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 570, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 570, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 570, 50, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 630, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 630, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        //GameObject.create(8, 60, 50, objid, objx, objy, objlength, objlengthhitbox);
-        //objlength++;
-        //GameObject.create(8, 80, 50, objid, objx, objy, objlength, objlengthhitbox);
-        //objlength++;
-        //GameObject.create(8, 100, 50, objid, objx, objy, objlength, objlengthhitbox);
-        //objlength++;
-        //GameObject.create(8, 120, 50, objid, objx, objy, objlength, objlengthhitbox);
-        //objlength++;
-        //GameObject.create(8, 140, 50, objid, objx, objy, objlength, objlengthhitbox);
-        //objlength++;
-        GameObject.create(7, 690, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 690, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 690, 50, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 690, 70, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 750, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 750, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 750, 50, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 750, 70, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 750, 90, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 750, 110, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 830, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 850, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 910, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(7, 910, 30, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(1, 910, 50, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(4, 1210, 70, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 1;
-        objlength++;
-        GameObject.create(5, 1410, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 9;
-        objlength++;
-        GameObject.create(6, 1430, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 9;
-        objlength++;
-        GameObject.create(7, 1450, 10, objid, objx, objy, objlength, objlengthhitbox);
-        objlengthimage[objlength] = 9;
-        objlength++;
+        //LevelLoader.Load("let's Dih!");
+        //makenewobj(5, 0, 0);
+        makenewobj(1, 110, 10);
+        makenewobj(1, 190, 10);
+        makenewobj(1, 190, 30);
+        makenewobj(1, 270, 10);
+        makenewobj(1, 270, 30);
+        makenewobj(1, 270, 50);
         makenewobj(9, 370, 1.666666666666667f);
         makenewobj(9, 390, 1.666666666666667f);
         makenewobj(11, 1600, 30);
@@ -297,7 +206,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         //makenewobj(10, 1640, 30);
         makenewobj(8, 2880, 10);
         
-        LevelLoader.Load("let's Dih!");
         
         try {
         	for (int i = 0; i < 15; i++) {
@@ -401,7 +309,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     }
     
     public static void makenewobj(int id, int x, float f) throws IOException {
-        GameObject.create(id, x, f, objid, objx, objy, objlength, objlengthhitbox);
+        GameObject.create(new GameObjectData(id, x, -f, false, false, 0), obj, objlength, objlengthhitbox);
         objdataistouching[objlength] = false;
         objlengthimage[objlength] = id;
         objlength++;
@@ -937,6 +845,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         checkcollisionswithoutjump();
         checkcollisions();
+        checkjumpaftertouch();
         switch (type) {
 	    	case 0: {
 	    		if (type == 0)
@@ -1290,8 +1199,9 @@ public class GameScreen extends GameCanvas implements Runnable {
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
         
         for (int i = 0; i < objlength; i++) {
-        	if (objx[i]-cameraX<getWidth()+20&&objx[i]-cameraX>-40) {
-        	GameObject.render(objid[i], objx[i]-cameraX, objy[i]-cameraY, 0.5, 0.5, objimage, g);
+            GameObjectData o = (GameObjectData) obj.elementAt(i);
+        	if (o.objx-cameraX<getWidth()+20&&o.objx-cameraX>-40) {
+        	GameObject.render(o.objid, o.objx-cameraX, o.objy-cameraY, 0.5, 0.5, objimage, g);
         	//if (GameObject.getHitboxType(objid[i]) == 1) {
         	//	SharkUtilities.drawHitboxWithRect(Hitbox.rect(objlengthhitbox[i].getX()-cameraX, objlengthhitbox[i].getY()-cameraY, objlengthhitbox[i].getWidth(), objlengthhitbox[i].getHeight(), objlengthhitbox[i].getAnchorX(), objlengthhitbox[i].getAnchorY()), g, 0xff0000, 0);
         	//} else {
@@ -1342,7 +1252,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL, g);
         //TextUtilities.drawOutlinedString(debugStr, 0, 0, 0, g, 0xFFFFFF, 0x000000);
         //TextUtilities.drawOutlinedString(debugStr2, 0, 12, 0, g, 0xFFFFFF, 0x000000);
-        TextUtilities.drawOutlinedString("" + playerY, 0, 24, 0, g, 0xFFFFFF, 0x000000);
+        TextUtilities.drawOutlinedString("" + isGrounded, 0, 24, 0, g, 0xFFFFFF, 0x000000);
         
         if (isPaused) {
         	//

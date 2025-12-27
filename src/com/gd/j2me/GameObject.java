@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameObject {
-	public static class Object {
+	public static class GameObjectData {
 	    public int objid;
 	    public float objx;
 	    public float objy;
@@ -17,7 +17,7 @@ public class GameObject {
 	    public boolean isFlippedVer;
 	    public float rotation;
 	    
-	    public Object(int num1, float num2, float num3, boolean num4, boolean num5, float num6) {
+	    public GameObjectData(int num1, float num2, float num3, boolean num4, boolean num5, float num6) {
 	    	this.objid = num1;
 	    	this.objx = num2;
 	    	this.objy = num3;
@@ -124,7 +124,40 @@ public class GameObject {
 		//g2.drawRect((int) f, (int) g, 20, 20);
 	}
 	
-	private static void setuphitboxes(int i, int objlength, float[] objx, float[] objy, Hitbox[] objlengthhitbox) {
+	private static void setuphitboxes(int i, int objlength, float f, float g, Hitbox[] objlengthhitbox) {
+		switch (i) {
+			case (8): {
+				objlengthhitbox[objlength] = Hitbox.rect(f+16, g+12, 4, 8, 0.5, 0.5);
+				break;
+			}
+			case (9): {
+				objlengthhitbox[objlength] = Hitbox.rect(f+14, g+12.8f, 6, 7.2f, 0.5, 0.5);
+				break;
+			}
+			case (10): {
+				objlengthhitbox[objlength] = Hitbox.rect(f+3.3f+20, g-30f, 16.7f, 50, 0.5, 0.5);
+				break;
+			}
+			case (11): {
+				objlengthhitbox[objlength] = Hitbox.rect(f+3.3f+20, g-30f, 16.7f, 50, 0.5, 0.5);
+				break;
+			}
+			case (12): {
+				objlengthhitbox[objlength] = Hitbox.rect(f+3.3f+20, g-30f, 16.7f, 50, 0.5, 0.5);
+				break;
+			}
+			case (13): {
+				objlengthhitbox[objlength] = Hitbox.rect(f+3.3f+20, g-30f, 16.7f, 50, 0.5, 0.5);
+				break;
+			}
+			default: {
+				objlengthhitbox[objlength] = Hitbox.rect(f, g, 20, 20, 0.5, 0.5);
+				break;
+			}
+		}
+	}
+	
+	private static void setuphitboxesold(int i, int objlength, float[] objx, float[] objy, Hitbox[] objlengthhitbox) {
 		switch (i) {
 			case (8): {
 				objlengthhitbox[objlength] = Hitbox.rect(objx[objlength]+16, objy[objlength]+12, 4, 8, 0.5, 0.5);
@@ -157,24 +190,19 @@ public class GameObject {
 		}
 	}
 
-	public static void create(int i, int f, float f2, int[] objid,
-			float[] objx, float[] objy, int objlength, Hitbox[] objlengthhitbox) {
+	public static void create(GameObjectData data, Vector obj, int objlength, Hitbox[] objlengthhitbox) {
 		// TODO Auto-generated method stub
 		int objlenght = objlength;
         
 		try {
-			objx[objlenght] = f;
-			objy[objlenght] = -f2;
-			objid[objlength] = i;
+			obj.addElement(data);
 			
-			setuphitboxes(i, objlength, objx, objy, objlengthhitbox);
+			setuphitboxes(data.objid, objlength, data.objx, data.objy, objlengthhitbox);
 		} catch (Exception e) {
 			objlenght = 0;
-			objx[objlenght] = f;
-			objy[objlenght] = -f2;
-			objid[objlength] = i;
+			obj.addElement(data);
 			
-			setuphitboxes(i, objlength, objx, objy, objlengthhitbox);
+			setuphitboxes(data.objid, objlength, data.objx, data.objy, objlengthhitbox);
 		}
 	}
 	
