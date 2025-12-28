@@ -1,7 +1,11 @@
 package com.gd.j2me;
 
+import java.io.InputStream;
+
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.media.Manager;
+import javax.microedition.media.Player;
 
 public class SharkUtilities {
 
@@ -509,6 +513,18 @@ public class SharkUtilities {
             return -Math.PI / 2;
         } else {
             return 0.0; 
+        }
+    }
+    
+    public static void playAMR(String filePath, Class classtype, Player player) {
+        try {
+            InputStream is = classtype.getResourceAsStream(filePath);
+            player = Manager.createPlayer(is, "audio/amr");
+            player.realize();
+            player.prefetch();
+            player.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

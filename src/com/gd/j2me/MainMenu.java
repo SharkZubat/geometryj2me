@@ -32,6 +32,7 @@ public class MainMenu extends GameCanvas implements Runnable {
 	private boolean isTouchingDown;
 	private String selection;
 	private Player midiPlayer;
+	private Player sfx;
 	private Image bigFont;
 	private Image bigFontbig;
 	private String menu = "main";
@@ -76,7 +77,7 @@ public class MainMenu extends GameCanvas implements Runnable {
         	bigFontbig = Image.createImage("/img/fonts/bigFont-24.png");
         	lineimage = SharkUtilities.tintImage(Image.createImage("/img/level/floorLine_01_001.png"), 0xffffff);
         	gnshadow = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquareShadow_001.png"), 0xffffff);
-        } catch (IOException ioex) {System.out.println("error:" + ioex);}    
+        } catch (IOException ioex) {System.out.println("error:" + ioex);}
         
         gameThread = new Thread(this);
         gameThread.start();
@@ -116,6 +117,7 @@ public class MainMenu extends GameCanvas implements Runnable {
     	int gameAction = getGameAction(keyCode);
         if (gameAction == FIRE && menu == "mainlevels") {
         	System.out.println("test");
+        	SharkUtilities.playAMR("/sounds/amr/playSound_01.amr", getClass(), sfx);
         	this.stop();
         	midlet.switchDisplay(midlet.getGameScreen());
         	selection = null;
