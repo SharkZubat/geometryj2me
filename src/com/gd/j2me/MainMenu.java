@@ -117,8 +117,8 @@ public class MainMenu extends GameCanvas implements Runnable {
     	int gameAction = getGameAction(keyCode);
         if (gameAction == FIRE && menu == "mainlevels") {
         	System.out.println("test");
-        	SharkUtilities.playAMR("/sounds/amr/playSound_01.amr", getClass(), sfx);
         	this.stop();
+        	SharkUtilities.playWAV("/sounds/wav/playSound_01.wav", getClass(), sfx);
         	midlet.switchDisplay(midlet.getGameScreen());
         	selection = null;
         }

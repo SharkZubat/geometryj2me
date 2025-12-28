@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameScreen extends GameCanvas implements Runnable {
-	private float istillrememberjava;
 	private Launcher midlet;
     private boolean isRunning;
     private boolean isTouchingDown;
@@ -778,11 +777,12 @@ public class GameScreen extends GameCanvas implements Runnable {
     	isDeath = true;
     	try {
     		midiPlayer.stop();
-	        InputStream is = getClass().getResourceAsStream("/sounds/midi/explode_11.mid");
-	        sfx = Manager.createPlayer(is, "audio/midi");
-	        sfx.start();
-	        is.close();
-	        is = null;
+	        //InputStream is = getClass().getResourceAsStream("/sounds/midi/explode_11.mid");
+    		SharkUtilities.playWAV("/sounds/wav/explode_11.wav", getClass(), sfx);
+	        //sfx = Manager.createPlayer(is, "audio/midi");
+	        //sfx.start();
+	        //is.close();
+	        //is = null;
 	        draw();
 		} catch (MediaException e) {
 			// TODO Auto-generated catch block

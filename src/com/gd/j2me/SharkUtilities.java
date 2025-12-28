@@ -527,4 +527,16 @@ public class SharkUtilities {
             e.printStackTrace();
         }
     }
+    
+    public static void playWAV(String filePath, Class classtype, Player player) {
+        try {
+            InputStream is = classtype.getResourceAsStream(filePath);
+            player = Manager.createPlayer(is, "audio/wav");
+            player.realize();
+            player.prefetch();
+            player.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
