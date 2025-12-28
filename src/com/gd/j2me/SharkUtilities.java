@@ -539,4 +539,25 @@ public class SharkUtilities {
             e.printStackTrace();
         }
     }
+    
+    public static int hsvToRgb(float h, float s, float v) {
+        int r = 0, g = 0, b = 0;
+
+        int i = (int)(h * 6f);
+        float f = h * 6f - i;
+        float p = v * (1f - s);
+        float q = v * (1f - f * s);
+        float t = v * (1f - (1f - f) * s);
+
+        switch (i % 6) {
+            case 0: r = (int)(v * 255); g = (int)(t * 255); b = (int)(p * 255); break;
+            case 1: r = (int)(q * 255); g = (int)(v * 255); b = (int)(p * 255); break;
+            case 2: r = (int)(p * 255); g = (int)(v * 255); b = (int)(t * 255); break;
+            case 3: r = (int)(p * 255); g = (int)(q * 255); b = (int)(v * 255); break;
+            case 4: r = (int)(t * 255); g = (int)(p * 255); b = (int)(v * 255); break;
+            case 5: r = (int)(v * 255); g = (int)(p * 255); b = (int)(q * 255); break;
+        }
+
+        return (r << 16) | (g << 8) | b;
+    }
 }

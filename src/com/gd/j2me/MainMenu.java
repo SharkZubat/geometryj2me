@@ -51,7 +51,7 @@ public class MainMenu extends GameCanvas implements Runnable {
 
     
     public MainMenu(Launcher midlet) {
-        super(true);
+        super(false);
         this.midlet = midlet;
         setFullScreenMode(true);
     }
@@ -115,14 +115,15 @@ public class MainMenu extends GameCanvas implements Runnable {
     
     protected void keyReleased(int keyCode) {
     	int gameAction = getGameAction(keyCode);
-        if (gameAction == FIRE && menu == "mainlevels") {
+    	int keyStates = getKeyStates();
+        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE)) && menu == "mainlevels") {
         	System.out.println("test");
         	this.stop();
         	SharkUtilities.playWAV("/sounds/wav/playSound_01.wav", getClass(), sfx);
         	midlet.switchDisplay(midlet.getGameScreen());
         	selection = null;
         }
-        if (gameAction == Canvas.FIRE) {
+        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE))) {
         	menu = "mainlevels";
         	selection = null;
         }
@@ -157,7 +158,7 @@ public class MainMenu extends GameCanvas implements Runnable {
         hue += hueSpeed * deltaTimeSeconds;
         if (hue > 1f) hue -= 1f;
 
-        rainbowColor = hsvToRgb(hue+0.6f, 0.84f, 1f);
+        rainbowColor = SharkUtilities.hsvToRgb(hue+0.6f, 0.84f, 1f);
         //
         int keyStates = getKeyStates();
         if (selection == "playBtn") {
@@ -208,28 +209,6 @@ public class MainMenu extends GameCanvas implements Runnable {
             SharkUtilities.drawImageWithAnchor(lineimage, getWidth() / 2, (int) y-lineimage.getHeight(), 0, -0.5, 0, g);
     	}
     }
-    
-    private int hsvToRgb(float h, float s, float v) {
-        int r = 0, g = 0, b = 0;
-
-        int i = (int)(h * 6f);
-        float f = h * 6f - i;
-        float p = v * (1f - s);
-        float q = v * (1f - f * s);
-        float t = v * (1f - (1f - f) * s);
-
-        switch (i % 6) {
-            case 0: r = (int)(v * 255); g = (int)(t * 255); b = (int)(p * 255); break;
-            case 1: r = (int)(q * 255); g = (int)(v * 255); b = (int)(p * 255); break;
-            case 2: r = (int)(p * 255); g = (int)(v * 255); b = (int)(t * 255); break;
-            case 3: r = (int)(p * 255); g = (int)(q * 255); b = (int)(v * 255); break;
-            case 4: r = (int)(t * 255); g = (int)(p * 255); b = (int)(v * 255); break;
-            case 5: r = (int)(v * 255); g = (int)(p * 255); b = (int)(q * 255); break;
-        }
-
-        return (r << 16) | (g << 8) | b;
-    }
-   
     
     public void drawmainlevels() {
     	Graphics g = getGraphics();
