@@ -26,7 +26,7 @@ public class CustomFont {
 			if (getChar(string.charAt(i)) != 512) {
 				tempImage = SharkUtilities.splitImg(image, (image.getWidth() / target.length())*getChar(string.charAt(i)), 0, image.getWidth() / target.length(), image.getHeight());
 			} else {
-				tempImage = SharkUtilities.splitImg(image, 0, 0, 10, 10);
+				tempImage = SharkUtilities.scale(SharkUtilities.splitImg(image, 0, 0, 1, 1), 10, 10);
 			}
 			Image tempImage2 = SharkUtilities.scale(tempImage, (int)(tempImage.getWidth() * scale), (int)(tempImage.getHeight() * scale));
 			//System.out.println(tempImage.getWidth() * scale);

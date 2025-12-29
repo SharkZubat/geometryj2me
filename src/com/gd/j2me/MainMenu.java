@@ -35,20 +35,25 @@ public class MainMenu extends GameCanvas implements Runnable {
 	private Player sfx;
 	private Image bigFont;
 	private Image bigFontbig;
+	private Image goldFont;
+	private Image goldFontbig;
 	private String menu = "main";
 	
 	//Parallax ground
 	private Image ground;
+	private Image gnshadow;
+	private Image lineimage;
+	private Image groundRainbow;
 	private float groundX = 0;
 	private float groundSpeed = 10.41667f;
 	//colours
 	private float hue = 0f;        
 	private float hueSpeed = 0.025f; 
 	private int rainbowColor = 0x287DFF;
-	private Image gnshadow;
-	private Image lineimage;
-	private Image groundRainbow;
-
+	
+	//loading system
+	private boolean isLoadedResGame = false;
+	private static int[] objlengthimage = new int[100]; // test, some level improvements soon
     
     public MainMenu(Launcher midlet) {
         super(false);
@@ -60,14 +65,6 @@ public class MainMenu extends GameCanvas implements Runnable {
     	isRunning = true;
     	
         try {
-	        InputStream is = getClass().getResourceAsStream("/sounds/midi/mainLoop.mid");
-	        midiPlayer = Manager.createPlayer(is, "audio/midi");
-	        midiPlayer.setLoopCount(-1);
-	        midiPlayer.start();
-	        is.close();
-	        is = null;
-        } catch (Exception e) {System.out.println("midi error:" + e);}
-        try {
         	logo = Image.createImage("/img/GJ_logo_001.png");
         	playBtn = Image.createImage("/img/GJ_playBtn_001.png");
         	garageBtn = Image.createImage("/img/GJ_garageBtn_001.png");
@@ -75,9 +72,20 @@ public class MainMenu extends GameCanvas implements Runnable {
         	ground = Image.createImage("/img/level/groundSquare_01_001.png");
         	bigFont = Image.createImage("/img/fonts/bigFont.png");
         	bigFontbig = Image.createImage("/img/fonts/bigFont-24.png");
+        	goldFont = Image.createImage("/img/fonts/goldFont.png");
+        	goldFontbig = Image.createImage("/img/fonts/goldFont-24.png");
         	lineimage = SharkUtilities.tintImage(Image.createImage("/img/level/floorLine_01_001.png"), 0xffffff);
         	gnshadow = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquareShadow_001.png"), 0xffffff);
         } catch (IOException ioex) {System.out.println("error:" + ioex);}
+        try {
+        	InputStream is = getClass().getResourceAsStream("/sounds/midi/mainLoop.mid");
+        	midiPlayer = Manager.createPlayer(is, "audio/midi");
+        	midiPlayer.setLoopCount(-1);
+        	midiPlayer.start();
+        	is.close();
+        	is = null;
+        } catch (Exception e) {System.out.println("midi error:" + e);}
+        isLoadedResGame=true;
         
         gameThread = new Thread(this);
         gameThread.start();
@@ -133,10 +141,14 @@ public class MainMenu extends GameCanvas implements Runnable {
     public void run() {
     	while (isRunning) {
             update();
-            if (menu == "main") {
-            	draw();
-            } else if (menu == "mainlevels") {
-            	drawmainlevels();
+            if (isLoadedResGame) {
+	            if (menu == "main") {
+	            	draw();
+	            } else if (menu == "mainlevels") {
+	            	drawmainlevels();
+	            }
+            } else {
+            	drawloading();
             }
             
             try { Thread.sleep(1); } catch (InterruptedException e) {}
@@ -185,6 +197,17 @@ public class MainMenu extends GameCanvas implements Runnable {
 
         //draw ground
         renderground(g, groundY, false);
+        flushGraphics();
+    }
+    
+    public void drawloading() {
+    	Graphics g = getGraphics();
+    	
+        g.setColor(0x287DFF);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        
+        CustomFont.drawString(goldFontbig, 0, 0, 0.5f, "Loading Resources", 22, g);
+
         flushGraphics();
     }
     
