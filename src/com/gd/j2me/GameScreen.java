@@ -104,7 +104,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private boolean isRestartReady;
 	private int countdownTrail;
 	private boolean isTrailing;
-	private static int[] objlengthimage = new int[100];
+	public static int[] objlengthimage = new int[100];
 	private int color1 = 0x40ff00;
 	private int color2 = 0x00ffff;
 	private Image bgimage2;
@@ -206,17 +206,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         //makenewobj(10, 1640, 30);
         makenewobj(8, 2880, 10);
         
-        
-        try {
-        	for (int i = 0; i < 15; i++) {
-        	    objimage[i] = GameObject.getImage(i);
-        	    System.out.println(i);
-        	}
-        } catch (IOException e) {
-        	// TODO Auto-generated catch block
-        	//e.printStackTrace();
-        }
-        
         gameThread = new Thread(this);
         gameThread.start();
         if (!isDone) {
@@ -261,7 +250,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         	        System.out.println("Successfully added image for ID: " + objid[i]);
         	    }
         	}
-        } catch (IOException e) {
+        } catch (Exception e) {
         	// TODO Auto-generated catch block
         	e.printStackTrace();
         }
@@ -307,6 +296,13 @@ public class GameScreen extends GameCanvas implements Runnable {
             SharkUtilities.fillRectWithTransp(p.x - (int)cameraX + 10, p.y - (int)cameraY+10, 10, 10, transparent, g);
         }
     }
+    
+    
+    public void changeObjImage(Image[] image) {
+    	// TODO Auto-generated method stub
+    	objimage = image;
+    }
+
     
     public static void makenewobj(int id, int x, float f) throws IOException {
         GameObject.create(new GameObjectData(id, x, -f, false, false, 0), obj, objlength, objlengthhitbox);

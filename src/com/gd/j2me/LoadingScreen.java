@@ -12,7 +12,7 @@ import javax.microedition.midlet.MIDlet;
 import java.io.InputStream;
 import java.io.IOException;
 
-public class MainMenu extends GameCanvas implements Runnable {
+public class LoadingScreen extends GameCanvas implements Runnable {
 	
     private boolean isRunning;
     private Thread gameThread;
@@ -26,13 +26,8 @@ public class MainMenu extends GameCanvas implements Runnable {
     
     //ui variables
     private Image logo;
-	private Image playBtn;
-	private Image garageBtn;
-	private Image creatorBtn;
 	private boolean isTouchingDown;
 	private String selection;
-	private Player midiPlayer;
-	private Player sfx;
 	private Image bigFont;
 	private Image bigFontbig;
 	private Image goldFont;
@@ -50,13 +45,8 @@ public class MainMenu extends GameCanvas implements Runnable {
 	private float hue = 0f;        
 	private float hueSpeed = 0.025f; 
 	private int rainbowColor = 0x287DFF;
-	
-	//loading system
-	private boolean isLoadedResGame = false;
-	private Image[] objimagetoload = new Image[100];
-	//private static int[] objlengthimage = new int[100]; // test, some level improvements soon
     
-    public MainMenu(Launcher midlet) {
+    public LoadingScreen(Launcher midlet) {
         super(false);
         this.midlet = midlet;
         setFullScreenMode(true);
@@ -67,9 +57,6 @@ public class MainMenu extends GameCanvas implements Runnable {
     	
         try {
         	logo = Image.createImage("/img/GJ_logo_001.png");
-        	playBtn = Image.createImage("/img/GJ_playBtn_001.png");
-        	garageBtn = Image.createImage("/img/GJ_garageBtn_001.png");
-        	creatorBtn = Image.createImage("/img/GJ_creatorBtn_001.png");
         	ground = Image.createImage("/img/level/groundSquare_01_001.png");
         	bigFont = Image.createImage("/img/fonts/bigFont.png");
         	bigFontbig = Image.createImage("/img/fonts/bigFont-24.png");
@@ -79,26 +66,6 @@ public class MainMenu extends GameCanvas implements Runnable {
         	gnshadow = SharkUtilities.tintImage(Image.createImage("/img/level/groundSquareShadow_001.png"), 0xffffff);
         } catch (IOException ioex) {System.out.println("error:" + ioex);}
         drawloading();
-        try {
-        	for (int i = 0; i < 15; i++) {
-        		System.out.println(i);
-        		objimagetoload[i] = GameObject.getImage(i);
-        	}
-        } catch (Exception e) {
-        	// TODO Auto-generated catch block
-        	System.out.println(GameObject.getImage(1));
-        }
-        try {
-        	InputStream is = getClass().getResourceAsStream("/sounds/midi/mainLoop.mid");
-        	midiPlayer = Manager.createPlayer(is, "audio/midi");
-        	midiPlayer.setLoopCount(-1);
-        	midiPlayer.start();
-        	is.close();
-        	is = null;
-        } catch (Exception e) {System.out.println("midi error:" + e);}
-        midlet.switchDisplay(this);
-        midlet.loadingScreen.stop();
-        isLoadedResGame=true;
         
         gameThread = new Thread(this);
         gameThread.start();
@@ -106,64 +73,13 @@ public class MainMenu extends GameCanvas implements Runnable {
     
     public void stop() {
     	isRunning = false;
-    	if (midiPlayer != null) {
-	    	try {
-				midiPlayer.stop();
-			} catch (MediaException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
-    }
-    
-    protected void pointerPressed(int x, int y) {
-    	if (x >= ((int) ((playBtn.getWidth() - getWidth()) * -0.5f)) && x <= ((int) ((playBtn.getWidth() - getWidth()) * -0.5f))+playBtn.getWidth() && y >= ((int) ((playBtn.getHeight() - getHeight()) * -0.5f)-10) && y <= ((int) ((playBtn.getHeight() - getHeight()) * -0.5f)-10)+playBtn.getHeight()) {
-    		System.out.println("play button holding");
-    	}
-    	isTouchingDown = true;
-    }
-    
-    protected void pointerReleased(int x, int y) {
-    	if (x >= ((int) ((playBtn.getWidth() - getWidth()) * -0.5f)) && x <= ((int) ((playBtn.getWidth() - getWidth()) * -0.5f))+playBtn.getWidth() && y >= ((int) ((playBtn.getHeight() - getHeight()) * -0.5f)-10) && y <= ((int) ((playBtn.getHeight() - getHeight()) * -0.5f)-10)+playBtn.getHeight()) {
-    		System.out.println("play button pressed");
-    		selection = "playBtn";
-    	}
-    	isTouchingDown = false;
-    }
-    
-    protected void keyPressed(int keyCode) {
-    }
-    
-    protected void keyReleased(int keyCode) {
-    	int gameAction = getGameAction(keyCode);
-    	int keyStates = getKeyStates();
-        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE)) && menu == "mainlevels") {
-        	System.out.println("test");
-        	this.stop();
-        	SharkUtilities.playWAV("/sounds/wav/playSound_01.wav", getClass(), sfx);
-        	midlet.switchDisplay(midlet.getGameScreen());
-        	midlet.changeObjImage(objimagetoload);
-        	selection = null;
-        }
-        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE))) {
-        	menu = "mainlevels";
-        	selection = null;
-        }
     }
     
     
     public void run() {
     	while (isRunning) {
             update();
-            if (isLoadedResGame) {
-	            if (menu == "main") {
-	            	draw();
-	            } else if (menu == "mainlevels") {
-	            	drawmainlevels();
-	            }
-            } else {
-            	drawloading();
-            }
+            drawloading();
             
             try { Thread.sleep(1); } catch (InterruptedException e) {}
     	}
@@ -194,26 +110,6 @@ public class MainMenu extends GameCanvas implements Runnable {
         
         lastFrameTime = currentFrameTime;
     }
-    
-    public void draw() {
-    	Graphics g = getGraphics();
-    	
-        g.setColor(rainbowColor);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        
-        //button ui
-        g.drawImage(logo, (int) ((logo.getWidth() - getWidth()) * -0.5f), 10, 0);
-        g.drawImage(playBtn, (int) ((playBtn.getWidth() - getWidth()) * -0.5f), (int) ((playBtn.getHeight() - getHeight()) * -0.5f)-10, 0);
-        g.drawImage(garageBtn, (int) ((garageBtn.getWidth() - getWidth()) * -0.2f), (int) ((garageBtn.getHeight() - getHeight()) * -0.5f)-10, 0);
-        g.drawImage(creatorBtn, (int) ((creatorBtn.getWidth() - getWidth()) * -0.8f), (int) ((creatorBtn.getHeight() - getHeight()) * -0.5f)-10, 0);
-        
-        int groundY = getHeight() - ground.getHeight() + 20;
-
-        //draw ground
-        renderground(g, groundY, false);
-        flushGraphics();
-    }
-    
     public void drawloading() {
     	Graphics g = getGraphics();
     	

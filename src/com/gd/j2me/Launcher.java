@@ -9,14 +9,17 @@ public class Launcher extends MIDlet {
 	private Display display;
     private MainMenu mainMenu;
 	private GameScreen gameScreen;
+	public LoadingScreen loadingScreen;
     
     public void startApp() {
         //if (mainMenu == null) {
     	display = Display.getDisplay(this);
+    	loadingScreen = new LoadingScreen(this);
+    	loadingScreen.start();
+    	Display.getDisplay(this).setCurrent(loadingScreen);
         mainMenu = new MainMenu(this);
         mainMenu.start();
         //}
-        Display.getDisplay(this).setCurrent(mainMenu);
     }
 
     public void pauseApp() {
@@ -46,5 +49,10 @@ public class Launcher extends MIDlet {
 			e.printStackTrace();
 		}
     	return gameScreen;
+    }
+    
+    public GameScreen changeObjImage(Image[] image) {
+    	gameScreen.changeObjImage(image);
+		return gameScreen;
     }
 }

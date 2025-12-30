@@ -79,8 +79,13 @@ public class GameObject {
 		return hitboxids[i];
 	}
 	
-	public static Image getImage(int i) throws IOException {
-		setupimgs();
+	public static Image getImage(int i) {
+		try {
+			setupimgs();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return objimage[i];
 	}
