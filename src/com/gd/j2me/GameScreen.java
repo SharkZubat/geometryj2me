@@ -114,6 +114,8 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private Image practiceBtn;
 	private Image playBtn;
 	private boolean isHitPortal;
+	private InputStream is;
+	private String label;
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -146,10 +148,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         } catch (IOException ioex) {System.out.println("error:" + ioex);}
         
 		try {
-			InputStream is = getClass().getResourceAsStream(music);
+			is = getClass().getResourceAsStream(music);
 			midiPlayer = Manager.createPlayer(is, "audio/midi");
-			is.close();
-			is = null;
 		} catch (Exception e) {System.out.println("midi error:" + e);}
         
         deltaTimeMillis = 0;
@@ -215,6 +215,13 @@ public class GameScreen extends GameCanvas implements Runnable {
         			if (!isDone && !isPaused && isRunning) {
 	        			try {
 							midiPlayer.start();
+							try {
+								is.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							is = null;
 						} catch (MediaException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -270,12 +277,12 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void handletrails() {
     	if (isTrailing) {
-    	if (countdownTrail == 0) {
+    	if (countdownTrail < 0) {
     		trailPoints.addElement(new Point((int)playerhitbox.getX()+5, (int)playerhitbox.getY()+5));
     		countdownTrail = 2;
     	}
     	
-    	countdownTrail -= 1;
+    	countdownTrail -= deltaTimeMillis/0.0083333333333333;
 
         if (trailPoints.size() > MAX_TRAIL_LENGTH) {
             trailPoints.removeElementAt(0);
@@ -423,11 +430,11 @@ public class GameScreen extends GameCanvas implements Runnable {
         	switch (type) {
         		case 0: {
         			if (type==0)
-		            if (isGrounded) {
+		            if (isGrounded || isTouched) {
 		            	if (!isFlipped) {
-		            		velocityY = (float) (JUMP_STRENGTH+GRAVITY * deltaTimeSeconds * 42);
+		            		velocityY = (float) (JUMP_STRENGTH+(GRAVITY * deltaTimeSeconds * 42));
 		            	} else {
-		            		velocityY = (float) (-JUMP_STRENGTH-GRAVITY * deltaTimeSeconds * 42);
+		            		velocityY = (float) (-JUMP_STRENGTH-(GRAVITY * deltaTimeSeconds * 42));
 		            	}
 		                isGrounded = false;
 		                isTouched = false;
@@ -562,17 +569,32 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void checkcollisions() {
     	int j = 0;
+    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f);
+    	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
+    	for (; j < skippedFrames; j++) {
+    	boolean secondValue = false;
+    	Hitbox playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    	Hitbox playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX(), smallphitbox.getY(), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
+    	if (!isFlipped) {
+    		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		try {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+(10.41667f * (8.334f * 42) * 20)/(skippedFrames-(j/skippedFrames)), playerhitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)/(skippedFrames-(j/skippedFrames)))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+(10.41667f * (8.334f * 42) * 20)/(skippedFrames-(j/skippedFrames)), smallphitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)/(skippedFrames-(j/skippedFrames)))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
+    		} catch (ArithmeticException e) {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		}
+    		secondValue = velocityY > 0;
+    	} else {
+    		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()- ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		try {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+(10.41667f * (8.334f * 42) * 20)/(skippedFrames-(j/skippedFrames)), playerhitbox.getY()- ((float)(GRAVITY * (8.334f * 42)/(skippedFrames-(j/skippedFrames)))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		} catch (ArithmeticException e) {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		}
+    		secondValue = velocityY < 0;
+    	}
         for (int i = 0; i < objlength; i++) {
         	GameObjectData o = (GameObjectData) obj.elementAt(i);
-        	boolean secondValue = false;
-        	Hitbox playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-        	if (!isFlipped) {
-        		playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-        		secondValue = velocityY > 0;
-        	} else {
-        		playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()- ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-        		secondValue = velocityY < 0;
-        	}
         	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
 	        	if (GameObject.getHitboxType(o.objid) == 2 && !objdataistouching[i]) {
 	        		objdataistouching[i] = true;
@@ -596,8 +618,8 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	}
 	        	if (!isFlipped) {
 		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
-		        			velocityY = 1.f/24;
-		        			playerY = o.objy - playerhitbox.getHeight();
+		        		velocityY = 1.f/24;
+		        		playerY = o.objy - playerhitbox.getHeight();
 		        		isTouched = true;
 		        	}
 		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1 && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
@@ -608,8 +630,8 @@ public class GameScreen extends GameCanvas implements Runnable {
 			        	if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 		        			velocityY = -1.f/24;
 		        			playerY = o.objy + playerhitbox.getHeight();
-		        		isTouched = true;
-		        		isGrounded = true;
+			        		isTouched = true;
+			        		isGrounded = true;
 			        	}
 		        	}
 		        	
@@ -639,16 +661,12 @@ public class GameScreen extends GameCanvas implements Runnable {
         		
         		//System.out.println(-((-objy[i]) + playerhitbox.getHeight()));
 	        	if (!isFlipped) {
-	        		if (j < 16 || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
-	        			//break;
-	        		} else {
-	        			j++;
+	        		if (j < skippedFrames || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
+	        			break;
 	        		}
 	        	} else {
-	        		if (j < 16 || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
-	        			//break;
-	        		} else {
-	        			j++;
+	        		if (j < skippedFrames || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
+	        			break;
 	        		}
 	        	}
         	} else {
@@ -662,6 +680,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         				checkjumpaftertouch();
         			}
         		}
+        	}
         	}
         }
     }
@@ -848,7 +867,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         checkcollisionswithoutjump();
         checkcollisions();
-        checkjumpaftertouch();
         switch (type) {
 	    	case 0: {
 	    		if (type == 0)
@@ -863,6 +881,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         playerX += 10.41667 * deltaTimeSeconds * 20;
         checkcollisionswithoutjump();
         playerY += velocityY * deltaTimeSeconds * 39;
+        checkjumpaftertouch();
         if (playerY < -1800) {
         	try {
 				death();
@@ -1041,7 +1060,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         	isTouched = false;
         }
         
-        if (isGrounded && type != 1) {
+        if ((isGrounded || isTouched) && type != 1) {
         	isTrailing = false;
         }
         
@@ -1101,7 +1120,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         }
         if (type==1) {
-        	float playerAngletolerp = (float) SharkUtilities.atan2(velocityY, 10.41667 * deltaTimeSeconds * 40) * -45;
+        	float playerAngletolerp = (float) SharkUtilities.atan2(velocityY, 10.41667 * 1f/120f * 40) * -45;
         	playerAngle = SharkUtilities.lerp(playerAngle, playerAngletolerp, 20f * (float) deltaTimeSeconds);
         	if (-1 < playerAngle && 1 > playerAngle) {
         		playerAngle = 0;
@@ -1255,12 +1274,12 @@ public class GameScreen extends GameCanvas implements Runnable {
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL, g);
         //TextUtilities.drawOutlinedString(debugStr, 0, 0, 0, g, 0xFFFFFF, 0x000000);
         //TextUtilities.drawOutlinedString(debugStr2, 0, 12, 0, g, 0xFFFFFF, 0x000000);
-        TextUtilities.drawOutlinedString("" + isHitPortal, 0, 24, 0, g, 0xFFFFFF, 0x000000);
+        TextUtilities.drawOutlinedString(label, 0, 24, 0, g, 0xFFFFFF, 0x000000);
         
         if (isPaused) {
         	//
         	TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
-        	//g.drawImage(pausemenubg, 0, 0, 0);
+        	//g.drawImage(pausemenubg, 0, 0, 0);s
         	g.drawImage(SharkUtilities.scale(transparentblack, getWidth(), getHeight()), 0, 0, 0);
         	g.drawImage(SharkUtilities.scale(transparentblack, getWidth()-12, getHeight()-12), 6, 6, 0);
         	//TextUtilities.drawOutlinedString(levelName, 0, 0, 0, g, 0xffffff, 0x000000);
@@ -1279,6 +1298,10 @@ public class GameScreen extends GameCanvas implements Runnable {
     	g.fillRect(0, 0, getWidth(), getHeight());
     	CustomFont.drawString(bigFont, getWidth() - ("Loading...".length() * 11), getHeight() - 17, 1f, "Loading...", 11, g);
     	flushGraphics();
+    }
+    
+    private void drawdebug(String label) {
+    	this.label = label;
     }
     
     class Point {

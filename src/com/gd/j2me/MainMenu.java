@@ -137,7 +137,7 @@ public class MainMenu extends GameCanvas implements Runnable {
     protected void keyReleased(int keyCode) {
     	int gameAction = getGameAction(keyCode);
     	int keyStates = getKeyStates();
-        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE)) && menu == "mainlevels") {
+        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE)) && menu == "mainlevels" && isRunning) {
         	System.out.println("test");
         	this.stop();
         	SharkUtilities.playWAV("/sounds/wav/playSound_01.wav", getClass(), sfx);
@@ -145,7 +145,7 @@ public class MainMenu extends GameCanvas implements Runnable {
         	midlet.changeObjImage(objimagetoload);
         	selection = null;
         }
-        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE))) {
+        if ((gameAction == FIRE || keyCode == getKeyCode(FIRE)) && isRunning) {
         	menu = "mainlevels";
         	selection = null;
         }
