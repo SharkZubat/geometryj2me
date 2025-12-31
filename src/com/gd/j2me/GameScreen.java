@@ -115,7 +115,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private Image playBtn;
 	private boolean isHitPortal;
 	private InputStream is;
-	private String label;
+	private String label = "test";
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -1264,17 +1264,14 @@ public class GameScreen extends GameCanvas implements Runnable {
         } catch (Exception e) {
         	System.err.println("Details: " + e.getMessage());
         }
-        
         g.drawImage(pauseBtn, getWidth() - 24, 4, 0);
-        
         String progressFixedStr = Integer.toString(progressFixed) + "%";
         
         g.setColor(0xFFFFFF);
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
         //TextUtilities.drawOutlinedString(progressFixed + "%", (getWidth() / 2) - (progressFixedStr.length() * 5), 0, 0, g, 0xFFFFFF, 0x000000);
         CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(progressFixedStr.length() * 22 * 0.25f), 0, 0.5f, progressFixed + "%", 22, g);
-        
-        
+
         String debugStr = "gameVerID:"+gameVerID+"\nlevelName:"+levelName+"\nbgColor:"+bgColor+"\ngnColor:"+gnColor;
         String debugStr2 = "\npyvel:"+velocityY+"\ncx:"+cameraX+"\ndtms:"+deltaTimeMillis+"\nkeystate:"+getKeyStates()+"\nobjlength:"+objx[1];
         
@@ -1306,7 +1303,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     	g.setColor(0x000000);
     	g.fillRect(0, 0, getWidth(), getHeight());
     	CustomFont.drawString(bigFont, getWidth() - ("Loading...".length() * 11), getHeight() - 17, 1f, "Loading...", 11, g);
-    	CustomFont.clearCache();
+    	//\wCustomFont.clearCache();
     	flushGraphics();
     }
     
