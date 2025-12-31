@@ -1296,6 +1296,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         
         //SharkUtilities.splitImg(player, 0, 0, 10, 5);
         
+        CustomFont.clearCache();
+        
         flushGraphics();
     }
     
@@ -1304,6 +1306,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     	g.setColor(0x000000);
     	g.fillRect(0, 0, getWidth(), getHeight());
     	CustomFont.drawString(bigFont, getWidth() - ("Loading...".length() * 11), getHeight() - 17, 1f, "Loading...", 11, g);
+    	CustomFont.clearCache();
     	flushGraphics();
     }
     

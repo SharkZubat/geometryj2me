@@ -211,6 +211,9 @@ public class MainMenu extends GameCanvas implements Runnable {
 
         //draw ground
         renderground(g, groundY, false);
+        
+        CustomFont.clearCache();
+        
         flushGraphics();
     }
     
@@ -221,6 +224,8 @@ public class MainMenu extends GameCanvas implements Runnable {
         g.fillRect(0, 0, getWidth(), getHeight());
         
         CustomFont.drawString(goldFontbig, 0, 0, 0.5f, "Loading Resources", 22, g);
+        
+        CustomFont.clearCache();
 
         flushGraphics();
     }
@@ -253,6 +258,8 @@ public class MainMenu extends GameCanvas implements Runnable {
         g.setColor(0x287DFF);
         g.fillRect(0, 0, getWidth(), getHeight());
         CustomFont.drawString(bigFontbig, 0, 0, 0.5f, "Test Level", 22, g);
+        
+        CustomFont.clearCache();
         
         flushGraphics();
     }
