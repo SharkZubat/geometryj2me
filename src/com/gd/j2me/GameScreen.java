@@ -125,7 +125,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 
     public void start() throws IOException {
         isRunning = true;
-        System.out.println(new Random().nextInt(3) + 9);
+        CustomFont.clearCache();
         
         try {
         	pauseBtn = Image.createImage("/img/GJ_pauseBtn_clean_001.png");
@@ -156,6 +156,9 @@ public class GameScreen extends GameCanvas implements Runnable {
         deltaTimeSeconds = 0;
         progress = 0;
         cameraY = -159-((getHeight()-240));
+        
+    	bgimage = SharkUtilities.tintImage(bgimage2, bgColor);
+    	gnimage = SharkUtilities.tintImage(gnimage2, gnColor);
         
         //LevelLoader.Load("let's Dih!");
         //makenewobj(5, 0, 0);
@@ -254,7 +257,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         	    if (!alreadyExists) {
         	        objimage[objid[i]] = GameObject.getImage(objid[i]);
         	        currentobjid.addElement(idString);
-        	        System.out.println("Successfully added image for ID: " + objid[i]);
         	    }
         	}
         } catch (Exception e) {
@@ -359,7 +361,6 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     protected void pointerPressed(int x, int y) {
     	if (x >= 296 && x <= 316 && y >= 4 && y <= 24) {
-    		System.out.println("pause button holding");
     	} else {
     		isTouchingDown = true;
     	}
@@ -398,7 +399,6 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     protected void pointerReleased(int x, int y) {
     	if ((x >= 296 - (320-getWidth()) && x <= 316 - (320-getWidth()) && y >= 4 && y <= 24) && !isPaused) {
-    		System.out.println("pause button pressed");
     		pause();
     	}
     	
@@ -464,15 +464,6 @@ public class GameScreen extends GameCanvas implements Runnable {
     		GameObjectData o = (GameObjectData) obj.elementAt(i);
         	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
         		if (GameObject.getHitboxType(o.objid) == 1 ) {
-        			//System.out.println((float)objlengthhitbox[i].getHeight() + (float)objlengthhitbox[i].getY());
-        			//System.out.println((float)objlengthhitbox[i].getHeight());
-        			//System.out.println((float)objlengthhitbox[i].getY());
-        			//System.out.println((float)objlengthhitbox[i].getWidth() + (float)objlengthhitbox[i].getX());
-        			//System.out.println((float)objlengthhitbox[i].getWidth());
-        			//System.out.println((float)objlengthhitbox[i].getX());
-        			//System.out.println((float)playerhitbox.getX());
-        			//System.out.println((float)playerhitbox.getY());
-        			//System.out.println((float)playerhitbox.getHeight());
             		try {
             			if (!isDeath) {
             				death();
@@ -486,18 +477,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         	}
         	if (SharkUtilities.Hitbox.isTouching(smallphitbox, objlengthhitbox[i])  && GameObject.getHitboxType(o.objid) != 2 && GameObject.getHitboxType(o.objid) != 3 && GameObject.getHitboxType(o.objid) != 4) {
         		try {
-        			//System.out.println("advanced death log with some positions:");
-        			//System.out.println((float)objlengthhitbox[i].getHeight() + (float)objlengthhitbox[i].getY()+ ((float)objlengthhitbox[i].getHeight() * (float)objlengthhitbox[i].getAnchorY()));
-        			//System.out.println((float)objlengthhitbox[i].getHeight());
-        			//System.out.println((float)objlengthhitbox[i].getX() + ((float)objlengthhitbox[i].getWidth() * (float)objlengthhitbox[i].getAnchorX()));
-        			//System.out.println((float)objlengthhitbox[i].getY() + ((float)objlengthhitbox[i].getHeight() * (float)objlengthhitbox[i].getAnchorY()));
-        			//System.out.println((float)smallphitbox.getY());
-        			//System.out.println((float)smallphitbox.getX());
-        			//System.out.println((float)smallphitbox.getHeight());
-        			//System.out.println((float)smallphitbox.getWidth());
-        			//System.out.println((float)playerhitbox.getX());
-        			//System.out.println((float)playerhitbox.getY() + ((float)playerhitbox.getHeight() * (float)playerhitbox.getAnchorY()));
-        			//System.out.println((float)playerhitbox.getHeight());
         			if (!isDeath) {
         				death();
         				break;
@@ -855,9 +834,6 @@ public class GameScreen extends GameCanvas implements Runnable {
     	//int randomNumber = random.nextInt(10) -159;
 
     	//cameraY = randomNumber;
-    	
-    	bgimage = SharkUtilities.tintImage(bgimage2, bgColor);
-    	gnimage = SharkUtilities.tintImage(gnimage2, gnColor);
     	
     	if (!isDeath) {
     	
@@ -1260,7 +1236,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         //
         try {
-        	CustomFont.drawString(bigFontbig, (int)(((getWidth() / 2)+((0-(int)cameraX)+30-(("Attempt "+attempts).length() * 22*0.6f*0.5f)))), getHeight() / 3, .6f, ("Attempt "+attempts), 22, g);
+        	//CustomFont.drawString(bigFontbig, (int)(((getWidth() / 2)+((0-(int)cameraX)+30-(("Attempt "+attempts).length() * 22*0.6f*0.5f)))), getHeight() / 3, .6f, ("Attempt "+attempts), 22, g);
         } catch (Exception e) {
         	System.err.println("Details: " + e.getMessage());
         }
@@ -1270,7 +1246,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         g.setColor(0xFFFFFF);
         TextUtilities.setFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_LARGE, g);
         //TextUtilities.drawOutlinedString(progressFixed + "%", (getWidth() / 2) - (progressFixedStr.length() * 5), 0, 0, g, 0xFFFFFF, 0x000000);
-        CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(progressFixedStr.length() * 22 * 0.25f), 0, 0.5f, progressFixed + "%", 22, g);
+        //CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(progressFixedStr.length() * 22 * 0.25f), 0, 0.5f, progressFixed + "%", 22, g);
 
         String debugStr = "gameVerID:"+gameVerID+"\nlevelName:"+levelName+"\nbgColor:"+bgColor+"\ngnColor:"+gnColor;
         String debugStr2 = "\npyvel:"+velocityY+"\ncx:"+cameraX+"\ndtms:"+deltaTimeMillis+"\nkeystate:"+getKeyStates()+"\nobjlength:"+objx[1];
@@ -1287,13 +1263,11 @@ public class GameScreen extends GameCanvas implements Runnable {
         	g.drawImage(SharkUtilities.scale(transparentblack, getWidth(), getHeight()), 0, 0, 0);
         	g.drawImage(SharkUtilities.scale(transparentblack, getWidth()-12, getHeight()-12), 6, 6, 0);
         	//TextUtilities.drawOutlinedString(levelName, 0, 0, 0, g, 0xffffff, 0x000000);
-        	CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(levelName.length() * 22 * 0.4f), 6, 0.8f, levelName, 22, g);
+        	//CustomFont.drawString(bigFontbig, (getWidth() / 2) - (int)(levelName.length() * 22 * 0.4f), 6, 0.8f, levelName, 22, g);
         	SharkUtilities.drawImageWithAnchor(playBtn, getWidth()/2, getHeight()/2, 0, -0.5, 0.5, g);
         }
         
         //SharkUtilities.splitImg(player, 0, 0, 10, 5);
-        
-        CustomFont.clearCache();
         
         flushGraphics();
     }
