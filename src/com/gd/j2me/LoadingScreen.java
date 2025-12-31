@@ -116,7 +116,8 @@ public class LoadingScreen extends GameCanvas implements Runnable {
         g.setColor(0x287DFF);
         g.fillRect(0, 0, getWidth(), getHeight());
         
-        CustomFont.drawString(goldFontbig, 0, 0, 0.5f, "Loading Resources", 22, g);
+        TextUtilities.setFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_LARGE, g);
+        TextUtilities.drawOutlinedString("Loading Resources", 0, 0, 0, g, 0xffdd00, 0x000000);
 
         flushGraphics();
     }

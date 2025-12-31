@@ -432,9 +432,9 @@ public class GameScreen extends GameCanvas implements Runnable {
         			if (type==0)
 		            if (isGrounded || isTouched) {
 		            	if (!isFlipped) {
-		            		velocityY = (float) (JUMP_STRENGTH+(GRAVITY * deltaTimeSeconds * 42));
+		            		velocityY = (float) (JUMP_STRENGTH+(GRAVITY * (float)deltaTimeSeconds/2 * 42));
 		            	} else {
-		            		velocityY = (float) (-JUMP_STRENGTH-(GRAVITY * deltaTimeSeconds * 42));
+		            		velocityY = (float) (-JUMP_STRENGTH-(GRAVITY * (float)deltaTimeSeconds/2 * 42));
 		            	}
 		                isGrounded = false;
 		                isTouched = false;
@@ -548,7 +548,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void checkcollisions() {
     	int j = 0;
-    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f)*2;
+    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f);
     	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
     	for (; j < skippedFrames; j++) {
     	boolean secondValue = false;
@@ -656,7 +656,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void checkcollisionswithoutjump() {
     	int j = 0;
-    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f)*2;
+    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f);
     	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
     	for (; j < skippedFrames; j++) {
     	boolean secondValue = false;

@@ -1,6 +1,7 @@
 package com.gd.j2me;
 
 import java.io.InputStream;
+import java.util.Hashtable;
 
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -8,6 +9,9 @@ import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 
 public class SharkUtilities {
+	
+	private static Hashtable rotateCache = new Hashtable();
+    private static Hashtable scaleCache = new Hashtable();
 
 	public static class Hitbox {
 		
@@ -349,6 +353,10 @@ public class SharkUtilities {
 	// Retrieved 2025-12-14, License - CC BY-SA 3.0
 
 	public static Image scale(Image original, int newWidth, int newHeight) {
+		String key = original.hashCode() + "_" + newWidth + "x" + newHeight;
+        Image cached = (Image) scaleCache.get(key);
+        
+        if (cached != null) return cached;
 
 	 int[] rawInput = new int[original.getHeight() * original.getWidth()];
 	 original.getRGB(rawInput, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
@@ -381,7 +389,10 @@ public class SharkUtilities {
 		   }
 		 }
 		 rawInput = null;
-		 return Image.createRGBImage(rawOutput, newWidth, newHeight, true);
+		 Image result = Image.createRGBImage(rawOutput, newWidth, newHeight, true);
+		 
+		 scaleCache.put(key, result);
+		 return result;
 	}
 	
     public static float lerp(float start, float end, float amount) {
@@ -389,6 +400,12 @@ public class SharkUtilities {
     }
     
     public static Image rotateImage(Image image, float angle) {
+    	int roundedAngle = (int)angle % 360;
+        String key = image.hashCode() + "_" + roundedAngle;
+        
+        Image cached = (Image) rotateCache.get(key);
+        if (cached != null) return cached;
+    	
         int[] srcData = new int[image.getWidth() * image.getHeight()];
         image.getRGB(srcData, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
         
@@ -414,7 +431,10 @@ public class SharkUtilities {
             }
         }
 
-        return Image.createRGBImage(dstData, newWidth, newHeight, true);
+        Image result = Image.createRGBImage(dstData, newWidth, newHeight, true);
+        
+        rotateCache.put(key, result);
+        return result;
     }
     
     public static float rotateImageToReturnWidth(Image image, float angle) {
@@ -559,5 +579,10 @@ public class SharkUtilities {
         }
 
         return (r << 16) | (g << 8) | b;
+    }
+    
+    public static void clearCaches() {
+        rotateCache.clear();
+        scaleCache.clear();
     }
 }
