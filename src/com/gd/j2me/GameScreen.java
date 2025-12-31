@@ -569,7 +569,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void checkcollisions() {
     	int j = 0;
-    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f);
+    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f)*2;
     	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
     	for (; j < skippedFrames; j++) {
     	boolean secondValue = false;
@@ -578,8 +578,8 @@ public class GameScreen extends GameCanvas implements Runnable {
     	if (!isFlipped) {
     		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
     		try {
-    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+(10.41667f * (8.334f * 42) * 20)/(skippedFrames-(j/skippedFrames)), playerhitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)/(skippedFrames-(j/skippedFrames)))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+(10.41667f * (8.334f * 42) * 20)/(skippedFrames-(j/skippedFrames)), smallphitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)/(skippedFrames-(j/skippedFrames)))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), playerhitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), smallphitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
     		} catch (ArithmeticException e) {
     			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
     		}
@@ -587,7 +587,8 @@ public class GameScreen extends GameCanvas implements Runnable {
     	} else {
     		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()- ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
     		try {
-    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+(10.41667f * (8.334f * 42) * 20)/(skippedFrames-(j/skippedFrames)), playerhitbox.getY()- ((float)(GRAVITY * (8.334f * 42)/(skippedFrames-(j/skippedFrames)))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), playerhitbox.getY()- ((float)(GRAVITY * (8.334f * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), smallphitbox.getY()- ((float)(GRAVITY * (8.334f * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
     		} catch (ArithmeticException e) {
     			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
     		}
@@ -595,17 +596,6 @@ public class GameScreen extends GameCanvas implements Runnable {
     	}
         for (int i = 0; i < objlength; i++) {
         	GameObjectData o = (GameObjectData) obj.elementAt(i);
-        	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
-	        	if (GameObject.getHitboxType(o.objid) == 2 && !objdataistouching[i]) {
-	        		objdataistouching[i] = true;
-	        		isTrailing = true;
-	        		isHitPortal = true;
-	        		isGrounded = false;
-	        		
-	        		touchportals(i);
-	        		break;
-	        	}
-        	}
         	if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && secondValue) { 
 	        	//System.out.println(SharkUtilities.Hitbox.isTouchingV(smallphitbox, objlengthhitbox[i]));
         		//  + (playerhitbox.getHeight() * (float) playerhitbox.getAnchorY())
@@ -661,11 +651,11 @@ public class GameScreen extends GameCanvas implements Runnable {
         		
         		//System.out.println(-((-objy[i]) + playerhitbox.getHeight()));
 	        	if (!isFlipped) {
-	        		if (j < skippedFrames || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
+	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
 	        			break;
 	        		}
 	        	} else {
-	        		if (j < skippedFrames || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
+	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
 	        			break;
 	        		}
 	        	}
@@ -687,21 +677,38 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void checkcollisionswithoutjump() {
     	int j = 0;
+    	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f)*2;
+    	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
+    	for (; j < skippedFrames; j++) {
+    	boolean secondValue = false;
+    	Hitbox playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    	Hitbox playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX(), smallphitbox.getY(), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
+    	if (!isFlipped) {
+    		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		try {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), playerhitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), smallphitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
+    		} catch (ArithmeticException e) {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		}
+    		secondValue = velocityY > 0;
+    	} else {
+    		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()- ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		try {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), playerhitbox.getY()- ((float)(GRAVITY * (8.334f * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), smallphitbox.getY()- ((float)(GRAVITY * (8.334f * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
+    		} catch (ArithmeticException e) {
+    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    		}
+    		secondValue = velocityY < 0;
+    	}
         for (int i = 0; i < objlength; i++) {
-        	boolean secondValue = false;
         	GameObjectData o = (GameObjectData) obj.elementAt(i);
-        	Hitbox playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-        	if (!isFlipped) {
-        		playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-        		secondValue = velocityY > 0;
-        	} else {
-        		playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()- ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-        		secondValue = velocityY < 0;
-        	}
         	if (SharkUtilities.Hitbox.isTouching(playerhitbox, objlengthhitbox[i])) {
-	        	if (GameObject.getHitboxType(objid[i]) == 2 && !objdataistouching[i]) {
+	        	if (GameObject.getHitboxType(o.objid) == 2 && !objdataistouching[i]) {
 	        		objdataistouching[i] = true;
 	        		isTrailing = true;
+	        		isHitPortal = true;
 	        		isGrounded = false;
 	        		
 	        		touchportals(i);
@@ -738,20 +745,17 @@ public class GameScreen extends GameCanvas implements Runnable {
         		
         		//System.out.println(-((-objy[i]) + playerhitbox.getHeight()));
 	        	if (!isFlipped) {
-	        		if (j < 16 || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
-	        			//break;
-	        		} else {
-	        			j++;
+	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
+	        			break;
 	        		}
 	        	} else {
-	        		if (j < 16 || SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
-	        			//break;
-	        		} else {
-	        			j++;
+	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
+	        			break;
 	        		}
 	        	}
         	}
         }
+    	}
     }
     
     private void touchportals(int i) {
@@ -1121,6 +1125,9 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         if (type==1) {
         	float playerAngletolerp = (float) SharkUtilities.atan2(velocityY, 10.41667 * 1f/120f * 40) * -45;
+        	if (isTouched) {
+        		playerAngletolerp = 0;
+        	}
         	playerAngle = SharkUtilities.lerp(playerAngle, playerAngletolerp, 20f * (float) deltaTimeSeconds);
         	if (-1 < playerAngle && 1 > playerAngle) {
         		playerAngle = 0;
