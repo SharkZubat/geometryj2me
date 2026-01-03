@@ -80,7 +80,7 @@ public class MainMenu extends GameCanvas implements Runnable {
         } catch (IOException ioex) {System.out.println("error:" + ioex);}
         drawloading();
         try {
-        	for (int i = 0; i < 15; i++) {
+        	for (int i = 0; i < 18; i++) {
         		System.out.println(i);
         		objimagetoload[i] = GameObject.getImage(i);
         	}
@@ -231,7 +231,7 @@ public class MainMenu extends GameCanvas implements Runnable {
     
     private void renderground(Graphics g, float y, boolean isUpsideDown) {
     	if (!isUpsideDown) {
-        	for (int i = 0; i-75 < 320; i += 75) {
+        	for (int i = 0; i-75 < getWidth(); i += 75) {
             	SharkUtilities.drawImageWithAnchor(groundRainbow, (int) -groundX+i+(int) (Math.floor((double) (groundX/75))*75), (int) y, 0, 0.0, 0.0, g);
             }
             
@@ -240,7 +240,7 @@ public class MainMenu extends GameCanvas implements Runnable {
             
             SharkUtilities.drawImageWithAnchor(lineimage, getWidth() / 2, (int) y, 0, -0.5, 0, g);
     	} else {
-        	for (int i = 0; i-75 < 320; i += 75) {
+        	for (int i = 0; i-75 < getWidth(); i += 75) {
             	SharkUtilities.drawImageWithAnchor(SharkUtilities.flipImageVertical(groundRainbow), (int) -groundX+i+(int) (Math.floor((double) (groundX/75))*75), (int) y-75, 0, 0.0, 0.0, g);
             }
             

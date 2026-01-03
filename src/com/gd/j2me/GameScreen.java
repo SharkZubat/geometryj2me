@@ -116,6 +116,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	private boolean isHitPortal;
 	private InputStream is;
 	private String label = "test";
+	private Hitbox hitboxinput = SharkUtilities.Hitbox.rect(0,0,0,0,0,0);
     
     public GameScreen(Launcher midlet) {
         super(true);
@@ -549,30 +550,23 @@ public class GameScreen extends GameCanvas implements Runnable {
     private void checkcollisions() {
     	int j = 0;
     	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f);
-    	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
     	for (; j < skippedFrames; j++) {
     	boolean secondValue = false;
     	Hitbox playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
     	Hitbox playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX(), smallphitbox.getY(), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
     	if (!isFlipped) {
     		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()+ ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    		try {
-    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), playerhitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), smallphitbox.getY()+ ((float)(GRAVITY * (8.334f * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
-    		} catch (ArithmeticException e) {
-    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    		}
+    			playerhitboxwithdrop = Hitbox.rect(playerX+((0.008333f * (1/120 * 42) * 20)*(j)), playerY+ ((float)(GRAVITY * (0.008333 * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((0.008333f * (1/120 * 42) * 20)*(j)), smallphitbox.getY()+ ((float)(GRAVITY * (0.008333 * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
     		secondValue = velocityY > 0;
     	} else {
     		//playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY()- ((float)(GRAVITY * deltaTimeSeconds * 42)/(4-(j/16))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    		try {
-    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), playerhitbox.getY()- ((float)(GRAVITY * (8.334f * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((10.41667f * (8.334f * 42) * 20)*(j)), smallphitbox.getY()- ((float)(GRAVITY * (8.334f * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
-    		} catch (ArithmeticException e) {
-    			playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
-    		}
+    			playerhitboxwithdrop = Hitbox.rect(playerX+((0.008333f * (1/120 * 42) * 20)*(j)), playerY- ((float)(GRAVITY * (0.008333 * 42)*(j))), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
+    			playersmallhbwithdrop = Hitbox.rect(smallphitbox.getX()+((0.008333f * (1/120 * 42) * 20)*(j)), smallphitbox.getY()- ((float)(GRAVITY * (0.008333 * 42)*(j))), smallphitbox.getWidth(), smallphitbox.getHeight(), smallphitbox.getAnchorX(), smallphitbox.getAnchorY());
     		secondValue = velocityY < 0;
     	}
+    	drawdebug(playerhitboxwithdrop.getX() + "" + playerhitboxwithdrop.getY());
+    	drawhitbox(playerhitboxwithdrop);
         for (int i = 0; i < objlength; i++) {
         	GameObjectData o = (GameObjectData) obj.elementAt(i);
         	if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && secondValue) { 
@@ -629,12 +623,17 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	}
         		
         		//System.out.println(-((-objy[i]) + playerhitbox.getHeight()));
+	        	if (j != 0) {
+	        	drawdebug("" + j);
+	        	}
 	        	if (!isFlipped) {
-	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingD(smallphitbox, objlengthhitbox[i])) {
+	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i])) {
+	        			checkjumpaftertouch();
 	        			break;
 	        		}
 	        	} else {
-	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i]) && !SharkUtilities.Hitbox.isTouchingU(smallphitbox, objlengthhitbox[i])) {
+	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i])) {
+	        			checkjumpaftertouch();
 	        			break;
 	        		}
 	        	}
@@ -654,10 +653,16 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
     }
     
-    private void checkcollisionswithoutjump() {
+    private void drawhitbox(Hitbox playerhitboxwithdrop) {
+		// TODO Auto-generated method stub
+    	hitboxinput = playerhitboxwithdrop;
+		
+	}
+
+	private void checkcollisionswithoutjump() {
     	int j = 0;
     	int skippedFrames = (int) Math.floor((((float)deltaTimeMillis/1000f)/(1f/120f))+1f);
-    	drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
+    	//drawdebug(String.valueOf(skippedFrames) + "" + isGrounded + "" + isTouched + "" + deltaTimeSeconds);
     	for (; j < skippedFrames; j++) {
     	boolean secondValue = false;
     	Hitbox playerhitboxwithdrop = Hitbox.rect(playerhitbox.getX(), playerhitbox.getY(), playerhitbox.getWidth(), playerhitbox.getHeight(), playerhitbox.getAnchorX(), playerhitbox.getAnchorY());
@@ -861,6 +866,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         playerX += 10.41667 * deltaTimeSeconds * 20;
         checkcollisionswithoutjump();
         playerY += velocityY * deltaTimeSeconds * 39;
+        checkcollisions();
+        checkothercollis();
         checkjumpaftertouch();
         if (playerY < -1800) {
         	try {
@@ -1136,8 +1143,6 @@ public class GameScreen extends GameCanvas implements Runnable {
         GROUND_LEVELint = (int)GROUND_LEVEL;
         smallphitbox = SharkUtilities.Hitbox.rect((int)(playerX+17.5), (int)(playerY+17.5), 5, 5, 0, 0);
         playerhitbox = SharkUtilities.Hitbox.rect(playerX, playerY, playerhitbox.getWidth(), playerhitbox.getHeight(), 0.5, 0.5);
-        checkothercollis();
-        
         }
         
         float cameraYtolerp = 0;
@@ -1157,7 +1162,7 @@ public class GameScreen extends GameCanvas implements Runnable {
     
     private void renderground(Graphics g, float y, boolean isUpsideDown) {
     	if (!isUpsideDown) {
-        	for (int i = 0; i-75 < 320; i += 75) {
+        	for (int i = 0; i-75 < getWidth(); i += 75) {
             	SharkUtilities.drawImageWithAnchor(gnimage, (int) -cameraX+i+(int) (Math.floor((double) (cameraX/75))*75), (int) y, 0, 0.0, 0.0, g);
             }
             
@@ -1166,7 +1171,7 @@ public class GameScreen extends GameCanvas implements Runnable {
             
             SharkUtilities.drawImageWithAnchor(lineimage, getWidth() / 2, (int) y, 0, -0.5, 0, g);
     	} else {
-        	for (int i = 0; i-75 < 320; i += 75) {
+        	for (int i = 0; i-75 < getWidth(); i += 75) {
             	SharkUtilities.drawImageWithAnchor(SharkUtilities.flipImageVertical(gnimage), (int) -cameraX+i+(int) (Math.floor((double) (cameraX/75))*75), (int) y-75, 0, 0.0, 0.0, g);
             }
             
@@ -1222,7 +1227,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         	PlayerObject.renderPlayer(player_2, player, ship, playerAngle, playerXint, cameraX, playerYint, cameraY, type, isFlipped, g);
         }
         
-        for (int i = 0; i-75 < 320; i += 75) {
+        for (int i = 0; i-75 < getWidth(); i += 75) {
         	SharkUtilities.drawImageWithAnchor(gnimage, (int) -cameraX+i+(int) (Math.floor((double) (cameraX/75))*75), (int) -cameraY+20, 0, 0.0, 0.0, g);
         }
         
@@ -1268,6 +1273,8 @@ public class GameScreen extends GameCanvas implements Runnable {
         }
         
         //SharkUtilities.splitImg(player, 0, 0, 10, 5);
+        
+        SharkUtilities.drawHitbox(hitboxinput.getX() + (hitboxinput.getWidth() * (float) hitboxinput.getAnchorX()) - (int)cameraX, hitboxinput.getY() + (hitboxinput.getHeight() * (float) hitboxinput.getAnchorY()) - (int)cameraY, hitboxinput.getWidth(), hitboxinput.getHeight(), g, 0xffffff, 0);
         
         flushGraphics();
     }

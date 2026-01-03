@@ -42,11 +42,14 @@ public class GameObject {
 		objimage[7] = Image.createImage("/img/obj/square_07_001.png");
 		objimage[8] = Image.createImage("/img/obj/spike_01_001.png");
 		objimage[9] = Image.createImage("/img/obj/pit_01_001.png");
-		objimage[10] = Image.createImage("/img/obj/portal_01_001.png");
-		objimage[11] = Image.createImage("/img/obj/portal_02_001.png");
-		objimage[12] = Image.createImage("/img/obj/portal_03_001.png");
-		objimage[13] = Image.createImage("/img/obj/portal_04_001.png");
-		objimage[14] = Image.createImage("/img/obj/square_05_001.png");
+		objimage[10] = Image.createImage("/img/obj/portal_01_back_001.png");
+		objimage[11] = Image.createImage("/img/obj/portal_01_front_001.png");
+		objimage[12] = Image.createImage("/img/obj/portal_02_back_001.png");
+		objimage[13] = Image.createImage("/img/obj/portal_02_front_001.png");
+		objimage[14] = Image.createImage("/img/obj/portal_03_back_001.png");
+		objimage[15] = Image.createImage("/img/obj/portal_03_front_001.png");
+		objimage[16] = Image.createImage("/img/obj/portal_04_back_001.png");
+		objimage[17] = Image.createImage("/img/obj/portal_04_front_001.png");
 	}
 	
 	private static void setuphtypes() {
@@ -96,25 +99,29 @@ public class GameObject {
 		
 		switch (i) {
 			case 10: {
-				if (i == 10)
-				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
-			}
+				if (i == 10) {
+				SharkUtilities.drawImageWithAnchor(image[10], (int) f+10, (int) g, 0, h, i2, g2);
+				SharkUtilities.drawImageWithAnchor(image[11], (int) f+10, (int) g, 0, h, i2, g2);
+			}}
 			case 11: {
-				if (i == 11)
-				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
-			}
+				if (i == 11) {
+				SharkUtilities.drawImageWithAnchor(image[12], (int) f+10, (int) g, 0, h, i2, g2);
+				SharkUtilities.drawImageWithAnchor(image[13], (int) f+10, (int) g, 0, h, i2, g2);
+			}}
 			case 12: {
-				if (i == 12)
-				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
-			}
+				if (i == 12) {
+				SharkUtilities.drawImageWithAnchor(image[14], (int) f+10, (int) g, 0, h, i2, g2);
+				SharkUtilities.drawImageWithAnchor(image[15], (int) f+10, (int) g, 0, h, i2, g2);
+			}}
 			case 13: {
-				if (i == 13)
-				SharkUtilities.drawImageWithAnchor(image[i], (int) f+10, (int) g, 0, h, i2, g2);
-			}
-			case 14: {
+				if (i == 13) {
+				SharkUtilities.drawImageWithAnchor(image[16], (int) f+10, (int) g, 0, h, i2, g2);
+				SharkUtilities.drawImageWithAnchor(image[17], (int) f+10, (int) g, 0, h, i2, g2);
+			}}
+			case 14: {{
 				if (i == 14)
-				SharkUtilities.drawImageWithAnchor(image[i], (int) f, (int) g, 0, h, i2, g2);
-			}
+				SharkUtilities.drawImageWithAnchor(image[1], (int) f+10, (int) g, 0, h, i2, g2);
+			}}
 			default: {
 				if (i != 10 &&
 						i != 11 &&
