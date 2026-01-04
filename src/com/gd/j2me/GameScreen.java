@@ -424,7 +424,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         lastFrameTime = currentFrameTime;
     }
     
-    private void checkjumpaftertouch() {
+    private void checkjumpaftertouch(boolean withframes, float frames) {
         int keyStates = getKeyStates();
         if (!isDeath)
         if (((keyStates & FIRE_PRESSED) != 0 || (keyStates & UP_PRESSED) != 0 || (isTouchingDown)) && !isDeath && !isPaused) {
@@ -432,10 +432,18 @@ public class GameScreen extends GameCanvas implements Runnable {
         		case 0: {
         			if (type==0)
 		            if (isGrounded || isTouched) {
-		            	if (!isFlipped) {
-		            		velocityY = (float) (JUMP_STRENGTH+(GRAVITY * (float)deltaTimeSeconds/2 * 42));
+		            	if (!withframes) {
+			            	if (!isFlipped) {
+			            		velocityY = (float) (JUMP_STRENGTH+(GRAVITY * (float)deltaTimeSeconds/2 * 42));
+			            	} else {
+			            		velocityY = (float) (-JUMP_STRENGTH-(GRAVITY * (float)deltaTimeSeconds/2 * 42));
+			            	}
 		            	} else {
-		            		velocityY = (float) (-JUMP_STRENGTH-(GRAVITY * (float)deltaTimeSeconds/2 * 42));
+			            	if (!isFlipped) {
+			            		velocityY = (float) (JUMP_STRENGTH+(GRAVITY * (float)frames * 42));
+			            	} else {
+			            		velocityY = (float) (-JUMP_STRENGTH-(GRAVITY * (float)frames * 42));
+			            	}
 		            	}
 		                isGrounded = false;
 		                isTouched = false;
@@ -565,7 +573,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	}
 	        	
         	} else {
-        		checkjumpaftertouch();
+        		checkjumpaftertouch(false, 0);
         	}
         }
     }
@@ -616,7 +624,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 		        	}
 		        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1 && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 		        		isGrounded = true;
-		        		checkjumpaftertouch();
+		        		checkjumpaftertouch(true, (float)(skippedFrames-j)/240);
 		        	}
 		        	if (type == 1) {
 			        	if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
@@ -635,7 +643,7 @@ public class GameScreen extends GameCanvas implements Runnable {
 		        	}
 			        if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1 && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
 			        	isGrounded = true;
-			        	checkjumpaftertouch();
+			        	checkjumpaftertouch(true, (float)(skippedFrames-j)/240);
 			        }
 		        	if (type == 1) {
 			        	if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
@@ -657,12 +665,12 @@ public class GameScreen extends GameCanvas implements Runnable {
 	        	}
 	        	if (!isFlipped) {
 	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i])) {
-	        			checkjumpaftertouch();
+	        			checkjumpaftertouch(true, (float)(skippedFrames-j)/240);
 	        			break;
 	        		}
 	        	} else {
 	        		if (SharkUtilities.Hitbox.isTouching(playerhitboxwithdrop, objlengthhitbox[i])) {
-	        			checkjumpaftertouch();
+	        			checkjumpaftertouch(true, (float)(skippedFrames-j)/240);
 	        			break;
 	        		}
 	        	}
@@ -670,11 +678,11 @@ public class GameScreen extends GameCanvas implements Runnable {
         		isTouched = false;
         		if (!isFlipped) {
         			if (!SharkUtilities.Hitbox.isTouchingD(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
-        				checkjumpaftertouch();
+        				checkjumpaftertouch(false, 0);
         			}
         		} else {
         			if (!SharkUtilities.Hitbox.isTouchingU(smallphitbox.expand(-1, -1, 2, 2, 0.0, 0.0), objlengthhitbox[i]) && GameObject.getHitboxType(objid[i]) != 1  && GameObject.getHitboxType(objid[i]) != 2 && GameObject.getHitboxType(objid[i]) != 3 && GameObject.getHitboxType(objid[i]) != 4) {
-        				checkjumpaftertouch();
+        				checkjumpaftertouch(false, 0);
         			}
         		}
         	}
@@ -893,7 +901,7 @@ public class GameScreen extends GameCanvas implements Runnable {
         playerY += velocityY * deltaTimeSeconds * 39;
         checkcollisions();
         checkcollisionswithoutjump();
-        checkjumpaftertouch();
+        checkjumpaftertouch(false, 0);
         if (playerY < -1800) {
         	try {
 				death();
@@ -992,9 +1000,9 @@ public class GameScreen extends GameCanvas implements Runnable {
 			}
 		}
         
-        if (isTouched) {
-        	checkjumpaftertouch();
-        }
+        //if (isTouched) {
+        //	checkjumpaftertouch(false, 0);
+        //}
         
         if (type == 1) {
 	        if (!((playerY) < GROUND_LEVEL-10-(border*20))) {
