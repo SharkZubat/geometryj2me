@@ -1,4 +1,4 @@
-package com.gd.j2me;
+package com.tsg.sharkutilitiesdemo;
 
 import java.io.InputStream;
 import java.util.Hashtable;

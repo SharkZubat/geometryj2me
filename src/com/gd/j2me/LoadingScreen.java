@@ -9,6 +9,9 @@ import javax.microedition.lcdui.*;
 import javax.microedition.media.*;
 import javax.microedition.media.control.*;
 import javax.microedition.midlet.MIDlet;
+
+import com.tsg.sharkutilitiesdemo.SharkUtilities;
+
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -21,7 +24,6 @@ public class LoadingScreen extends GameCanvas implements Runnable {
 	private long currentFrameTime = System.currentTimeMillis();
     private long deltaTimeMillis = currentFrameTime - lastFrameTime;
     private double deltaTimeSeconds = deltaTimeMillis / 1000.0;
-    private GameScreen gameScreen;
     private Launcher midlet;
     
     //ui variables

@@ -6,6 +6,8 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
+import com.tsg.sharkutilitiesdemo.SharkUtilities;
+
 public class CustomFont {
 	private static final String TARGET = "~`!1@2#3$4%5^6&7*8(9)0_-+=[]{}:;\"'|\\<>,.?/QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm ";
 
