@@ -5,22 +5,22 @@ import javax.microedition.midlet.*;
 
 public class Launcher extends MIDlet {
 	private Display display;
-    private DemoCanvas democanvas;
+    private LevelGame levelGame;
     
     public void startApp() {
     	display = Display.getDisplay(this);
-        democanvas = new DemoCanvas();
-        democanvas.start();
-        Display.getDisplay(this).setCurrent(democanvas);
+        levelGame = new LevelGame("tyest");
+        levelGame.start();
+        Display.getDisplay(this).setCurrent(levelGame);
     }
 
     public void pauseApp() {
-        //nothing
+        // todo: make to pause, not returning to beginning one
     }
 
     public void destroyApp(boolean unconditional) {
-        if (democanvas != null) {
-            democanvas.stop();
+        if (levelGame != null) {
+        	levelGame.stop();
         }
     }
     
