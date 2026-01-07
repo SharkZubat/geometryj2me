@@ -231,8 +231,8 @@ public class SharkUtilities {
 	public static void drawImageWithAnchor(Image image, int i, int j, int k,
 			double d, double e, Graphics g) {
 		// TODO Auto-generated method stub
-		int x = (int) (i+(image.getWidth()*d));
-		int y = (int) (j-(image.getHeight()*e)+(40*e));
+		int x = (int) (i-(image.getWidth()*d));
+		int y = (int) (j-(image.getHeight()*e));
 		g.drawImage(image, x, y, k);
 		
 	}
@@ -590,5 +590,11 @@ public class SharkUtilities {
 			int k, Graphics g) {
 		// TODO Auto-generated method stub
 		g.drawImage(rotateImage(objImage, f), (int)(h-(rotateImageToReturnWidth(objImage, f)-objImage.getWidth())/2), (int)(i-(rotateImageToReturnHeight(objImage, f)-objImage.getHeight())/2), k);
+	}
+	
+	public static void drawImageWithDirAnchor(Image objImage, float f, float h, float i,
+			int k, double d, double e, Graphics g) {
+		// TODO Auto-generated method stub
+		SharkUtilities.drawImageWithAnchor(rotateImage(objImage, f), (int)h, (int)i, k, d, e, g);
 	}
 }

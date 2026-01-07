@@ -10,12 +10,12 @@ import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
 public class LevelGame extends GameCanvas implements Runnable {
     private long lastFrameTime = System.currentTimeMillis();
-	private long currentFrameTime = System.currentTimeMillis();
+	public long currentFrameTime = System.currentTimeMillis();
     private long deltaTimeMillis = currentFrameTime - lastFrameTime;
     private double deltaTimeSeconds = deltaTimeMillis / 1000.0;
 	
 	private String levelData = "";
-	private boolean isRunning;
+	public boolean isRunning;
 	private Thread gameThread;
 	
 	//game level settings
@@ -27,6 +27,11 @@ public class LevelGame extends GameCanvas implements Runnable {
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
+	private PlayerScript player = new PlayerScript();
+	
+	//camera
+	private float cameraX = 0;
+	private float cameraY = 0;
 
 	protected LevelGame(String levelData) {
 		super(true);
@@ -59,12 +64,31 @@ public class LevelGame extends GameCanvas implements Runnable {
 		// TODO Auto-generated method stub
 		while (isRunning) {
 			update();
+			controlcamera();
 			draw();
 			flushGraphics();
 			try { Thread.sleep(1); } catch (InterruptedException e) {}
 		}
 	}
 	
+	private void controlcamera() {
+		// TODO Auto-generated method stub
+	    int keyState = getKeyStates();
+
+	    if ((keyState & LEFT_PRESSED) != 0) {
+	        cameraX-=deltaTimeSeconds*256f;
+	    }
+	    if ((keyState & RIGHT_PRESSED) != 0) {
+	    	cameraX+=deltaTimeSeconds*256f;
+	    }
+	    if ((keyState & UP_PRESSED) != 0) {
+	    	cameraY+=deltaTimeSeconds*256f;
+	    }
+	    if ((keyState & DOWN_PRESSED) != 0) {
+	    	cameraY-=256f*deltaTimeSeconds;
+	    }
+	}
+
 	public void freeup() {
 		SharkUtilities.clearCaches();
 		System.gc();
@@ -86,13 +110,22 @@ public class LevelGame extends GameCanvas implements Runnable {
     }
     
     private void renderobject(Image obj, float x, float y, float dir) {
-    	Graphics g = getGraphics();
-    	if (dir == 0) {
-    		g.drawImage(obj, (int)x, (int)y, 0);
-    	} else {
-    		SharkUtilities.drawImageWithDir(objImage, dir, x, y, 0, g);
+    	long calculatedX = (long) ((x-cameraX)/1.363636f+(getWidth()/2));
+    	long calculatedY = (long) ((y+cameraY)/1.363636f+(getHeight()/2));
+    	if (calculatedX > -20
+    			&& calculatedX < getWidth()+20
+    			&& calculatedY > -20
+    			&& calculatedY < getHeight()+20) {
+	    	if (drewlayers <= 100) {
+		    	Graphics g = getGraphics();
+		    	if (dir == 0) {
+		    		SharkUtilities.drawImageWithAnchor(obj, (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    	} else {
+		    		SharkUtilities.drawImageWithDirAnchor(objImage, dir, (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    	}
+		    	drewlayers++;
+	    	}
     	}
-    	drewlayers++;
     }
 	
 	private void draw() {
@@ -101,15 +134,16 @@ public class LevelGame extends GameCanvas implements Runnable {
 		g.setColor(bgColor);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
-		renderobject(objImage,0,0,dirTest);
-		renderobject(objImage,22,0,dirTest);
-		renderobject(objImage,44,0,dirTest);
-		renderobject(objImage,0,22,dirTest);
-		renderobject(objImage,22,22,dirTest);
-		renderobject(objImage,44,22,dirTest);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 2; j++) {
+				renderobject(objImage,i*30,j*30,dirTest);
+			}
+		}
 		
-		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds), 22, g);
-		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn Layers: " + drewlayers, 22, g);
-		CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory() + "KB", 22, g);
+		//SharkUtilities.drawImageWithAnchor(objImage, 0, 0, 0, 0.5, 0.5, g);
+		
+		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds) + "/" + deltaTimeSeconds, 22, g);
+		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
+		CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 	}
 }
