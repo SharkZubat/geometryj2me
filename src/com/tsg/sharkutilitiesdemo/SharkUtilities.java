@@ -585,4 +585,10 @@ public class SharkUtilities {
         rotateCache.clear();
         scaleCache.clear();
     }
+
+	public static void drawImageWithDir(Image objImage, float f, float h, float i,
+			int k, Graphics g) {
+		// TODO Auto-generated method stub
+		g.drawImage(rotateImage(objImage, f), (int)(h-(rotateImageToReturnWidth(objImage, f)-objImage.getWidth())/2), (int)(i-(rotateImageToReturnHeight(objImage, f)-objImage.getHeight())/2), k);
+	}
 }
