@@ -27,5 +27,32 @@ class GameObjectType {
     }
 }
 public class GameObject {
-
+	public int id;
+	public float x;
+	public float y;
+	public boolean h;
+	public boolean v;
+	public float dir;
+	public GameObject(int id, float x, float y, boolean h, boolean v, float dir) {
+		this.id = id;
+		this.x = x;
+		this.y = y;
+		this.h = h;
+		this.v = v;
+		this.dir = dir;
+	}
+	
+	public static String[] getImages() {
+		String[] output = {
+			"square_01_001.png",
+			"square_02_001.png",
+			"square_03_001.png",
+			"square_04_001.png",
+			"square_05_001.png",
+			"square_06_001.png",
+			"square_07_001.png",
+			"spike_01_001.png"
+		};
+		return output;
+	}
 }
