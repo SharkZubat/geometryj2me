@@ -32,8 +32,8 @@ public class GameObject {
 	public float y;
 	public boolean h;
 	public boolean v;
-	public float dir;
-	public GameObject(int id, float x, float y, boolean h, boolean v, float dir) {
+	public Direction dir = new Direction(0);
+	public GameObject(int id, float x, float y, boolean h, boolean v, Direction dir) {
 		this.id = id;
 		this.x = x;
 		this.y = y;

@@ -39,6 +39,18 @@ public class PlayerScript {
 
 	private boolean m_isRising;
 	
+	float m_playerSpeed = 0.9f;
+	float m_snapDifference;
+	
+	boolean _particles1Activated;
+	boolean _particles2Activated;
+	boolean _particles3Activated;
+	
+	Vec2 m_obLastGroundPos;
+	Vec2 m_prevPos;
+
+	double m_dXVel = 5.770002;
+	
 	public float x;
 	public float y;
 	public Direction dir = new Direction(0);
@@ -49,10 +61,11 @@ public class PlayerScript {
 	
 	public void render(Graphics g, float cx, float cy) {
 		g.setColor(0xffffff);
-		g.fillRect((int)(0-cx/1.363636), (int)-(0-cy/1.363636), 22, 22);
+		g.fillRect((int)(0-cx/1.363636), (int)(-0+cy/1.363636), 22, 22);
 	}
 	
-	public void update() {
-		dir.add(6);
+	public void update(double delta) {
+		dir.add(60*delta);
+		x += m_dXVel * delta * 54;
 	}
 }
