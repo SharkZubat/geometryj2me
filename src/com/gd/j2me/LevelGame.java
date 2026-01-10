@@ -39,7 +39,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private Player music;
 	
 	//camera
-	private float cameraX = 0;
+	private float cameraX = -512;
 	private float cameraY = 0;
 
 	protected LevelGame(String levelData) {
@@ -70,8 +70,8 @@ public class LevelGame extends GameCanvas implements Runnable {
 			e.printStackTrace();
 		}
 		try {
-	        InputStream is = getClass().getResourceAsStream("/sounds/midi/mainLoop3.mid");
-	        music = Manager.createPlayer(is, "audio/midi");
+	        InputStream is = getClass().getResourceAsStream("/sounds/amr/DJRubRub.amr");
+	        music = Manager.createPlayer(is, "audio/amr");
 	        music.prefetch();
 	        music.start();
         	is.close();
@@ -107,17 +107,18 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private void controlcamera() {
 		// TODO Auto-generated method stub
 	    int keyState = getKeyStates();
+        cameraX+=deltaTimeSeconds*256f;
 
-	    if ((keyState & LEFT_PRESSED) != 0) {
-	        cameraX-=deltaTimeSeconds*256f;
-	    }
-	    if ((keyState & RIGHT_PRESSED) != 0) {
-	    	cameraX+=deltaTimeSeconds*256f;
-	    }
-	    if ((keyState & UP_PRESSED) != 0) {
+	    //if ((keyState & LEFT_PRESSED) != 0) {
+	    //    cameraX-=deltaTimeSeconds*256f;
+	    //}
+	    //if ((keyState & RIGHT_PRESSED) != 0) {
+	    //	cameraX+=deltaTimeSeconds*256f;
+	    //}
+	    if ((keyState & DOWN_PRESSED) != 0) {
 	    	cameraY+=deltaTimeSeconds*256f;
 	    }
-	    if ((keyState & DOWN_PRESSED) != 0) {
+	    if ((keyState & UP_PRESSED) != 0) {
 	    	cameraY-=256f*deltaTimeSeconds;
 	    }
 	}
@@ -151,6 +152,7 @@ public class LevelGame extends GameCanvas implements Runnable {
     	
     	long calculatedX = (long) ((x-cameraX)/1.363636f+(getWidth()/2));
     	long calculatedY = (long) ((y+cameraY)/1.363636f+(getHeight()/2));
+    	//calculatedX -= (long)deltaTimeSeconds*deltaTimeSeconds;
     	if (calculatedX > -20
     			&& calculatedX < getWidth()+20
     			&& calculatedY > -20
@@ -186,5 +188,6 @@ public class LevelGame extends GameCanvas implements Runnable {
 		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds) + "/" + deltaTimeSeconds, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
+		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX, 22, g);
 	}
 }
