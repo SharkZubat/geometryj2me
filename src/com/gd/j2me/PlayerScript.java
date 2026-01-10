@@ -52,7 +52,7 @@ public class PlayerScript {
 	double m_dXVel = 5.770002;
 	
 	public float x;
-	public float y;
+	public float y=15;
 	public Direction dir = new Direction(0);
 	
 	public PlayerScript() {
@@ -65,7 +65,7 @@ public class PlayerScript {
 	}
 	
 	public void update(double delta) {
-		dir.add(60*delta);
+		dir.add(-360*delta);
 		x += m_dXVel * delta * 54;
 	}
 }

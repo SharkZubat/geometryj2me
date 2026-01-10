@@ -66,7 +66,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 		
 		gobjtest = new GameObject[objsize];
 		gobjtest[0] = new GameObject(1,525,45,false,false,new Direction(0));
-		gobjtest[1] = new GameObject(1,525,15,false,false,new Direction(0));
+		gobjtest[1] = new GameObject(7,525,15,false,false,new Direction(0));
 		gobjtest[2] = new GameObject(1,615,15,false,false,new Direction(0));
 		try {
 			objImage[0] = Image.createImage("/img/obj/square_01_001.png");
@@ -76,8 +76,8 @@ public class LevelGame extends GameCanvas implements Runnable {
 			e.printStackTrace();
 		}
 		try {
-	        InputStream is = getClass().getResourceAsStream("/sounds/amr/DJRubRub.amr");
-	        music = Manager.createPlayer(is, "audio/amr");
+	        InputStream is = getClass().getResourceAsStream("/sounds/midi/Jumper.mid");
+	        music = Manager.createPlayer(is, "audio/midi");
 	        music.prefetch();
 	        music.start();
         	is.close();
@@ -101,6 +101,12 @@ public class LevelGame extends GameCanvas implements Runnable {
 	public void stop() {
 		// TODO Auto-generated method stub
 		isRunning = false;
+		try {
+			music.stop();
+		} catch (MediaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
