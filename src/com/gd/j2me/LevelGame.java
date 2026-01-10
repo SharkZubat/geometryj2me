@@ -70,7 +70,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 			e.printStackTrace();
 		}
 		try {
-	        InputStream is = getClass().getResourceAsStream("/sounds/midi/DryOut.mid");
+	        InputStream is = getClass().getResourceAsStream("/sounds/midi/mainLoop3.mid");
 	        music = Manager.createPlayer(is, "audio/midi");
 	        music.prefetch();
 	        music.start();
@@ -179,7 +179,9 @@ public class LevelGame extends GameCanvas implements Runnable {
 		//	}
 		//}
 		
-		renderobject(objImage[0],gobjtest[0]);
+		renderobject(objImage[1],new GameObject(1,-29,0,false,false,0));
+		renderobject(objImage[1],new GameObject(1,0,0,false,false,0));
+		renderobject(objImage[1],new GameObject(1,30,0,false,false,0));
 		
 		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds) + "/" + deltaTimeSeconds, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
