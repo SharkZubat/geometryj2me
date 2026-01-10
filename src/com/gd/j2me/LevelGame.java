@@ -37,6 +37,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private PlayerScript player = new PlayerScript();
 	private GameObject[] gobjtest = new GameObject[40];
 	private Player music;
+	private PlayerScript curr_player = new PlayerScript();
 	
 	//camera
 	private float cameraX = -512;
@@ -54,7 +55,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 		String[] input = GameObject.getImages();
 		for (int i = 0; i < input.length; i++) {
 			try {
-				objImage[i] = Image.createImage("/img/obj/" + input[i]);
+				objImage[i+1] = Image.createImage("/img/obj/" + input[i]);
 				System.out.println("initalized obj image:" + i);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -84,6 +85,10 @@ public class LevelGame extends GameCanvas implements Runnable {
 			e.printStackTrace();
 		}
 		isRunning = true;
+	    lastFrameTime = System.currentTimeMillis();
+		currentFrameTime = System.currentTimeMillis();
+	    deltaTimeMillis = currentFrameTime - lastFrameTime;
+	    deltaTimeSeconds = deltaTimeMillis / 1000.0;
         gameThread = new Thread(this);
         gameThread.start();
 	}
@@ -99,6 +104,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 			update();
 			controlcamera();
 			draw();
+			curr_player.update();
 			flushGraphics();
 			try { Thread.sleep(1); } catch (InterruptedException e) {}
 		}
@@ -142,7 +148,7 @@ public class LevelGame extends GameCanvas implements Runnable {
         lastFrameTime = currentFrameTime;
     }
     
-    private void renderobject(Image obj, GameObject gobj) {
+    private void renderobject(Image[] obj, GameObject gobj) {
     	int id = gobj.id;
     	float x = gobj.x;
     	float y = gobj.y;
@@ -160,9 +166,9 @@ public class LevelGame extends GameCanvas implements Runnable {
 	    	if (drewlayers <= 100) {
 		    	Graphics g = getGraphics();
 		    	if (dir == 0) {
-		    		SharkUtilities.drawImageWithAnchor(obj, (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithAnchor(obj[id], (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	} else {
-		    		SharkUtilities.drawImageWithDirAnchor(obj, dir, (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithDirAnchor(obj[id], dir, (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	}
 		    	drewlayers++;
 	    	}
@@ -181,13 +187,15 @@ public class LevelGame extends GameCanvas implements Runnable {
 		//	}
 		//}
 		
-		renderobject(objImage[1],new GameObject(1,-29,0,false,false,0));
-		renderobject(objImage[1],new GameObject(1,0,0,false,false,0));
-		renderobject(objImage[1],new GameObject(1,30,0,false,false,0));
+		for (int i = 0; i < 1; i++) {
+			renderobject(objImage,new GameObject(1,-29,0,false,false,0));
+		}
+		renderobject(objImage,new GameObject(1,curr_player.x,curr_player.y,false,false,curr_player.dir.toFloat()));
 		
 		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds) + "/" + deltaTimeSeconds, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX, 22, g);
+		
 	}
 }

@@ -1,5 +1,7 @@
 package com.gd.j2me;
 
+import javax.microedition.lcdui.Graphics;
+
 class PlayerGamemode {
     private final int name;
     private final int ordinal;
@@ -37,7 +39,20 @@ public class PlayerScript {
 
 	private boolean m_isRising;
 	
+	public float x;
+	public float y;
+	public Direction dir = new Direction(0);
+	
 	public PlayerScript() {
 		//
+	}
+	
+	public void render(Graphics g, float cx, float cy) {
+		g.setColor(0xffffff);
+		g.fillRect((int)(0-cx/1.363636), (int)-(0-cy/1.363636), 22, 22);
+	}
+	
+	public void update() {
+		dir.add(6);
 	}
 }
