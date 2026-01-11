@@ -42,7 +42,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	
 	//camera
 	private float cameraX = 0;
-	private float cameraY = 0;
+	private float cameraY = 70;
 
 	protected LevelGame(String levelData) {
 		super(true);
@@ -124,7 +124,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private void controlcamera() {
 		// TODO Auto-generated method stub
 	    int keyState = getKeyStates();
-	    cameraX=curr_player.x;
+	    cameraX=curr_player.x+(getWidth()/6);
 
 	    //if ((keyState & LEFT_PRESSED) != 0) {
 	    //    cameraX-=deltaTimeSeconds*256f;
@@ -167,8 +167,8 @@ public class LevelGame extends GameCanvas implements Runnable {
     	boolean v = gobj.v;
     	Direction dir = gobj.dir;
     	
-    	long calculatedX = (long) ((x-cameraX)/1.363636f+(getWidth()/2));
-    	long calculatedY = (long) ((-y+cameraY)/1.363636f+(getHeight()/2));
+    	long calculatedX = (long) Math.floor((x-cameraX)/1.3636363636363636363636363636363636f+(getWidth()/2));
+    	long calculatedY = (long) Math.floor((-y+cameraY)/1.36363636363636363636363636363636f+(getHeight()/2));
     	//calculatedX -= (long)deltaTimeSeconds*deltaTimeSeconds;
     	if (calculatedX > -20
     			&& calculatedX < getWidth()+20

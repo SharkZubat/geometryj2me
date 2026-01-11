@@ -65,7 +65,7 @@ public class PlayerScript {
 	}
 	
 	public void update(double delta) {
-		dir.add(-360*delta);
+		//dir.add(-360*delta);
 		x += m_dXVel * delta * 54;
 	}
 }
