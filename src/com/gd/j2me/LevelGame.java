@@ -124,7 +124,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private void controlcamera() {
 		// TODO Auto-generated method stub
 	    int keyState = getKeyStates();
-	    cameraX=curr_player.x+(getWidth()/6);
+	    cameraX=curr_player.position.x+(getWidth()/6);
 
 	    //if ((keyState & LEFT_PRESSED) != 0) {
 	    //    cameraX-=deltaTimeSeconds*256f;
@@ -201,12 +201,12 @@ public class LevelGame extends GameCanvas implements Runnable {
 		for (int i = 0; i < objsize; i++) {
 			renderobject(objImage,gobjtest[i]);
 		}
-		renderobject(objImage,new GameObject(1,curr_player.x,curr_player.y,false,false,curr_player.dir));
+		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
 		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds) + "/" + deltaTimeSeconds, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
-		CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
-		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);
+		//CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
+		//CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);
 		
 	}
 }

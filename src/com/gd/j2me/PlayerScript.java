@@ -51,8 +51,7 @@ public class PlayerScript {
 
 	double m_dXVel = 5.770002;
 	
-	public float x;
-	public float y=15;
+	public Vec2 position = new Vec2(0, 15);
 	public Direction dir = new Direction(0);
 	
 	public PlayerScript() {
@@ -66,6 +65,6 @@ public class PlayerScript {
 	
 	public void update(double delta) {
 		//dir.add(-360*delta);
-		x += m_dXVel * delta * 54;
+		position.add(m_dXVel * delta * 54, 0);
 	}
 }
