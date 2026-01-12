@@ -14,6 +14,7 @@ public class Launcher extends MIDlet {
 	    	display = Display.getDisplay(this);
 	        levelGame = new LevelGame("tyest");
 	        levelGame.start();
+	        levelGame.resetdelta();
 	        Display.getDisplay(this).setCurrent(levelGame);
     	}
     }

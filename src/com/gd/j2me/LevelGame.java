@@ -34,7 +34,6 @@ public class LevelGame extends GameCanvas implements Runnable {
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
-	private PlayerScript player = new PlayerScript();
 	private GameObject[] gobjtest = new GameObject[40];
 	private int objsize = 3;
 	private Player music;
@@ -89,13 +88,16 @@ public class LevelGame extends GameCanvas implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		isRunning = true;
+	    isRunning = true;
+        gameThread = new Thread(this);
+        gameThread.start();
+	}
+	
+	public void resetdelta() {
 	    lastFrameTime = System.currentTimeMillis();
 		currentFrameTime = System.currentTimeMillis();
 	    deltaTimeMillis = currentFrameTime - lastFrameTime;
 	    deltaTimeSeconds = deltaTimeMillis / 1000.0;
-        gameThread = new Thread(this);
-        gameThread.start();
 	}
 	
 	public void stop() {
@@ -207,6 +209,6 @@ public class LevelGame extends GameCanvas implements Runnable {
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);
-		
+		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "PY:" + curr_player.m_dYVel, 22, g);
 	}
 }

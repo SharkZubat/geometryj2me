@@ -25,7 +25,7 @@ class PlayerGamemode {
 }
 
 public class PlayerScript {
-	private double m_dYVel = 0;
+	public double m_dYVel = 0;
 	private double m_dGravity = 0.958199;
 	private double m_dJumpHeight = 11.180032;
 	private PlayerGamemode gamemode = PlayerGamemode.PlayerGamemodeCube;
@@ -55,6 +55,7 @@ public class PlayerScript {
 	public Direction dir = new Direction(0);
 	
 	public PlayerScript() {
+		maxvely();
 		//
 	}
 	
@@ -65,6 +66,21 @@ public class PlayerScript {
 	
 	public void update(double delta) {
 		//dir.add(-360*delta);
-		position.add(m_dXVel * delta * 54, 0);
+		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
+		m_dYVel -= m_dGravity * delta * 54;
+		maxvely();
+	}
+	
+	private void maxvely() {
+		switch (gamemode.ordinal()) {
+			case 0: {
+				m_dYVel = Math.min(20, Math.max(-15, m_dYVel));
+				break;
+			}
+			case 1: {
+				m_dYVel = Math.min(7, Math.max(-6.4, m_dYVel));
+				break;
+			}
+		}
 	}
 }
