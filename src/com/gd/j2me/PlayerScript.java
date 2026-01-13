@@ -87,7 +87,7 @@ public class PlayerScript {
 			psf.add(m_dXVel * 0.00416 * 54, (m_dYVel * 0.00416 * 54) + (m_dGravity * 0.00416 * 54)*i);
 			if (psf.y < 15) {
 				position.y = 15;
-				m_dYVel = m_dJumpHeight - (frames-i)*0.00416;
+				m_dYVel = m_dJumpHeight - (frames-i)*0.00416 - dt-(frames*0.00416);
 				break;
 			}
 		}
