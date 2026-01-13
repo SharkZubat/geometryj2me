@@ -26,7 +26,7 @@ class PlayerGamemode {
 
 public class PlayerScript {
 	public static double m_dYVel = 0;
-	private double m_dGravity = 0.958199;
+	double m_dGravity = 0.958199;
 	private double m_dJumpHeight = 11.180032;
 	private PlayerGamemode gamemode = PlayerGamemode.PlayerGamemodeCube;
 	
@@ -69,24 +69,9 @@ public class PlayerScript {
 		//dir.add(-360*delta);
 		m_dYVel -= m_dGravity * delta * 54;
 		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
-		collideground(this, delta);
+		Collide.collideground(this, delta);
 		maxvely();
 	    Launcher.levelGame.cameraX=Launcher.levelGame.curr_player.position.x+(Launcher.levelGame.getWidth()/6);
-	}
-	
-	public void collideground(PlayerScript player, double dt) {
-		Vec2 psf = new Vec2(position.x, position.y);
-		m_prevPos = new Vec2(position.x, position.y);
-		int frames = (int) Math.floor((((float)dt)/(1f/240f))+1f);
-		for (int i=0; i<frames; i++) {
-			System.out.println(i);
-			psf.add(m_dXVel * 0.00416 * 54, (m_dYVel * 0.00416 * 54) + (m_dGravity * 0.00416 * 54)*i);
-			if (psf.y < 15) {
-				position.y = (float) (15 + ((frames-i)*0.0041666f - dt-(frames*0.0041666f)));
-				m_dYVel = m_dJumpHeight;
-				break;
-			}
-		}
 	}
 	
 	private void maxvely() {

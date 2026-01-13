@@ -21,7 +21,7 @@ public class Launcher extends MIDlet {
 
     public void pauseApp() {
         // todo: make to pause, not returning to beginning one
-    	
+        levelGame.resetdelta();
     }
 
     public void destroyApp(boolean arg0) {

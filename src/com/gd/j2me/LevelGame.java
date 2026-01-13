@@ -58,6 +58,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 
 	public void start() {
 		// TODO Auto-generated method stub
+	    cameraX=curr_player.position.x+(getWidth()/6);
 		String[] input = GameObject.getImages();
 		for (int i = 0; i < input.length; i++) {
 			try {
@@ -137,11 +138,11 @@ public class LevelGame extends GameCanvas implements Runnable {
 	        lastTime = currentTime;
 			controlcamera();
 			while (currentTime > nextGameTick) {
-				update();
 				curr_player.update(SKIP_TICKS / 1000.0f);
 				nextGameTick += SKIP_TICKS;
 				currentTime = System.currentTimeMillis();
 			}
+			update();
 			draw();
 			updatefps();
 			flushGraphics();
