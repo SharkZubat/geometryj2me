@@ -5,7 +5,7 @@ import javax.microedition.midlet.*;
 
 public class Launcher extends MIDlet {
 	private Display display;
-    private LevelGame levelGame;
+    public static LevelGame levelGame;
 	private boolean isRunning;
     
     public void startApp() {

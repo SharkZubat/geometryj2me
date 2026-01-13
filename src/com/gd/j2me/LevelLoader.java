@@ -8,6 +8,7 @@ import java.util.*;
 
 public class LevelLoader {
 	public static void Load(String data) throws IOException {
-		//GameScreen.makenewobj(3, 54, 5);
+		Launcher.levelGame.objsize = 1;
+		Launcher.levelGame.addobj(new GameObject(1,525,45,false,false,new Direction(0)));
 	}
 }

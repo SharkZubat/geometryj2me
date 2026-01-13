@@ -34,14 +34,20 @@ public class LevelGame extends GameCanvas implements Runnable {
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
-	private GameObject[] gobjtest = new GameObject[40];
-	private int objsize = 3;
+	private static GameObject[] gobjtest = new GameObject[40];
+	public int objsize = 1;
 	private Player music;
 	private PlayerScript curr_player = new PlayerScript();
 	
 	//camera
 	private float cameraX = 0;
 	private float cameraY = 70;
+	private int objcount = 0;
+	
+	private long lastFpsCheck = System.currentTimeMillis();
+	private int currentFrames = 0;
+	private int framesPerSecond = 0;
+
 
 	protected LevelGame(String levelData) {
 		super(true);
@@ -64,9 +70,12 @@ public class LevelGame extends GameCanvas implements Runnable {
 		}
 		
 		gobjtest = new GameObject[objsize];
-		gobjtest[0] = new GameObject(1,525,45,false,false,new Direction(0));
-		gobjtest[1] = new GameObject(7,525,15,false,false,new Direction(0));
-		gobjtest[2] = new GameObject(1,615,15,false,false,new Direction(0));
+		try {
+			LevelLoader.Load(levelData);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			objImage[0] = Image.createImage("/img/obj/square_01_001.png");
 			bigFontBig = Image.createImage("/img/fonts/bigFont-24.png");
@@ -100,6 +109,11 @@ public class LevelGame extends GameCanvas implements Runnable {
 	    deltaTimeSeconds = deltaTimeMillis / 1000.0;
 	}
 	
+	public void addobj(GameObject data) {
+		gobjtest[objcount] = data;
+		objcount++;
+	}
+	
 	public void stop() {
 		// TODO Auto-generated method stub
 		isRunning = false;
@@ -117,6 +131,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 			update();
 			controlcamera();
 			draw();
+			updatefps();
 			curr_player.update(deltaTimeSeconds);
 			flushGraphics();
 			try { Thread.sleep(1); } catch (InterruptedException e) {}
@@ -187,6 +202,16 @@ public class LevelGame extends GameCanvas implements Runnable {
 	    	}
     	}
     }
+    
+    private void updatefps() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastFpsCheck >= 1000) {
+            framesPerSecond = (int) (currentFrames);
+            currentFrames = 0;
+            lastFpsCheck = currentTime;
+        }
+    }
+
 	
 	private void draw() {
 		Graphics g = getGraphics();
@@ -205,10 +230,11 @@ public class LevelGame extends GameCanvas implements Runnable {
 		}
 		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
-		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(1f/deltaTimeSeconds) + "/" + deltaTimeSeconds, 22, g);
+		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(framesPerSecond) + "/" + deltaTimeSeconds, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);
 		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "PY:" + curr_player.m_dYVel, 22, g);
+		currentFrames++;
 	}
 }
