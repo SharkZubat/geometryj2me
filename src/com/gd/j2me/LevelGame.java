@@ -40,7 +40,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	PlayerScript curr_player = new PlayerScript();
 	
 	//camera
-	private float cameraX = 0;
+	float cameraX = 0;
 	private float cameraY = 70;
 	private int objcount = 0;
 	
@@ -127,21 +127,35 @@ public class LevelGame extends GameCanvas implements Runnable {
 	
 	public void run() {
 		// TODO Auto-generated method stub
+	    long lastTime = System.currentTimeMillis();
+	    final int TPS = 240;
+	    final int SKIP_TICKS = 1000 / TPS;
+	    long nextGameTick = System.currentTimeMillis();
 		while (isRunning) {
+	        long currentTime = System.currentTimeMillis();
+	        long deltaTime = currentTime - lastTime;
+	        lastTime = currentTime;
 			controlcamera();
+			while (currentTime > nextGameTick) {
+				update();
+				curr_player.update(SKIP_TICKS / 1000.0f);
+				nextGameTick += SKIP_TICKS;
+				currentTime = System.currentTimeMillis();
+			}
 			draw();
 			updatefps();
-			curr_player.update(deltaTimeSeconds);
-			update();
 			flushGraphics();
-			try { Thread.sleep(1); } catch (InterruptedException e) {}
+	        try {
+	            Thread.sleep(Math.max(0, nextGameTick - currentTime));
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
 		}
 	}
 	
 	private void controlcamera() {
 		// TODO Auto-generated method stub
 	    int keyState = getKeyStates();
-	    cameraX=curr_player.position.x+(getWidth()/6);
 
 	    //if ((keyState & LEFT_PRESSED) != 0) {
 	    //    cameraX-=deltaTimeSeconds*256f;
@@ -230,7 +244,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 		}
 		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
-		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(framesPerSecond) + "/" + deltaTimeSeconds, 22, g);
+		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(framesPerSecond), 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);

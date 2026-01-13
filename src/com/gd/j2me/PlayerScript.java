@@ -71,6 +71,7 @@ public class PlayerScript {
 		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
 		collideground(this, delta);
 		maxvely();
+	    Launcher.levelGame.cameraX=Launcher.levelGame.curr_player.position.x+(Launcher.levelGame.getWidth()/6);
 	}
 	
 	public void collideground(PlayerScript player, double dt) {
