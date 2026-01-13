@@ -67,13 +67,8 @@ public class PlayerScript {
 	
 	public void update(double delta) {
 		//dir.add(-360*delta);
-		try {
-			//position = m_prevPos;
-		} catch (Exception e) {
-			// do nothing
-		}
-		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
 		m_dYVel -= m_dGravity * delta * 54;
+		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
 		collideground(this, delta);
 		maxvely();
 	}
@@ -87,7 +82,7 @@ public class PlayerScript {
 			psf.add(m_dXVel * 0.00416 * 54, (m_dYVel * 0.00416 * 54) + (m_dGravity * 0.00416 * 54)*i);
 			if (psf.y < 15) {
 				position.y = 15;
-				m_dYVel = m_dJumpHeight - (frames-i)*0.0041666f - dt-(frames*0.0041666f);
+				m_dYVel = m_dJumpHeight;
 				break;
 			}
 		}
