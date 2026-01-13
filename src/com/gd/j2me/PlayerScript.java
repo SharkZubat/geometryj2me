@@ -81,7 +81,7 @@ public class PlayerScript {
 			System.out.println(i);
 			psf.add(m_dXVel * 0.00416 * 54, (m_dYVel * 0.00416 * 54) + (m_dGravity * 0.00416 * 54)*i);
 			if (psf.y < 15) {
-				position.y = 15;
+				position.y = (float) (15 + ((frames-i)*0.0041666f - dt-(frames*0.0041666f)));
 				m_dYVel = m_dJumpHeight;
 				break;
 			}
