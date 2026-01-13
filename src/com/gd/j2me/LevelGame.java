@@ -37,7 +37,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private static GameObject[] gobjtest = new GameObject[40];
 	public int objsize = 1;
 	private Player music;
-	private PlayerScript curr_player = new PlayerScript();
+	PlayerScript curr_player = new PlayerScript();
 	
 	//camera
 	private float cameraX = 0;
@@ -128,11 +128,11 @@ public class LevelGame extends GameCanvas implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		while (isRunning) {
-			update();
 			controlcamera();
 			draw();
 			updatefps();
 			curr_player.update(deltaTimeSeconds);
+			update();
 			flushGraphics();
 			try { Thread.sleep(1); } catch (InterruptedException e) {}
 		}
@@ -234,7 +234,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);
-		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "PY:" + curr_player.m_dYVel, 22, g);
+		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "PY:" + curr_player.position.y, 22, g);
 		currentFrames++;
 	}
 }

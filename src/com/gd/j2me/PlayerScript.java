@@ -25,7 +25,7 @@ class PlayerGamemode {
 }
 
 public class PlayerScript {
-	public double m_dYVel = 0;
+	public static double m_dYVel = 0;
 	private double m_dGravity = 0.958199;
 	private double m_dJumpHeight = 11.180032;
 	private PlayerGamemode gamemode = PlayerGamemode.PlayerGamemodeCube;
@@ -47,12 +47,13 @@ public class PlayerScript {
 	boolean _particles3Activated;
 	
 	Vec2 m_obLastGroundPos;
-	Vec2 m_prevPos;
+	Vec2 m_prevPos = new Vec2(0, 15);
 
 	double m_dXVel = 5.770002;
 	
 	public Vec2 position = new Vec2(0, 15);
 	public Direction dir = new Direction(0);
+	public boolean m_movingState;
 	
 	public PlayerScript() {
 		maxvely();
@@ -66,9 +67,30 @@ public class PlayerScript {
 	
 	public void update(double delta) {
 		//dir.add(-360*delta);
+		try {
+			//position = m_prevPos;
+		} catch (Exception e) {
+			// do nothing
+		}
 		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
 		m_dYVel -= m_dGravity * delta * 54;
+		collideground(this, delta);
 		maxvely();
+	}
+	
+	public void collideground(PlayerScript player, double dt) {
+		Vec2 psf = new Vec2(position.x, position.y);
+		m_prevPos = new Vec2(position.x, position.y);
+		int frames = (int) Math.floor((((float)dt)/(1f/240f))+1f);
+		for (int i=0; i<frames; i++) {
+			System.out.println(i);
+			psf.add(m_dXVel * 0.00416 * 54, (m_dYVel * 0.00416 * 54) + (m_dGravity * 0.00416 * 54)*i);
+			if (psf.y < 15) {
+				position.y = 15;
+				m_dYVel = m_dJumpHeight - (frames-i)*0.00416;
+				break;
+			}
+		}
 	}
 	
 	private void maxvely() {
