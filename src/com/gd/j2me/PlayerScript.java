@@ -1,6 +1,9 @@
 package com.gd.j2me;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.game.GameCanvas;
+
+import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
 class PlayerGamemode {
     private final int name;
@@ -30,7 +33,7 @@ public class PlayerScript {
 	private double m_dJumpHeight = 11.180032;
 	private PlayerGamemode gamemode = PlayerGamemode.PlayerGamemodeCube;
 	
-	private boolean m_bOnGround;
+	boolean m_bOnGround;
 
 	private boolean m_bIsDead;
 	private boolean m_bIsLocked;
@@ -38,6 +41,9 @@ public class PlayerScript {
 	private boolean m_bGravityFlipped;
 
 	private boolean m_isRising;
+	private boolean m_bIsHolding = false;
+	
+	boolean m_bIsRotating = false;
 	
 	float m_playerSpeed = 0.9f;
 	float m_snapDifference;
@@ -53,7 +59,6 @@ public class PlayerScript {
 	
 	public Vec2 position = new Vec2(0, 15);
 	public Direction dir = new Direction(0);
-	public boolean m_movingState;
 	
 	public PlayerScript() {
 		maxvely();
@@ -65,15 +70,41 @@ public class PlayerScript {
 		g.fillRect((int)(0-cx/1.363636), (int)(-0+cy/1.363636), 22, 22);
 	}
 	
-	public void update(double delta) {
-		//dir.add(-360*delta);
+	public void update(double delta, boolean isHolding) {
+		if (m_bIsRotating) {
+			dir.add(-180*delta*flipMod()/0.41);
+		} else {
+			dir.set((int)SharkUtilities.lerp(dir.toFloat(), 90*SharkUtilities.round(dir.toFloat()/90), delta/0.075));
+		}
 		m_dYVel -= m_dGravity * delta * 54;
 		position.add(m_dXVel * delta * 54, m_dYVel * delta * 54);
 		Collide.collideground(this, delta);
+		if (isHolding) {
+			jump();
+		}
 		maxvely();
 	    Launcher.levelGame.cameraX=Launcher.levelGame.curr_player.position.x+(Launcher.levelGame.getWidth()/6);
 	}
 	
+	private void jump() {
+		// TODO Auto-generated method stub
+		if (m_bOnGround) {
+			m_dYVel = m_dJumpHeight;
+			m_bOnGround = false;
+			m_bIsRotating = true;
+		}
+	}
+	
+	private float flipMod() { return m_bGravityFlipped ? -1.0f : 1.0f; }
+	
+	private boolean isGravityFlipped() {
+		return m_bGravityFlipped;
+	}
+
+	boolean isDead() { return m_bIsDead; }
+
+	boolean isOnGround() { return m_bOnGround; }
+
 	private void maxvely() {
 		switch (gamemode.ordinal()) {
 			case 0: {

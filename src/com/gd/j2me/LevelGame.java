@@ -47,6 +47,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private long lastFpsCheck = System.currentTimeMillis();
 	private int currentFrames = 0;
 	private int framesPerSecond = 0;
+	private boolean isHolding;
 
 
 	protected LevelGame(String levelData) {
@@ -138,7 +139,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	        lastTime = currentTime;
 			controlcamera();
 			while (currentTime > nextGameTick) {
-				curr_player.update(SKIP_TICKS / 1000.0f);
+				curr_player.update(SKIP_TICKS / 1000.0f, isHolding);
 				nextGameTick += SKIP_TICKS;
 				currentTime = System.currentTimeMillis();
 			}
@@ -177,6 +178,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	}
 	
     private void update() {
+	    int keyState = getKeyStates();
     	currentFrameTime = System.currentTimeMillis();
         deltaTimeMillis = currentFrameTime - lastFrameTime;
         deltaTimeSeconds = deltaTimeMillis / 1000.0;
@@ -187,6 +189,12 @@ public class LevelGame extends GameCanvas implements Runnable {
         if (Runtime.getRuntime().freeMemory()/1024 <= Runtime.getRuntime().totalMemory()/1024/2) {
         	freeup();
         }
+        
+	    if (((keyState & FIRE_PRESSED) != 0) || ((keyState & KEY_NUM5) != 0) || ((keyState & KEY_NUM2) != 0)) {
+	    	isHolding = true;
+	    } else {
+	    	isHolding = false;
+	    }
         
         lastFrameTime = currentFrameTime;
     }
@@ -249,7 +257,6 @@ public class LevelGame extends GameCanvas implements Runnable {
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 72, 0.5f, "RAM: " + Runtime.getRuntime().freeMemory()/1024 + "KB/" + Runtime.getRuntime().totalMemory()/1024 + "KB", 22, g);
 		//CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "CamX: " + (int)cameraX + "CamY:" + (int)cameraY, 22, g);
-		CustomFont.drawString(bigFontBig, 0, 86, 0.5f, "PY:" + curr_player.position.y, 22, g);
 		currentFrames++;
 	}
 }

@@ -395,12 +395,20 @@ public class SharkUtilities {
 		 return result;
 	}
 	
+    public static float lerp(int start, int end, int amount) {
+        return start + (end - start) * amount;
+    }
+    
     public static float lerp(float start, float end, float amount) {
         return start + (end - start) * amount;
     }
     
+    public static float lerp(double start, double end, double amount) {
+        return (float) (start + (end - start) * amount);
+    }
+    
     public static Image rotateImage(Image image, float angle) {
-    	int roundedAngle = (int)angle % 360;
+    	float roundedAngle = angle % 360;
         String key = image.hashCode() + "_" + roundedAngle;
         
         Image cached = (Image) rotateCache.get(key);
@@ -597,4 +605,27 @@ public class SharkUtilities {
 		// TODO Auto-generated method stub
 		SharkUtilities.drawImageWithAnchor(rotateImage(objImage, f), (int)h, (int)i, k, d, e, g);
 	}
+
+	public static float round(float num) {
+		// TODO Auto-generated method stub
+		return (float) Math.floor(num+0.5f);
+	}
+	
+	public static double round(double num) {
+		// TODO Auto-generated method stub
+		return (double) Math.floor(num+0.5f);
+	}
+	
+	public static float slerp(float start, float end, float t) {
+        float dot = start * end;
+        
+        if (t < 0) t = 0;
+        if (t > 1) t = 1;
+
+        float diff = end - start;
+        while (diff < -180) diff += 360;
+        while (diff > 180) diff -= 360;
+        
+        return start + (diff * t);
+    }
 }

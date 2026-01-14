@@ -11,6 +11,9 @@ public class Collide {
 			if (psf.y < 15) {
 				player.position.y = (float) (15 + ((frames-i)*0.0041666f + dt-(frames*0.0041666f)));
 				player.m_dYVel = 1f/32;
+				player.m_bIsRotating = false;
+				player.m_bOnGround = true;
+				player.m_obLastGroundPos = psf;
 				break;
 			}
 		}

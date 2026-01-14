@@ -1,0 +1,167 @@
+<!-- $Id: package.html,v 1.2 2004/08/03 04:57:43 Dave Exp $ -->
+
+<body>
+
+Provides classes for performing IEEE-754 floating-point arithmetic on 
+JVM implementations which lack native <code>float</code> and <code>double</code>
+datatypes. This is intended for use on 
+"micro" devices such as mobile phones, which implement the 
+<a target="_top" href="http://java.sun.com/products/cldc/">CLDC 1.0</a> specification. 
+Note that <a target="_top" 
+href="http://jcp.org/aboutJava/communityprocess/final/jsr139/index.html">CLDC
+1.1</a> includes native floating-point support, so you don't need this library
+when running on a CLDC 1.1 JVM.
+<p>
+The classes in this package overload the <code>int</code> and <code>long</code> 
+data types by storing <code>float</code> and <code>double</code> data in them,
+respectively.  The format is the same one used by
+<a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Float.html#floatToIntBits(float)">Float.floatToIntBits(float)</a>
+<a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Double.html#doubleToLongBits(double)">Double.doubleToLongBits(double)</a>
+
+When working with these
+values, you should be careful to avoid integer arithmetic, comparison, and 
+typecasts, all of which can lead to meaningless results.
+For the sake of simplicity, 
+parameter types and return values are frequently
+referred to in this documentation as <code>double</code> or <code>float</code>
+types when their actual type is <code>long</code> or <code>int</code>.  
+Although literally incorrect, this means that the values are treated as
+a <code>double</code> or <code>float</code>.  
+<p>
+Generally speaking, the methods in this package duplicate J2SE native floating 
+point functions exactly.  However there are some exceptions:
+<ol>
+
+<li>All arithmetic is performed in
+<a target="_top" href="http://java.sun.com/docs/books/jls/second_edition/html/expressions.doc.html#249198">FP-Strict</a>
+mode.  Since most J2SE JVMs use extended precision for 
+intermediate calculations, this can cause minor discrepancies in results for
+primitive operations unless they are in a <code>strictfp</code> block,
+and for elementary function like sin and log, for which there is no way to
+disable use of extended precision.</li>
+
+<li>The <code>String</code> conversion methods use a different technique
+from the implementations in <code>Float</code> and 
+<code>Double</code>, and are sometimes less accurate.  I believe the 
+error is no more than one ulp in all cases.  Although not identical to their 
+J2SE counterparts,
+<code>toString</code> and <code>parseFloat</code> / <code>parseDouble</code> 
+should at least be consistent with one another.  In other words 
+<code>MicroDouble.parseDouble(MicroDouble.toString(d)) == d</code>.</li>
+
+<li>There are a few bugs in various J2SE implementations.  
+I myself have found bugs in <code>Math.rint</code> 
+and <code>Math.round</code>,
+and others have reported problems with <code>Math.pow</code> and
+<code>Math.tan</code>.</li>
+
+<li>There may be bugs in this code. Caveat emptor.</li>
+
+</ol>
+
+
+Using this package, you should be able
+to port most code which uses floating-point numbers to run on a CLDC 1.0 JVM.
+Here is a simple example:
+<p>
+<pre>
+// old function using native floating point arithmetic
+public double averageThreeNumbers(double a, double b, double c) {
+  return (a + b + c) / 3;
+}
+
+// new function using microfloat arithmetic
+import net.dclausen.microfloat.*;
+
+private static final long THREE = 0x4008000000000000L; 
+public long averageThreeNumbers(long a, long b, long c) {
+  return MicroDouble.div(MicroDouble.add(MicroDouble.add(a, b), c), THREE);
+}
+</pre>
+
+You can obtain constants like <code>THREE</code> above by having a simple
+J2SE helper class with a main method like this:
+<p>
+<pre>
+public static void main(String[] args) {
+  System.out.println(Long.toHexString(Double.doubleToLongBits(3)));
+}
+</pre>
+When building this package for a J2ME midlet or other memory-sensitive target,
+you should use an obfuscator such as 
+<a target="_top" href="http://www.retrologic.com/retroguard-main.html">RetroGuard</a>
+or 
+<a target="_top" href="http://proguard.sourceforge.net/">ProGuard</a>. 
+This will strip out code for methods which you aren't using, in addition to doing other
+size optimizations.  Typically this results in a much smaller JAR file.
+<p>
+Visit the project homepage at <a
+href="http://www.dclausen.net/projects/microfloat">http://www.dclausen.net/projects/microfloat</a>
+for more information and updates.
+<h2>Related Projects</h2>
+<ul>
+<li><a target="_top" href="http://home.rochester.rr.com/ohommes/MathFP/">MathFP</a>, a
+J2ME math library which uses fixed-point rather than floating-point numbers. 
+Closed-source.</li>
+<li><a target="_top"
+href="http://henson.newmail.ru/j2me/Float.htm">henson.midp.Float</a>, a 
+floating-point library which uses its own (non-IEEE) format.  Licensing
+appears to be BSD-like.</li>
+<li><a target="_top" href="http://gridbug.ods.org/Real.html">ral.Real</a>,
+another non-IEEE floating-point library.  GPL.</li>
+<li><a target="_top" href="http://www.jhauser.us/arithmetic/SoftFloat.html">SoftFloat</a>,
+an open-source C library for doing IEEE-754 floating point in software.  This is
+a good reference implementation of the IEEE spec, although it only deals with
+primitive operations such as add and divide.</li>
+<li><a target="_top"
+href="http://netlib.bell-labs.com/netlib/fdlibm/index.html">FDLIBM</a>, the C
+library behind <code>java.lang.Math</code>.  Many of the corresponding functions
+in <code>MicroDouble</code> are ports from FDLIBM.</li>
+</ul>
+
+<h2>License</h2>
+<pre>
+Copyright (C) 2003, 2004 David Clausen
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+Portions of this software are derived from FDLIBM, which contained the
+following notice:
+
+====================================================
+Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+
+Developed at SunSoft, a Sun Microsystems, Inc. business.
+Permission to use, copy, modify, and distribute this
+software is freely granted, provided that this notice 
+is preserved.
+====================================================
+
+
+</pre>
+
+@author David Clausen
+@see <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Float.html">Float</a>
+@see <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Double.html">Double</a>
+@see <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Math.html">Math</a>
+@see <a target="_top" href="http://java.sun.com/docs/books/jls/second_edition/html/typesValues.doc.html#9208">JLS section 4.2.3</a>
+@see <a target="_top" href="http://java.sun.com/docs/books/jls/second_edition/html/expressions.doc.html">JLS chapter 15</a>
+@see <a target="_top" href="http://docs.sun.com/source/806-3568/ncg_math.html">Numerical computation guide</a> 
+</body>
