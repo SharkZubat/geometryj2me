@@ -3,6 +3,8 @@ package com.gd.j2me;
 import javax.microedition.lcdui.*;
 import javax.microedition.lcdui.game.*;
 
+import com.tsg.hitbox.Direction;
+
 import java.io.IOException;
 import java.util.*;
 

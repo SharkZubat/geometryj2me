@@ -1,5 +1,7 @@
 package com.gd.j2me;
 
+import com.tsg.hitbox.Direction;
+
 class GameObjectType {
     private final int name;
     private final int ordinal;

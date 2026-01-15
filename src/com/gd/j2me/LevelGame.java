@@ -10,6 +10,7 @@ import javax.microedition.media.*;
 import javax.microedition.media.control.*;
 import javax.microedition.midlet.MIDlet;
 
+import com.tsg.hitbox.Direction;
 import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
 import java.io.InputStream;

@@ -3,6 +3,7 @@ package com.gd.j2me;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
 
+import com.tsg.hitbox.Direction;
 import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
 class PlayerGamemode {
@@ -59,6 +60,8 @@ public class PlayerScript {
 	
 	public Vec2 position = new Vec2(0, 15);
 	public Direction dir = new Direction(0);
+	
+	public boolean m_bNoclipOn;
 	
 	public PlayerScript() {
 		maxvely();

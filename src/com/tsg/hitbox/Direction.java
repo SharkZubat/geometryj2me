@@ -1,4 +1,4 @@
-package com.gd.j2me;
+package com.tsg.hitbox;
 
 public class Direction {
 	private float i;
