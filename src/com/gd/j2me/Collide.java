@@ -1,4 +1,6 @@
 package com.gd.j2me;
+import com.tsg.*;
+import com.tsg.hitbox.Hitbox;
 
 public class Collide {
 	public static void collideground(PlayerScript player, double dt) {
@@ -16,6 +18,12 @@ public class Collide {
 				player.m_obLastGroundPos = psf;
 				break;
 			}
+		}
+	}
+	
+	public static void collideobjects(PlayerScript player) {
+		if (Hitbox.RectRectCollision(player.hitbox, new Hitbox.Rectangle(30, 30, 50, 15), 0, false, true)) {
+			System.out.println("the hitbox is touching :)");
 		}
 	}
 }

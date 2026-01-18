@@ -4,6 +4,8 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
 
 import com.tsg.hitbox.Direction;
+import com.tsg.hitbox.Hitbox;
+import com.tsg.hitbox.Hitbox.Rectangle;
 import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
 class PlayerGamemode {
@@ -62,6 +64,7 @@ public class PlayerScript {
 	public Direction dir = new Direction(0);
 	
 	public boolean m_bNoclipOn;
+    Rectangle hitbox = new Hitbox.Rectangle(30, 30, 0, 15);
 	
 	public PlayerScript() {
 		maxvely();
@@ -86,6 +89,7 @@ public class PlayerScript {
 			jump();
 		}
 		maxvely();
+		Collide.collideobjects(this);
 	    Launcher.levelGame.cameraX=Launcher.levelGame.curr_player.position.x+(Launcher.levelGame.getWidth()/6);
 	}
 	
