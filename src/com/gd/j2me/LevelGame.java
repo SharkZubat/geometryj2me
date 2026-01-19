@@ -64,9 +64,10 @@ public class LevelGame extends GameCanvas implements Runnable {
 		String[] input = GameObject.getImages();
 		for (int i = 0; i < input.length; i++) {
 			try {
-			    LevelLoader.Load(levelData); // Pass the filename
-			} catch (IOException e1) {
-			    e1.printStackTrace();
+				objImage[i+1] = Image.createImage("/img/obj/" + input[i]);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -75,6 +76,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 			LevelLoader.Load(levelData);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
+			System.out.println("error");
 			e1.printStackTrace();
 		}
 		try {
@@ -248,7 +250,12 @@ public class LevelGame extends GameCanvas implements Runnable {
 		//}
 		
 		for (int i = 0; i < objsize; i++) {
-			renderobject(objImage,gobjtest[i]);
+			try {
+				System.out.println("rendering object" + gobjtest[i].id);
+				renderobject(objImage,gobjtest[i]);
+			} catch (Exception e) {
+				System.out.println("rendering object fail" + gobjtest[i].id);
+			}
 		}
 		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
