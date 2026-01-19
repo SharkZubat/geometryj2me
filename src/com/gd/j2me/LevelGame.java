@@ -35,7 +35,7 @@ public class LevelGame extends GameCanvas implements Runnable {
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
-	private static GameObject[] gobjtest = new GameObject[40];
+	private static GameObject[] gobjtest = new GameObject[5000];
 	public int objsize = 1;
 	private Player music;
 	PlayerScript curr_player = new PlayerScript();
@@ -64,15 +64,13 @@ public class LevelGame extends GameCanvas implements Runnable {
 		String[] input = GameObject.getImages();
 		for (int i = 0; i < input.length; i++) {
 			try {
-				objImage[i+1] = Image.createImage("/img/obj/" + input[i]);
-				System.out.println("initalized obj image:" + i);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    LevelLoader.Load(levelData); // Pass the filename
+			} catch (IOException e1) {
+			    e1.printStackTrace();
 			}
 		}
 		
-		gobjtest = new GameObject[objsize];
+		//gobjtest = new GameObject[objsize];
 		try {
 			LevelLoader.Load(levelData);
 		} catch (IOException e1) {
