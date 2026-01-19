@@ -9,8 +9,41 @@ import java.io.IOException;
 import java.util.*;
 
 public class LevelLoader {
-	public static void Load(String data) throws IOException {
-		Launcher.levelGame.objsize = 1;
-		Launcher.levelGame.addobj(new GameObject(1,525,45,false,false,new Direction(0)));
+	
+	/**
+	 * Load a level from a GMD file
+	 * @param filename - path to GMD file (e.g. "/levels/StereoMadness.gmd")
+	 */
+	public static void Load(String filename) throws IOException {
+		System.out.println("Loading level: " + filename);
+		
+		// Parse the GMD file
+		GameObject[] objects = GMDParser.parseGMD(filename);
+		
+		System.out.println("Loaded " + objects.length + " objects from GMD");
+		
+		// Set the object count
+		Launcher.levelGame.objsize = objects.length;
+		
+		// add all objects to the level
+		for (int i = 0; i < objects.length; i++) {
+			Launcher.levelGame.addobj(objects[i]);
+		}
+		
+		System.out.println("Level loaded successfully!");
+	}
+	
+	/**
+	 * Legacy load method - loads a test level
+	 */
+	public static void LoadTest() throws IOException {
+		Launcher.levelGame.objsize = 10;
+		
+		// Create some test objects
+		for (int i = 0; i < 10; i++) {
+			Launcher.levelGame.addobj(
+				new GameObject(1, 30 * i, 45, false, false, new Direction(0))
+			);
+		}
 	}
 }
