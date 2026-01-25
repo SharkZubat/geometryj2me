@@ -149,6 +149,7 @@ public class GMDParser {
         Vector objects = new Vector();
         
         // Split by semicolon to get individual objects
+        System.out.println("Found data:" + data);
         String[] objectStrings = split(data, ';');
         
         System.out.println("Found " + objectStrings.length + " object entries");
@@ -221,6 +222,7 @@ public class GMDParser {
             
             Direction dir = new Direction((int) rotation);
             
+            System.out.println("adding new obj (data): " + objID + ", "+ xPos + ", "+ yPos + ", "+ flipX + ", "+ flipY + ", "+ dir + ", ");
             return new GameObject(objID, xPos, yPos, flipX, flipY, dir);
             
         } catch (Exception e) {
