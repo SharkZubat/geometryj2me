@@ -1,5 +1,7 @@
 # geometryj2me
 
+##### [Read carefully right there.](https://github.com/SharkZubat/geometryj2me/blob/old/important.md)
+
 <img src="images/gdj2meonnokia.png" width=200>
 
 # About
