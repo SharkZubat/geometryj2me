@@ -35,7 +35,7 @@ public class LevelGame extends GameCanvas implements Runnable {
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
-	private static GameObject[] gobjtest = new GameObject[40];
+	private static GameObject[] gobjtest = new GameObject[5000];
 	public int objsize = 1;
 	private Player music;
 	PlayerScript curr_player = new PlayerScript();
@@ -65,18 +65,18 @@ public class LevelGame extends GameCanvas implements Runnable {
 		for (int i = 0; i < input.length; i++) {
 			try {
 				objImage[i+1] = Image.createImage("/img/obj/" + input[i]);
-				System.out.println("initalized obj image:" + i);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		gobjtest = new GameObject[objsize];
+		//gobjtest = new GameObject[objsize];
 		try {
 			LevelLoader.Load(levelData);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
+			System.out.println("error");
 			e1.printStackTrace();
 		}
 		try {
@@ -250,7 +250,12 @@ public class LevelGame extends GameCanvas implements Runnable {
 		//}
 		
 		for (int i = 0; i < objsize; i++) {
-			renderobject(objImage,gobjtest[i]);
+			try {
+				System.out.println("rendering object" + gobjtest[i].id);
+				renderobject(objImage,gobjtest[i]);
+			} catch (Exception e) {
+				System.out.println("rendering object fail" + gobjtest[i].id);
+			}
 		}
 		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
