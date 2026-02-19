@@ -38,7 +38,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private static GameObject[] gobjtest = new GameObject[5000];
 	public int objsize = 1;
 	private Player music;
-	PlayerScript curr_player = new PlayerScript();
+	//PlayerScript curr_player = new PlayerScript();
 	
 	//camera
 	float cameraX = 0;
@@ -60,7 +60,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 
 	public void start() {
 		// TODO Auto-generated method stub
-	    cameraX=curr_player.position.x+(getWidth()/6);
+	    //cameraX=curr_player.position.x+(getWidth()/6);
 		String[] input = GameObject.getImages();
 		for (int i = 0; i < input.length; i++) {
 			try {
@@ -140,7 +140,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	        lastTime = currentTime;
 			controlcamera();
 			while (currentTime > nextGameTick) {
-				curr_player.update(SKIP_TICKS / 1000.0f, isHolding);
+				//curr_player.update(SKIP_TICKS / 1000.0f, isHolding);
 				nextGameTick += SKIP_TICKS;
 				currentTime = System.currentTimeMillis();
 			}
@@ -160,17 +160,17 @@ public class LevelGame extends GameCanvas implements Runnable {
 		// TODO Auto-generated method stub
 	    int keyState = getKeyStates();
 
-	    //if ((keyState & LEFT_PRESSED) != 0) {
-	    //    cameraX-=deltaTimeSeconds*256f;
-	    //}
-	    //if ((keyState & RIGHT_PRESSED) != 0) {
-	    //	cameraX+=deltaTimeSeconds*256f;
-	    //}
+	    if ((keyState & LEFT_PRESSED) != 0) {
+	        cameraX-=deltaTimeSeconds*256f;
+	    }
+	    if ((keyState & RIGHT_PRESSED) != 0) {
+	    	cameraX+=deltaTimeSeconds*256f;
+	    }
 	    if ((keyState & DOWN_PRESSED) != 0) {
-	    	cameraY+=deltaTimeSeconds*256f;
+	    	cameraY-=deltaTimeSeconds*256f;
 	    }
 	    if ((keyState & UP_PRESSED) != 0) {
-	    	cameraY-=256f*deltaTimeSeconds;
+	    	cameraY+=256f*deltaTimeSeconds;
 	    }
 	}
 	public void freeup() {
@@ -257,7 +257,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 				System.out.println("rendering object fail" + gobjtest[i].id);
 			}
 		}
-		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
+		//renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
 		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(framesPerSecond), 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
