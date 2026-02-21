@@ -99,7 +99,7 @@ public class GMDParser {
         try {
             // Decode Base64
             byte[] decoded = Base64Decoder.decode(encoded);
-            System.out.println("Base64 decoded, got " + decoded.length + " bytes");
+            System.out.println("Base64 decoded, got " + decoded.length + " bytes, data: " + new String(decoded));
             
             // Check if data starts with GZIP magic number (0x1F 0x8B)
             if (decoded.length > 2 && 
