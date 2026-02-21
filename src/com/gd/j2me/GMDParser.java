@@ -43,13 +43,13 @@ public class GMDParser {
         String xmlContent = sb.toString();
         
         // Extract k2 data (object data)
-        String objectData = extractTagContent(xmlContent, "<k>k2</k>");
+        String objectData = extractTagContent(xmlContent, "<k>k4</k>");
         if (objectData == null || objectData.length() == 0) {
             System.out.println("No object data found in GMD");
             return new GameObject[0];
         }
         
-        System.out.println("Found k2 data, length: " + objectData.length());
+        System.out.println("Found k2 data, length: " + objectData.length() + ", data: " + objectData);
         
         // Try to decode and decompress
         String decodedData = decodeObjectData(objectData);
