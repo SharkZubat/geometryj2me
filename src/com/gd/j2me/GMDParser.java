@@ -1,6 +1,7 @@
 package com.gd.j2me;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Vector;
@@ -9,7 +10,6 @@ import com.tsg.hitbox.Direction;
 /**
  * GMD File Parser for Geometry Dash levels
  * Parses .gmd XML files and extracts level objects
- * totally not ai
  */
 public class GMDParser {
     
@@ -20,6 +20,32 @@ public class GMDParser {
     private static final int KEY_FLIP_X = 4;
     private static final int KEY_FLIP_Y = 5;
     private static final int KEY_ROTATION = 6;
+    
+    /**
+     * for already decompressed GMD data
+     */
+    public static GameObject[] parseDecompressed(String filename) throws IOException {
+        // Read the decompressed object data file
+        InputStream is = GMDParser.class.getResourceAsStream(filename);
+        if (is == null) {
+            System.out.println("Decompressed file not found: " + filename);
+            return new GameObject[0];
+        }
+        
+        // Read entire file into string
+        StringBuffer sb = new StringBuffer();
+        int ch;
+        while ((ch = is.read()) != -1) {
+            sb.append((char) ch);
+        }
+        is.close();
+        
+        String objectData = sb.toString();
+        System.out.println("Loaded decompressed data, length: " + objectData.length());
+        
+        // Parse objects directly
+        return parseObjects(objectData);
+    }
     
     /**
      * Parse a GMD file and return array of GameObjects
@@ -49,7 +75,7 @@ public class GMDParser {
             return new GameObject[0];
         }
         
-        System.out.println("Found k2 data, length: " + objectData.length() + ", data: " + objectData);
+        System.out.println("Found k2 data, length: " + objectData.length());
         
         // Try to decode and decompress
         String decodedData = decodeObjectData(objectData);
@@ -99,7 +125,7 @@ public class GMDParser {
         try {
             // Decode Base64
             byte[] decoded = Base64Decoder.decode(encoded);
-            System.out.println("Base64 decoded, got " + decoded.length + " bytes, data: " + new String(decoded));
+            System.out.println("Base64 decoded, got " + decoded.length + " bytes");
             
             // Check if data starts with GZIP magic number (0x1F 0x8B)
             if (decoded.length > 2 && 
@@ -107,32 +133,23 @@ public class GMDParser {
                 (decoded[1] & 0xFF) == 0x8B) {
                 
                 System.out.println("Data is GZIP compressed");
+                System.out.println("ERROR: GZIP decompression not supported in J2ME");
+                System.out.println("Please use parseDecompressed() method with pre-decompressed file!");
+                return null;
                 
-                // Try using our custom GZIP decoder
-                byte[] decompressed = GZIPDecoder.decompress(decoded);
-                if (decompressed != null && decompressed.length > 0) {
-                    System.out.println("Decompressed successfully: " + decompressed.length + " bytes");
-                    return new String(decompressed);
+            } else {
+                System.out.println("Data is not GZIP compressed");
+                // Try to use the decoded data directly
+                String result = new String(decoded);
+                
+                // Check if it looks like valid object data
+                if (result.indexOf(',') > 0 || result.indexOf(';') > 0) {
+                    System.out.println("Data appears to be valid object data");
+                    return result;
                 }
                 
-                System.out.println("GZIP decompression failed, returning raw data");
-            } else {
-                System.out.println("Data is not GZIP compressed (or already decompressed)");
-            }
-            
-            // Try to use the decoded data directly
-            String result = new String(decoded);
-            
-            // Check if it looks like valid object data (should contain numbers and commas)
-            if (result.indexOf(',') > 0 || result.indexOf(';') > 0) {
-                System.out.println("Data appears to be valid object data");
                 return result;
             }
-            
-            System.out.println("Data doesn't look like valid object data");
-            System.out.println("First 100 chars: " + result.substring(0, Math.min(100, result.length())));
-            
-            return result;
             
         } catch (Exception e) {
             System.out.println("Decode error: " + e);
@@ -143,17 +160,25 @@ public class GMDParser {
     
     /**
      * Parse objects from decoded object data string
-     * Format: "1,objID,2,xPos,3,yPos,...;1,objID,2,xPos,3,yPos,...;"
+     * Format: "1_objID_2_xPos_3_yPos_...|1_objID_2_xPos_3_yPos_...|"
+     * Note: GMD files use pipe (|) as object separator and underscore (_) as property separator
      */
     private static GameObject[] parseObjects(String data) {
         Vector objects = new Vector();
         
-        // Split by semicolon to get individual objects
-        System.out.println("Found data:" + data);
-        String[] objectStrings = split(data, ';');
+        // First, find where the actual object data starts
+        // GMD files have a header section before the objects
+        int objectStart = data.indexOf(';');
+        if (objectStart != -1) {
+            data = data.substring(objectStart + 1);
+        }
+        
+        // Split by pipe to get individual objects
+        String[] objectStrings = split(data, '|');
         
         System.out.println("Found " + objectStrings.length + " object entries");
         
+        int parsedCount = 0;
         for (int i = 0; i < objectStrings.length; i++) {
             String objStr = objectStrings[i].trim();
             if (objStr.length() == 0) continue;
@@ -161,10 +186,11 @@ public class GMDParser {
             GameObject obj = parseObject(objStr);
             if (obj != null) {
                 objects.addElement(obj);
+                parsedCount++;
             }
         }
         
-        System.out.println("Parsed " + objects.size() + " objects successfully");
+        System.out.println("Parsed " + parsedCount + " objects successfully");
         
         // Convert Vector to array
         GameObject[] result = new GameObject[objects.size()];
@@ -174,11 +200,12 @@ public class GMDParser {
     
     /**
      * Parse a single object from property string
-     * Format: "1,objID,2,xPos,3,yPos,4,flipX,5,flipY,6,rotation,..."
+     * Format: "1_objID_2_xPos_3_yPos_4_flipX_5_flipY_6_rotation_..."
+     * Note: GMD files use underscore (_) as property separator
      */
     private static GameObject parseObject(String objStr) {
         try {
-            String[] parts = split(objStr, ',');
+            String[] parts = split(objStr, '_');
             
             // Default values
             int objID = 1;
@@ -222,7 +249,6 @@ public class GMDParser {
             
             Direction dir = new Direction((int) rotation);
             
-            System.out.println("adding new obj (data): " + objID + ", "+ xPos + ", "+ yPos + ", "+ flipX + ", "+ flipY + ", "+ dir + ", ");
             return new GameObject(objID, xPos, yPos, flipX, flipY, dir);
             
         } catch (Exception e) {
@@ -232,7 +258,7 @@ public class GMDParser {
     }
     
     /**
-     * Split string by delimiter (J2ME doesn't have String.split)
+     * Split string by delimiter
      */
     private static String[] split(String str, char delimiter) {
         Vector parts = new Vector();
