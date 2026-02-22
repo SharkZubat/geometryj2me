@@ -5,6 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Vector;
+
+import org.bolet.jgz.GZipInputStream;
+
+import com.sun.midp.io.Base64;
 import com.tsg.hitbox.Direction;
 
 /**
@@ -117,6 +121,24 @@ public class GMDParser {
         
         return xml.substring(contentStart, contentEnd);
     }
+    /**
+     * basic gzip decompressing
+     */
+    public static String decompressGZIP(byte[] compressed) throws IOException {
+        ByteArrayInputStream bai = new ByteArrayInputStream(compressed);
+        GZipInputStream gzip = new GZipInputStream(bai);
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = gzip.read(buffer)) > 0) {
+            bao.write(buffer, 0, len);
+        }
+        
+        gzip.close();
+        bao.close();
+        return new String(bao.toByteArray());
+    }
     
     /**
      * Decode the object data (Base64 + GZIP)
@@ -124,7 +146,7 @@ public class GMDParser {
     private static String decodeObjectData(String encoded) {
         try {
             // Decode Base64
-            byte[] decoded = Base64Decoder.decode(encoded);
+            byte[] decoded = Base64.decode(encoded.replace('-', '+').replace('_', '/'));
             System.out.println("Base64 decoded, got " + decoded.length + " bytes");
             
             // Check if data starts with GZIP magic number (0x1F 0x8B)
@@ -133,9 +155,14 @@ public class GMDParser {
                 (decoded[1] & 0xFF) == 0x8B) {
                 
                 System.out.println("Data is GZIP compressed");
-                System.out.println("ERROR: GZIP decompression not supported in J2ME");
-                System.out.println("Please use parseDecompressed() method with pre-decompressed file!");
-                return null;
+                String decompr = decompressGZIP(decoded);
+                
+                if (decompr != null && decompr.length() > 0) {
+                    System.out.println("Decompressed successfully: " + decompr.length() + " bytes");
+                    return new String(decompr);
+                }
+                
+                System.out.println("GZIP decompression failed, returning raw data");
                 
             } else {
                 System.out.println("Data is not GZIP compressed");
@@ -156,6 +183,7 @@ public class GMDParser {
             e.printStackTrace();
             return null;
         }
+		return null;
     }
     
     /**
