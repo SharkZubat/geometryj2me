@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Vector;
-import net.sf.jazzlib.*;
 import com.tsg.hitbox.Direction;
 
 /**
@@ -76,7 +75,7 @@ public class GMDParser {
             return new GameObject[0];
         }
         
-        System.out.println("Found k2 data, length: " + objectData.length());
+        System.out.println("Found k4 data, length: " + objectData.length() + ", data: " + new String(objectData));
         
         // Try to decode and decompress
         String decodedData = decodeObjectData(objectData);
