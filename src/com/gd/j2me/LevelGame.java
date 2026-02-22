@@ -12,8 +12,6 @@ import javax.microedition.midlet.MIDlet;
 
 import org.bolet.jgz.GZipInputStream;
 
-import net.sf.jazzlib.GZIPInputStream;
-
 import com.sun.midp.io.Base64;
 import com.tsg.hitbox.Direction;
 import com.tsg.sharkutilitiesdemo.SharkUtilities;
