@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="J2MELIB"/>
+	<classpathentry kind="lib" path="lib/jazzlib-binary-0.07.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
