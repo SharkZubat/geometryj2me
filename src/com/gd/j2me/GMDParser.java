@@ -73,6 +73,13 @@ public class GMDParser {
         String xmlContent = sb.toString();
         
         // Extract k2 data (object data)
+        String[] levelDataK = new String[40];
+        
+        for (int i = 1; i < 40; i++) {
+            levelDataK[i] = extractTagContent(xmlContent, "<k>k" + i + "</k>");
+            System.out.println("Readed k" + i + ": " + levelDataK[i]);
+        }
+        
         String objectData = extractTagContent(xmlContent, "<k>k4</k>");
         if (objectData == null || objectData.length() == 0) {
             System.out.println("No object data found in GMD");
@@ -158,7 +165,7 @@ public class GMDParser {
                 String decompr = decompressGZIP(decoded);
                 
                 if (decompr != null && decompr.length() > 0) {
-                    System.out.println("Decompressed successfully: " + decompr.length() + " bytes");
+                    System.out.println("Decompressed successfully: " + decompr.length() + " bytes, data: " + decompr);
                     return new String(decompr);
                 }
                 

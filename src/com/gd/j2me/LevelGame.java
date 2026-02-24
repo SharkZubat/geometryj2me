@@ -223,9 +223,9 @@ public class LevelGame extends GameCanvas implements Runnable {
 	    	if (drewlayers <= 100) {
 		    	Graphics g = getGraphics();
 		    	if (dir.toFloat() == 0) {
-		    		SharkUtilities.drawImageWithAnchor(obj[id], (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithAnchor(SharkUtilities.scale(obj[id], (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	} else {
-		    		SharkUtilities.drawImageWithDirAnchor(obj[id], dir.toFloat(), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithDirAnchor(SharkUtilities.scale(obj[id], (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), dir.toFloat(), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	}
 		    	drewlayers++;
 	    	}
