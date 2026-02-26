@@ -12,7 +12,7 @@ public class Launcher extends MIDlet {
     	if (!isRunning) {
 	    	isRunning = true;
 	    	display = Display.getDisplay(this);
-	        levelGame = new LevelGame("tyest");
+	    	levelGame = new LevelGame("/levels/StereoMadness.gmd");
 	        levelGame.start();
 	        levelGame.resetdelta();
 	        Display.getDisplay(this).setCurrent(levelGame);
