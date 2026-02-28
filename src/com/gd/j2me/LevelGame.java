@@ -37,6 +37,8 @@ public class LevelGame extends GameCanvas implements Runnable {
     
     //game level res
     private Image[] objImage = new Image[10];
+    private Image bgi;
+    private Image grndi;
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
@@ -87,6 +89,8 @@ public class LevelGame extends GameCanvas implements Runnable {
 		try {
 			objImage[0] = Image.createImage("/img/obj/square_01_001.png");
 			bigFontBig = Image.createImage("/img/fonts/bigFont-24.png");
+			bgi = Image.createImage("/img/level/game_bg_01_001.png");
+			grndi = Image.createImage("/img/level/groundSquare_01_001.png");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -179,7 +183,6 @@ public class LevelGame extends GameCanvas implements Runnable {
 	    }
 	}
 	public void freeup() {
-		SharkUtilities.clearCaches();
 		System.gc();
 	}
 	
@@ -247,6 +250,8 @@ public class LevelGame extends GameCanvas implements Runnable {
 		
 		g.setColor(bgColor);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		
+		SharkUtilities.drawImageWithAnchor(SharkUtilities.tintImage(SharkUtilities.scale(bgi, (int)(bgi.getWidth()/1.3636363636363636363636363636363636f), (int)(bgi.getHeight()/1.3636363636363636363636363636363636f)), bgColor), (int)(getWidth()/2-(cameraX/10)), (int)(getHeight()/2+(cameraY/10)), 0, 0.5, 0.5, g);
 		
 		//for (int i = 0; i < 4; i++) {
 		//	for (int j = 0; j < 2; j++) {

@@ -12,6 +12,7 @@ public class SharkUtilities {
 	
 	private static Hashtable rotateCache = new Hashtable();
     private static Hashtable scaleCache = new Hashtable();
+    private static Hashtable tintCache = new Hashtable();
 
 	public static class Hitbox {
 		
@@ -247,8 +248,12 @@ public class SharkUtilities {
 	}
 	
 	public static Image tintImage(Image source, int rgb) {
-        int[] rgbData = new int[source.getWidth() * source.getHeight()];
+        String key = source.hashCode() + "_" + rgb;
+        
+        Image cached = (Image) tintCache.get(key);
+        if (cached != null) return cached;
 
+        int[] rgbData = new int[source.getWidth() * source.getHeight()];
         source.getRGB(rgbData, 0, source.getWidth(), 0, 0, source.getWidth(), source.getHeight());
 
         int tintR = (rgb >> 16) & 0xFF;
@@ -269,7 +274,12 @@ public class SharkUtilities {
 
             rgbData[i] = (alpha << 24) | (newR << 16) | (newG << 8) | newB;
         }
-        return Image.createRGBImage(rgbData, source.getWidth(), source.getHeight(), true);
+        
+        Image result = Image.createRGBImage(rgbData, source.getWidth(), source.getHeight(), true);
+        
+        tintCache.put(key, result);
+        
+        return result;
 	}
 	
 	private static Image transformImage(Image image, int type) {
@@ -392,6 +402,7 @@ public class SharkUtilities {
 		 Image result = Image.createRGBImage(rawOutput, newWidth, newHeight, true);
 		 
 		 scaleCache.put(key, result);
+		 System.out.println("scaled");
 		 return result;
 	}
 	
@@ -592,6 +603,7 @@ public class SharkUtilities {
     public static void clearCaches() {
         rotateCache.clear();
         scaleCache.clear();
+        tintCache.clear();
     }
 
 	public static void drawImageWithDir(Image objImage, float f, float h, float i,
