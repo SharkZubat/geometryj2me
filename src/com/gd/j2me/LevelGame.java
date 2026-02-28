@@ -45,7 +45,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private static GameObject[] gobjtest = new GameObject[5000];
 	public int objsize = 1;
 	private Player music;
-	//PlayerScript curr_player = new PlayerScript();
+	PlayerScript curr_player = new PlayerScript();
 	
 	//camera
 	float cameraX = 0;
