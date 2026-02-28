@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import org.bolet.jgz.GZipInputStream;
-
-import com.sun.midp.io.Base64;
+import org.kobjects.base64.*;
 import com.tsg.hitbox.Direction;
 
 /**

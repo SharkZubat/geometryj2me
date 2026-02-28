@@ -10,9 +10,8 @@ import javax.microedition.media.*;
 import javax.microedition.media.control.*;
 import javax.microedition.midlet.MIDlet;
 
-import org.bolet.jgz.GZipInputStream;
+//import org.bolet.jgz.GZipInputStream;
 
-import com.sun.midp.io.Base64;
 import com.tsg.hitbox.Direction;
 import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
@@ -78,13 +77,18 @@ public class LevelGame extends GameCanvas implements Runnable {
 			}
 		}
 		
+		Graphics g = getGraphics();
+		
+		g.setColor(0x000000);
+		g.drawString("error", 0,0,0);
+		
 		//gobjtest = new GameObject[objsize];
 		try {
 			LevelLoader.Load(levelData);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("error");
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 		try {
 			objImage[0] = Image.createImage("/img/obj/square_01_001.png");
