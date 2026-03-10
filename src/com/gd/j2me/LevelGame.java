@@ -10,9 +10,13 @@ import javax.microedition.media.*;
 import javax.microedition.media.control.*;
 import javax.microedition.midlet.MIDlet;
 
+//import org.bolet.jgz.GZipInputStream;
+
 import com.tsg.hitbox.Direction;
 import com.tsg.sharkutilitiesdemo.SharkUtilities;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -32,10 +36,12 @@ public class LevelGame extends GameCanvas implements Runnable {
     
     //game level res
     private Image[] objImage = new Image[10];
+    private Image bgi;
+    private Image grndi;
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
-	private static GameObject[] gobjtest = new GameObject[40];
+	private static GameObject[] gobjtest = new GameObject[5000];
 	public int objsize = 1;
 	private Player music;
 	PlayerScript curr_player = new PlayerScript();
@@ -60,28 +66,35 @@ public class LevelGame extends GameCanvas implements Runnable {
 
 	public void start() {
 		// TODO Auto-generated method stub
-	    cameraX=curr_player.position.x+(getWidth()/6);
+	    //cameraX=curr_player.position.x+(getWidth()/6);
 		String[] input = GameObject.getImages();
 		for (int i = 0; i < input.length; i++) {
 			try {
 				objImage[i+1] = Image.createImage("/img/obj/" + input[i]);
-				System.out.println("initalized obj image:" + i);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		gobjtest = new GameObject[objsize];
+		Graphics g = getGraphics();
+		
+		g.setColor(0x000000);
+		g.drawString("error", 0,0,0);
+		
+		//gobjtest = new GameObject[objsize];
 		try {
 			LevelLoader.Load(levelData);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.out.println("error");
+			//e1.printStackTrace();
 		}
 		try {
 			objImage[0] = Image.createImage("/img/obj/square_01_001.png");
 			bigFontBig = Image.createImage("/img/fonts/bigFont-24.png");
+			bgi = Image.createImage("/img/level/game_bg_01_001.png");
+			grndi = Image.createImage("/img/level/groundSquare_01_001.png");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,7 +153,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	        lastTime = currentTime;
 			controlcamera();
 			while (currentTime > nextGameTick) {
-				curr_player.update(SKIP_TICKS / 1000.0f, isHolding);
+				//curr_player.update(SKIP_TICKS / 1000.0f, isHolding);
 				nextGameTick += SKIP_TICKS;
 				currentTime = System.currentTimeMillis();
 			}
@@ -160,21 +173,20 @@ public class LevelGame extends GameCanvas implements Runnable {
 		// TODO Auto-generated method stub
 	    int keyState = getKeyStates();
 
-	    //if ((keyState & LEFT_PRESSED) != 0) {
-	    //    cameraX-=deltaTimeSeconds*256f;
-	    //}
-	    //if ((keyState & RIGHT_PRESSED) != 0) {
-	    //	cameraX+=deltaTimeSeconds*256f;
-	    //}
+	    if ((keyState & LEFT_PRESSED) != 0) {
+	        cameraX-=deltaTimeSeconds*256f;
+	    }
+	    if ((keyState & RIGHT_PRESSED) != 0) {
+	    	cameraX+=deltaTimeSeconds*256f;
+	    }
 	    if ((keyState & DOWN_PRESSED) != 0) {
-	    	cameraY+=deltaTimeSeconds*256f;
+	    	cameraY-=deltaTimeSeconds*256f;
 	    }
 	    if ((keyState & UP_PRESSED) != 0) {
-	    	cameraY-=256f*deltaTimeSeconds;
+	    	cameraY+=256f*deltaTimeSeconds;
 	    }
 	}
 	public void freeup() {
-		SharkUtilities.clearCaches();
 		System.gc();
 	}
 	
@@ -218,9 +230,9 @@ public class LevelGame extends GameCanvas implements Runnable {
 	    	if (drewlayers <= 100) {
 		    	Graphics g = getGraphics();
 		    	if (dir.toFloat() == 0) {
-		    		SharkUtilities.drawImageWithAnchor(obj[id], (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithAnchor(SharkUtilities.scale(obj[id], (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	} else {
-		    		SharkUtilities.drawImageWithDirAnchor(obj[id], dir.toFloat(), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithDirAnchor(SharkUtilities.scale(obj[id], (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), dir.toFloat(), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	}
 		    	drewlayers++;
 	    	}
@@ -243,6 +255,8 @@ public class LevelGame extends GameCanvas implements Runnable {
 		g.setColor(bgColor);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
+		SharkUtilities.drawImageWithAnchor(SharkUtilities.tintImage(SharkUtilities.scale(bgi, (int)(bgi.getWidth()/1.3636363636363636363636363636363636f), (int)(bgi.getHeight()/1.3636363636363636363636363636363636f)), bgColor), (int)(getWidth()/2-(cameraX/10)), (int)(getHeight()/2+(cameraY/10)), 0, 0.5, 0.5, g);
+		
 		//for (int i = 0; i < 4; i++) {
 		//	for (int j = 0; j < 2; j++) {
 		//		renderobject(objImage[0],i*30,j*30,dirTest);
@@ -250,9 +264,14 @@ public class LevelGame extends GameCanvas implements Runnable {
 		//}
 		
 		for (int i = 0; i < objsize; i++) {
-			renderobject(objImage,gobjtest[i]);
+			try {
+				System.out.println("rendering object" + gobjtest[i].id);
+				renderobject(objImage,gobjtest[i]);
+			} catch (Exception e) {
+				System.out.println("rendering object fail" + gobjtest[i].id);
+			}
 		}
-		renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
+		//renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));
 		
 		CustomFont.drawString(bigFontBig, 0, 48, 0.5f, "FPS: " + (int)(framesPerSecond), 22, g);
 		CustomFont.drawString(bigFontBig, 0, 60, 0.5f, "Drawn layers: " + drewlayers, 22, g);
