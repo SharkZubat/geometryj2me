@@ -221,7 +221,7 @@ public class LevelGame extends GameCanvas implements Runnable {
     	float y = gobj.y;
     	boolean h = gobj.h;
     	boolean v = gobj.v;
-    	Direction dir = gobj.dir;
+    	Direction dir = new Direction(gobj.dir.toFloat()*-1);
     	
     	long calculatedX = (long) Math.floor((x-cameraX)/1.3636363636363636363636363636363636f+(getWidth()/2));
     	long calculatedY = (long) Math.floor((-y+cameraY)/1.36363636363636363636363636363636f+(getHeight()/2));
@@ -230,12 +230,12 @@ public class LevelGame extends GameCanvas implements Runnable {
     			&& calculatedX < getWidth()+20
     			&& calculatedY > -20
     			&& calculatedY < getHeight()+20) {
-	    	if (drewlayers <= 100) {
+	    	if (drewlayers <= 500) {
 		    	Graphics g = getGraphics();
 		    	if (dir.toFloat() == 0) {
-		    		SharkUtilities.drawImageWithAnchor(SharkUtilities.scale(obj[id], (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithAnchor(SharkUtilities.scale(SharkUtilities.flipImage(SharkUtilities.flipImage(obj[id], h ? 0 : -1), v ? 1 : -1), (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	} else {
-		    		SharkUtilities.drawImageWithDirAnchor(SharkUtilities.scale(obj[id], (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), dir.toFloat(), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
+		    		SharkUtilities.drawImageWithDirAnchor(SharkUtilities.scale(SharkUtilities.flipImage(SharkUtilities.flipImage(obj[id], h ? 0 : -1), v ? 1 : -1), (int) (obj[id].getWidth()/1.3636363636363636363636363636364f), (int) (obj[id].getHeight()/1.3636363636363636363636363636364f)), dir.toFloat(), (int)calculatedX, (int)calculatedY, 0, 0.5, 0.5, g);
 		    	}
 		    	drewlayers++;
 	    	}

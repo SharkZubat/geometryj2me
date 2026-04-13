@@ -299,6 +299,9 @@ public class SharkUtilities {
 		int[] transformedImageData = new int[image.getWidth() * image.getHeight()];
 		
 		switch (type) {
+			case (-1):{
+				return image;
+			}
 			case (0):{
 				for (int y = 0; y < image.getHeight(); y++) {
 				    for (int x = 0; x < image.getWidth(); x++) {
@@ -307,7 +310,7 @@ public class SharkUtilities {
 				        transformedImageData[flippedIndex] = imageData[originalIndex];
 				    }
 				}
-
+				break;
 			}
 			case (1):{
 				for (int y = 0; y < image.getHeight(); y++) {
@@ -317,6 +320,7 @@ public class SharkUtilities {
 				        transformedImageData[flippedIndex] = imageData[originalIndex];
 				    }
 				}
+				break;
 			}
 		}
 		
