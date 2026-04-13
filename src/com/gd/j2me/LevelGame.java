@@ -32,16 +32,19 @@ public class LevelGame extends GameCanvas implements Runnable {
 	
 	//game level settings
     private int bgColor = 0x287dff;
-    private int gnColor = 0x0066ff;
+    private int grndColor = 0x0066ff;
+    private int lineColor = 0xffffff;
+    private int[] cols = new int[4];
     
     //game level res
     private Image[] objImage = new Image[10];
     private Image bgi;
     private Image grndi;
+    private Image linei;
     private Image bigFontBig;
 	private int drewlayers;
 	private float dirTest;
-	private static GameObject[] gobjtest = new GameObject[5000];
+	private static GameObject[] objects = new GameObject[5000];
 	public int objsize = 1;
 	private Player music;
 	PlayerScript curr_player = new PlayerScript();
@@ -82,7 +85,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 		g.setColor(0x000000);
 		g.drawString("error", 0,0,0);
 		
-		//gobjtest = new GameObject[objsize];
+		//objects = new GameObject[objsize];
 		try {
 			LevelLoader.Load(levelData);
 		} catch (IOException e1) {
@@ -126,7 +129,7 @@ public class LevelGame extends GameCanvas implements Runnable {
 	}
 	
 	public void addobj(GameObject data) {
-		gobjtest[objcount] = data;
+		objects[objcount] = data;
 		objcount++;
 	}
 	
@@ -252,11 +255,15 @@ public class LevelGame extends GameCanvas implements Runnable {
 	private void draw() {
 		Graphics g = getGraphics();
 		
-		g.setColor(bgColor);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		//g.setColor(bgColor);
+		//g.fillRect(0, 0, getWidth(), getHeight());
 		
-		SharkUtilities.drawImageWithAnchor(SharkUtilities.tintImage(SharkUtilities.scale(bgi, (int)(bgi.getWidth()/1.3636363636363636363636363636363636f), (int)(bgi.getHeight()/1.3636363636363636363636363636363636f)), bgColor), (int)(getWidth()/2-(cameraX/10)), (int)(getHeight()/2+(cameraY/10)), 0, 0.5, 0.5, g);
-		
+		for (int i = 0; i-512/1.363636363636363636363636f < getWidth()+512/1.363636363636363636363636f; i += 512/1.363636363636363636363636f) {
+			SharkUtilities.drawImageWithAnchor(SharkUtilities.tintImage(SharkUtilities.scale(bgi, (int)(bgi.getWidth()/1.3636363636363636363636363636363636f), (int)(bgi.getHeight()/1.3636363636363636363636363636363636f)), bgColor), (int) (-cameraX/1.363636363636363636363636f/10+i)+(int) (Math.floor((double) (cameraX/1.363636363636363636363636f/10/(512/1.363636363636363636363636f)))*512/1.363636363636363636363636f), (int)(getHeight()/2+(cameraY/10)), 0, 0.5, 0.5, g);
+		}
+		for (int i = 0; i-128/1.363636363636363636363636f < getWidth(); i += 128/1.363636363636363636363636f) {
+			SharkUtilities.drawImageWithAnchor(SharkUtilities.tintImage(SharkUtilities.scale(grndi, (int)(grndi.getWidth()/1.3636363636363636363636363636363636f), (int)(grndi.getHeight()/1.3636363636363636363636363636363636f)), grndColor), (int) (-cameraX/1.363636363636363636363636f+i)+(int) (Math.floor((double) (cameraX/1.363636363636363636363636f/(128/1.363636363636363636363636f)))*128/1.363636363636363636363636f), (int)(getHeight()/2+(cameraY/1.3636363636363636363636363636363636f)), 0, 0.5, 0, g);
+		}
 		//for (int i = 0; i < 4; i++) {
 		//	for (int j = 0; j < 2; j++) {
 		//		renderobject(objImage[0],i*30,j*30,dirTest);
@@ -265,10 +272,10 @@ public class LevelGame extends GameCanvas implements Runnable {
 		
 		for (int i = 0; i < objsize; i++) {
 			try {
-				System.out.println("rendering object" + gobjtest[i].id);
-				renderobject(objImage,gobjtest[i]);
+				//System.out.println("rendering object" + objects[i].id);
+				renderobject(objImage,objects[i]);
 			} catch (Exception e) {
-				System.out.println("rendering object fail" + gobjtest[i].id);
+				System.out.println("rendering object fail" + objects[i].id);
 			}
 		}
 		//renderobject(objImage,new GameObject(1,curr_player.position.x,curr_player.position.y,false,false,curr_player.dir));

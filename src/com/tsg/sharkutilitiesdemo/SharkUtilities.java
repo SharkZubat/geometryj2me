@@ -402,7 +402,7 @@ public class SharkUtilities {
 		 Image result = Image.createRGBImage(rawOutput, newWidth, newHeight, true);
 		 
 		 scaleCache.put(key, result);
-		 System.out.println("scaled");
+		 //System.out.println("scaled");
 		 return result;
 	}
 	

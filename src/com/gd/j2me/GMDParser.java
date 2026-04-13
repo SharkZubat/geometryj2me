@@ -8,6 +8,8 @@ import java.util.Vector;
 
 import org.bolet.jgz.GZipInputStream;
 import org.kobjects.base64.*;
+
+import com.tsg.hitbox.CheckTriWinding;
 import com.tsg.hitbox.Direction;
 
 /**
@@ -23,6 +25,28 @@ public class GMDParser {
     private static final int KEY_FLIP_X = 4;
     private static final int KEY_FLIP_Y = 5;
     private static final int KEY_ROTATION = 6;
+    
+    private static final int KEY_COLOR_RED = 1;
+    private static final int KEY_COLOR_GREEN = 2;
+    private static final int KEY_COLOR_BLUE = 3;
+    private static final int KEY_COLOR_PLAYER = 4;
+    private static final int KEY_COLOR_BLENDING = 5;
+    private static final int KEY_COLOR_CCI = 6;
+    private static final int KEY_COLOR_FROMOP = 7;
+    private static final int KEY_COLOR_TOGGLEOP = 8;
+    private static final int KEY_COLOR_ICCI = 9;
+    private static final int KEY_COLOR_HSV = 10;
+    private static final int KEY_COLOR_TORED = 11;
+    private static final int KEY_COLOR_TOGREEN = 12;
+    private static final int KEY_COLOR_TOBLUE = 13;
+    private static final int KEY_COLOR_DELTA = 14;
+    private static final int KEY_COLOR_TOOP = 15;
+    private static final int KEY_COLOR_DUR = 16;
+    private static final int KEY_COLOR_COPYOP = 17;
+    private static final int KEY_COLOR_18UNKNOWN = 18;
+    
+    private static int index = 0;
+    private static int objectIndex = 0;
     
     /**
      * for already decompressed GMD data
@@ -97,6 +121,7 @@ public class GMDParser {
         System.out.println("Decoded data length: " + decodedData.length());
         
         // Parse objects from decoded data
+        checkLevelStart(decodedData);
         return parseObjects(decodedData);
     }
     
@@ -128,7 +153,7 @@ public class GMDParser {
         return xml.substring(contentStart, contentEnd);
     }
     /**
-     * basic gzip decompressing
+     * basic gzip decompression
      */
     public static String decompressGZIP(byte[] compressed) throws IOException {
         ByteArrayInputStream bai = new ByteArrayInputStream(compressed);
@@ -192,6 +217,100 @@ public class GMDParser {
 		return null;
     }
     
+    private static void checkLevelStart(String decoded) {
+    	// for e.g. kA*, kS*, etc., and then object check
+    	boolean done = false;
+    	int length = 4;
+    	int repeatIndexLeft = 20;
+    	int count = countkAandkS(decoded);
+    	int countIndex = 0;
+    	System.out.println("Counted kA and kS: " + count);
+    	System.out.println("Checking Level Start Data...");
+    	
+    	String decoded_temp = decoded.substring(index, index+3);
+    	int index_temp = index;
+    	while (!done && 0 < repeatIndexLeft && count > countIndex) {
+        	decoded_temp = decoded.substring(index, index+length);
+        	index_temp = index;
+        	findkAorkS(decoded_temp, 3);
+    		if (index == -1) {
+    			done = true;
+    			return;
+    		}
+        	if (index != index_temp) {
+        		System.out.println("Found string setting \"" + decoded_temp + "\"");
+        		repeatIndexLeft = 10;
+        		length = 4;
+        		count++;
+        		checkString(decoded_temp, decoded);
+        	} else {
+        		if (length == 3) {
+	        		System.out.println("Check failed: unknown string setting \"" + decoded_temp + "\"");
+	        		length = 4;
+	        		length++;
+	        		index++;
+	        		repeatIndexLeft--;
+        		}
+        		length--;
+        	}
+    	}
+    }
+    
+    private static void findkAorkS(String temp, int add) {
+    	// if found, that means is okay
+    	System.out.println(temp);
+    	if (temp.indexOf(';') != -1) {
+    		System.out.println("Caught the semicolon");
+    		index = -1;
+    		objectIndex = temp.indexOf(';')+1;
+    		return;
+    	}
+    	if (strEqual(temp, "kA1") || strEqual(temp, "kA2") || strEqual(temp, "kA3") || strEqual(temp, "kA4") || strEqual(temp, "kA5") || strEqual(temp, "kA6") || strEqual(temp, "kA7") || strEqual(temp, "kA8") || strEqual(temp, "kA9") || strEqual(temp, "kA10") || strEqual(temp, "kA11") || strEqual(temp, "kA12") || strEqual(temp, "kA13") || strEqual(temp, "kA14") || strEqual(temp, "kA15") || strEqual(temp, "kA16") || strEqual(temp, "kA17") || strEqual(temp, "kA18") || strEqual(temp, "kS38") || strEqual(temp, "kS39")) {
+    		addIndex(add);
+    		return;
+    	} else {
+    		// fail it here
+    	}
+    }
+    
+    private static int countkAandkS(String decoded) {
+    	String[] parts = split(decoded, ',');
+    	int count = 0;
+    	int index = 0;
+    	
+    	while ((index = decoded.indexOf("kA", index)) != -1) {
+    		count++;
+    		index += "kA".length();
+    	}
+    	
+    	return count;
+    }
+    
+    private static boolean strEqual(String str1, String str2) {
+		return str1.trim().equals(str2.trim());
+    }
+    
+    private static void addIndex(int add) {
+		index += add;
+    }
+    
+    private static void checkString(String type, String decoded) {
+    	/*
+    	 * kS38 - colors
+    	 */
+    	
+    	if (type == "kS38") {
+    		
+    	}
+    	
+    	System.out.println(index);
+    	index++;
+    	System.out.println(index);
+    	int index_temp = index;
+    	index = decoded.substring(index_temp).indexOf(',', index_temp)+1;
+    	System.out.println(index);
+    }
+    
     /**
      * Parse objects from decoded object data string
      * Format: "1_objID_2_xPos_3_yPos_...|1_objID_2_xPos_3_yPos_...|"
@@ -208,7 +327,7 @@ public class GMDParser {
         }
         
         // Split by pipe to get individual objects
-        String[] objectStrings = split(data, '|');
+        String[] objectStrings = split(data, ';');
         
         System.out.println("Found " + objectStrings.length + " object entries");
         
@@ -239,7 +358,7 @@ public class GMDParser {
      */
     private static GameObject parseObject(String objStr) {
         try {
-            String[] parts = split(objStr, '_');
+            String[] parts = split(objStr, ',');
             
             // Default values
             int objID = 1;
